@@ -1,0 +1,18 @@
+.scrabble-text {
+  background: #fda;
+  border-radius: 15%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      $rotation: (15 - random(30)) + deg;
+      transform: translateY(0px) rotate($rotation);
+    }
+  }
+
+  &:hover {
+    z-index: 5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px);
+  }
+}

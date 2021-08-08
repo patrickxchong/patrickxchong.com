@@ -1,0 +1,55 @@
+---
+title: Tech
+layout: layouts/page
+status: published
+eleventyNavigation:
+  key: Tech # as it will appear in the nav
+  order: 3
+---
+<h1
+    class="py-10 m-auto w-full flex flex-wrap items-center justify-center text-2xl sm:text-3xl">
+  {% from "components/scrabble.njk" import scrabble %}
+  {{scrabble("TECH")}}
+</h1>
+<p class="text-center text-lg md:text-xl lg:text-2xl">
+  Do Androids Dream of Electric Sheep?
+</p>
+<div class="my-8">
+  {% include "components/cardGithubUser.njk" %}
+</div>
+
+{% markdown "my-8 md:p-4 max-w-4xl" %}
+Mostly a frontend web developer with some backend experience, but I like experimenting with different platforms and technologies.
+
+Technologies I use include:
+
+- Javascript/Typescript (Vue, Nuxt, Express, React, Eleventy, Alpine)
+- Python
+  - Web Dev: Flask, Django
+  - Webscraping: Beautiful Soup
+  - Data Processing and Analysis: Pandas
+- SQL (Postgres), NoSql (MongoDB)
+- PHP
+- C/C++ (Did most of my formal CS education in C/C++ with a focus on embedded systems)
+ Arduino/ARM Assembly
+- Bash scripting
+- Chrome Extensions
+- Google Apps Script
+{% endmarkdown %}
+
+<section>
+  <h2 class="mt-6 mb-4 text-2xl text-center">Github Repos</h2>
+  <div class="flex flex-wrap my-4 mx-auto">
+    {% set repos = ["hide-discord-sidebar", "RapidPlan", "InstaSquare", 
+  "mdiner", "Arduino-MIDI-over-Bluetooth" ]%}
+    {% from "components/cardGithubRepo.njk" import cardGithub %}
+    {% for repo in repos %}
+      {{cardGithub(github.repo[repo])}}
+    {% endfor %}
+  </div>
+</section>
+
+<div class="md:p-4">
+  {% from "components/galleryPost2.njk" import galleryPost %}
+  {{galleryPost(collections["tech"] | published | reverse | limit(3), "/tags/tech")}}
+</div>

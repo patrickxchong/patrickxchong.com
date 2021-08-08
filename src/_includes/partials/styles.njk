@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/assets/css/index.css"/>
+
+{% set css %}
+{% include "src/assets/css/prism-okaidia.css" %}
+{% endset %}
+<style>
+  {% if env.NODE_ENV == "production" %}
+    {{css | cssmin | safe}}
+  {% else %}
+    {{css | safe}}
+  {% endif %}
+</style>
+
+{% set fileExt = page.inputPath | getFileExt %}
+{% if fileExt == '.md' %}
+  <link rel="stylesheet" href="/assets/css/markdown.css"/>
+{% endif %}

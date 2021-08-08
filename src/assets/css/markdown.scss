@@ -1,0 +1,141 @@
+/**
+  * Inspired by
+  * https://github.com/iandinwoodie/github-markdown-tailwindcss/blob/master/markdown.css
+*/
+.markdown {
+	@apply text-gray-900 m-auto leading-normal break-words my-6;
+}
+
+.markdown > * {
+	@apply mt-0 mb-4;
+}
+
+.markdown li + li {
+	@apply mt-1;
+}
+
+.markdown li > p + p {
+	@apply mt-6;
+}
+
+.markdown strong {
+	@apply font-semibold;
+}
+
+.markdown a {
+	@apply text-blue-600 font-semibold;
+}
+
+.markdown strong a {
+	@apply font-bold;
+}
+
+.markdown h1 {
+	@apply text-3xl font-semibold mt-8 mb-0;
+}
+
+.markdown h2 {
+	@apply text-2xl font-semibold mt-8 mb-0;
+}
+
+.markdown h3 {
+	@apply text-xl font-semibold mt-6;
+}
+
+.markdown h4 {
+	@apply text-lg font-semibold mt-6;
+}
+
+.markdown h5 {
+	@apply text-base font-semibold mt-6;
+}
+
+.markdown h6 {
+	@apply text-sm font-semibold text-gray-600 mt-6;
+}
+
+.header-anchor {
+	font-family: sans-serif;
+	text-decoration: none;
+	font-style: normal;
+	margin-left: 0.1em;
+	font-weight: 400;
+}
+
+a[href].header-anchor,
+a[href].header-anchor:visited {
+	color: #949494;
+	visibility: hidden;
+}
+
+:focus > a[href].header-anchor,
+:focus > a[href].header-anchor:visited,
+:hover > a[href].header-anchor,
+:hover > a[href].header-anchor:visited,
+a[href].header-anchor:focus,
+a[href].header-anchor:focus:visited {
+	visibility: visible;
+}
+.markdown {
+	h1:before,
+	h2:before,
+	h3:before,
+	h4:before,
+	h5:before,
+	h6:before {
+		display: block;
+		content: '';
+		height: 70px;
+		margin: -70px 0 0;
+	}
+}
+.markdown blockquote {
+	@apply text-base border-l-4 border-gray-300 pl-4 pr-4 text-gray-600;
+}
+
+.markdown :not(pre) > code {
+	@apply font-mono text-sm inline bg-gray-200 rounded px-1;
+	// py-5
+}
+
+// .markdown pre {
+//   @apply bg-gray-100 rounded p-4;
+//   white-space: pre-wrap; /* css-3 */
+//   white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+//   white-space: -pre-wrap; /* Opera 4-6 */
+//   white-space: -o-pre-wrap; /* Opera 7 */
+//   word-wrap: break-word; /* Internet Explorer 5.5+ */
+// }
+
+// .markdown pre code {
+//   @apply block bg-transparent p-0 overflow-visible rounded-none;
+// }
+
+.markdown ul {
+	@apply text-base pl-8 list-disc;
+}
+
+.markdown ol {
+	@apply text-base pl-8 list-decimal;
+}
+
+.markdown kbd {
+	@apply text-xs inline-block rounded border px-1 py-5 align-middle font-normal font-mono shadow;
+}
+
+.markdown table {
+	@apply text-base border-gray-600;
+}
+
+.markdown th {
+	@apply border py-1 px-3;
+}
+
+.markdown td {
+	@apply border py-1 px-3;
+}
+
+/* Override pygments style background color. */
+.markdown .highlight pre {
+	@apply bg-gray-100;
+}

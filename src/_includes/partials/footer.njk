@@ -1,0 +1,27 @@
+<footer>
+	<div class="px-4 bg-gray-900">
+		<div class="max-w-4xl py-4 mx-auto md:flex md:items-center md:justify-between">
+			<div class="md:order-2">
+				{% include "components/buyMeACoffee.njk" %}
+			</div>
+			<div class="flex justify-center my-4 md:my-0 md:order-3 text-gray-100">
+
+				{# Display Social icons from _data/social.js  #}
+				{% for site in social %}
+					{% if site.url %}
+						<a rel="noreferrer" aria-label="Link to {{ site.platform }}" alt="Link to {{ site.platform }}" class="hover:text-gray-200" href="{{ site.url | url }}" target="_blank">
+							{% svg site.platform, "mx-2 h-6 w-6 fill-current", site.platform, "footer" %}
+						</a>
+					{% endif %}
+				{% endfor %}
+
+			</div>
+			<div class="md:order-1">
+				<p class="text-center text-base leading-6 mt-0 text-gray-100">
+          &copy; {{ env.BUILD_TIMESTAMP | dateToFormat('yyyy') }}
+					{{ meta.siteName }}
+				</p>
+			</div>
+		</div>
+	</div>
+</footer>

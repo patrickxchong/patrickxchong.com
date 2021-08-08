@@ -1,0 +1,46 @@
+---
+title: Music
+layout: layouts/page
+status: published
+eleventyNavigation:
+  key: Music # as it will appear in the nav
+  order: 4
+---
+<h1
+    class="py-10 m-auto w-full flex flex-wrap items-center justify-center text-2xl sm:text-3xl">
+  {% from "components/scrabble.njk" import scrabble %}
+  {{scrabble("MUSIC")}}
+</h1>
+<p class="text-center text-lg md:text-xl lg:text-2xl">
+  The soul to our hearts, the beats to our steps.
+</p>
+
+{% markdown "my-8" %}
+Grew up playing 🎹, picked up 🎸, and now generally experiment with any kind of musical instrument + composition. A hobby that I want to do more but always relegate to the sidelines. 🥲
+
+Favourite artists/musicians/genres include:
+- Owl City
+- Snarky Puppy
+- Aubrey Suwito
+- Zion. T
+- Soft Electronic
+- Jazz/R&B/Funk
+{% endmarkdown %}
+
+<section>
+  <h2 class="mt-6 mb-4 text-2xl text-center">Personal compositions</h2>
+
+  <iframe width="100%" height="400" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/661436946&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+
+  <h2 class="mt-6 mb-4 text-2xl text-center">Band Involvements</h2>
+  <div class="grid md:grid-cols-2">
+    <iframe src="https://open.spotify.com/embed/album/1XVOQtRA1YT8hSmju17OkR?theme=0" width="100%" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+    <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/233410334&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+  </div>
+
+</section>
+
+<div class="pt-8"></div>
+{% from "components/galleryPost2.njk" import galleryPost %}
+{{galleryPost(collections["music"] | published | reverse | limit(3), "/tags/music")}}

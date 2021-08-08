@@ -1,0 +1,38 @@
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  height: 12px;
+  width: 12px
+}
+
+::-webkit-scrollbar-track {
+  background: #efefef
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9b9da0;
+  border-radius: 6px
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c4c4c4
+}
+
+@media(max-width: 37.49em) {
+  ::-webkit-scrollbar {
+      height:6px;
+      width: 6px
+  }
+}
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

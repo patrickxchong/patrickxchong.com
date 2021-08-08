@@ -1,0 +1,33 @@
+{% macro cardPost(post) %}
+  <div class="grid-item">
+    <div class="flex flex-col h-full rounded-lg overflow-hidden shadow-md">
+      {% set postImage = post.data.image or "/assets/images/site/default.jpg" %}
+      <a href="{{post.url | url }}">
+        {% img "" + postImage,
+        post.data.title + " thumbnail" %}
+        {# <img class="w-full" src="{{ postImage }}" alt="{{ title }} thumbnail"> #}
+      </a>
+      <div class="flex-1 px-6 py-4">
+        <a href="{{post.url | url }}">
+          <p class="font-bold text-xl hover:text-gray-700">{{post.data.title}}</p>
+          <p class="text-gray-700 text-xs mt-0 mb-2">
+            <time datetime="{{ post.date | dateToFormat('yyyy-MM-dd') }}">{{ post.date | dateToFormat('LLL dd, yyyy') }}</time>
+          </p>
+          <p class="text-gray-700 text-base">
+            {{ post.data.excerpt }}
+          </p>
+        </a>
+      </div>
+      <div class="px-6 pb-4">
+        {% for tag in post.data.tags %}
+          {# Knock out the first iteration of the loop to drop the default "post" tag generated in `posts/posts.json`. #}
+          {# If there's a better/easier way of doing this, please LMK.  #}
+          {% if not loop.first %}
+            <a href="/tags/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700 bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+{% endmacro %}

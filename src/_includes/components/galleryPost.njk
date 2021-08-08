@@ -1,0 +1,16 @@
+{% macro galleryPost(posts) %}
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <style>
+    .grid-item {
+      width: 400px;
+      max-width: 100%;
+      margin: auto auto 20px;
+    }
+  </style>
+  <div class="mx-auto w-full" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300, "gutter": 20, "fitWidth": true }'>
+    {% from "components/cardPost.njk" import cardPost %}
+    {% for post in posts %}
+      {{cardPost(post)}}
+    {% endfor %}
+  </div>
+{% endmacro %}

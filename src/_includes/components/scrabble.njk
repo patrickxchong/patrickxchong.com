@@ -1,0 +1,9 @@
+{% macro scrabble(text) %}
+  {# (should only be included once) #}
+  <link rel="stylesheet" href="/assets/css/scrabble.css"/>
+  
+  {% for char in text %}
+    <span class="scrabble-text flex items-center justify-center leading-none 
+    h-8 w-8 m-1 sm:h-12 sm:w-12 sm:m-3">{{char}}</span>
+  {% endfor %}
+{% endmacro %}

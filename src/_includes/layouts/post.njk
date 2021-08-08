@@ -1,0 +1,67 @@
+---
+layout: layouts/base
+---
+
+{% if featureImage %}
+  <div class="w-full h-72 lg:h-80 xl:h-96">
+    {% img ""+image, title+" featured image", "object-cover w-full h-full" %}
+  </div>
+{% endif %}
+<article class="max-w-3xl m-auto py-12 {{ 'px-8' if featureImage}}">
+  <h1>{{ title }}</h1>
+  <div class="text-sm mt-2 text-gray-700">
+    <time datetime="{{ date | dateToFormat('yyyy-MM-dd') }}">
+      {{ date | dateToFormat("dd LLL yyyy") }}
+    </time>
+    {# Only display the Author Block if there is a value for "author" in Post Frontmatter #}
+    {% if author %}
+      {% set postAuthor = authors | getAuthor(author) %}
+        by {{ postAuthor.name }}
+      {# <a class="hover:underline" href="/authors/{{ author }}/"></a> #}
+    {% endif %}
+
+  </div>
+  {% set fileExt = page.inputPath | getFileExt %}
+  <div class="{{ 'markdown' if fileExt == '.md'}} max-w-3xl">
+    {{ layoutContent | safe }}
+  </div>
+  <div class="py-4 mt-12 mb-8 border-t border-b md:justify-between md:items-start md:flex md:flex-row">
+
+    <div class="md:w-1/2">
+      {% include "components/tagpills.njk" %}
+    </div>
+
+    <div class="px-2 pt-6 md:pt-2 md:w-1/2 md:flex md:justify-end">
+      {% include "components/socialshare.njk" %}
+    </div>
+
+  </div>
+  <div id="cusdis_thread"
+    data-host="https://cusdis.com"
+    data-app-id="390f520f-a76a-483f-be39-ef3fdfc5bdf1"
+    data-page-id="{{ page.url }}"
+    data-page-url="{{ page.url }}"
+    data-page-title="{{ title }}"
+  ></div>
+  <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+
+  {# ===== Previous and Next =====  #}
+  <div class="mt-4 pt-4 md:flex-row md:flex md:justify-between">
+    {% set previousPost = collections.post | getPreviousCollectionItem(page) %}
+    {% set nextPost = collections.post | getNextCollectionItem(page) %}
+
+    <div class="py-2 text-center sm:py-0">
+      {% if previousPost %}
+        <a class="{{ colors.prevNextCustom.text or colors.prevNextDefault.text }} hover:{{ colors.prevNextCustom.text or colors.prevNextDefault.textHover }}" href="{{ previousPost.url }}">← {{ previousPost.data.title }}</a>
+      {% endif %}
+    </div>
+
+    <div class="py-2 text-center sm:py-0">
+      {% if nextPost %}
+        <a class="{{ colors.prevNextCustom.text or colors.prevNextDefault.text }} hover:{{ colors.prevNextCustom.text or colors.prevNextDefault.textHover }}" href="{{ nextPost.url }}">{{ nextPost.data.title }} →</a>
+      {% endif %}
+    </div>
+
+  </div>
+
+</article>

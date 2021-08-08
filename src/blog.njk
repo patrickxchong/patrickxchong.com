@@ -1,0 +1,37 @@
+---
+title: Blog
+date: 2020-08-05
+layout: layouts/page
+status: published
+eleventyNavigation:
+  key: Blog
+  order: 5    # order to display in the nav
+pagination:
+  data: collections.post 
+  size: 8
+  reverse: true
+  alias: posts
+---
+<h1
+    class="my-10 m-auto w-full flex flex-wrap items-center justify-center text-2xl sm:text-3xl">
+  {% from "components/scrabble.njk" import scrabble %}
+  {{scrabble("BLOG")}}
+</h1>
+
+{% set tags = collections.tagList %}
+<div class="my-5 flex flex-center flex-wrap">
+  {% include "components/tagpills.njk" %}
+</div>
+
+<div>
+  {% from "components/cardPost2.njk" import cardPost %}
+  {% for post in posts %}
+    {{cardPost(post)}}
+  {% endfor %}
+</div>
+
+{# ===== Paginate based on "size" frontmatter value above =====  #}
+{# Don't even include the pagination component if there are fewer posts than needed to paginate  #}
+{% if collections.post.length > pagination.size %}
+  {% include "components/pagination.njk" %}
+{% endif %}

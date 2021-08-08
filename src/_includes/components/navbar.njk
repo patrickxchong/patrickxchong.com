@@ -1,0 +1,96 @@
+{% set navPages = collections.all | eleventyNavigation %}
+<div
+  class="fixed bg-white w-full z-10 sm:px-8"
+  style="box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%)"
+  x-data="{ navOpen: false }">
+  <div
+    class="max-w-4xl m-auto flex flex-col sm:flex-row justify-start
+      sm:justify-between items-center sm:py-3 sm:h-auto"
+    :class="navOpen ? 'h-screen' : ''">
+    <div class="flex w-full sm:w-auto items-center justify-between z-20 border-b
+        border-gray-200 py-3 px-8 sm:p-0 sm:border-none">
+      <a href="/">
+        <img
+          width="40px"
+          height="40px"
+          src="/android-chrome-512x512.png"
+          alt="Patrick Chong's Website Logo"/>
+      </a>
+      <div class="sm:hidden">
+        <button
+          title="Navigation Bar Menu"
+          aria-label="Navigation Bar Menu"
+          @click="navOpen = !navOpen"
+          type="button"
+          class="block text-gray-500 hover:text-black focus:text-white focus:outline-none">
+          <template x-if="navOpen">
+            <svg class="h-6 w-6" viewBox="0 0 24 24">
+              <path
+                fill-rule="evenodd"
+                d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0
+                  1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828
+                  4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"/>
+            </svg>
+          </template>
+          <template x-if="!navOpen">
+            <svg class="h-6 w-6" viewBox="0 0 24 24">
+              <path
+                fill-rule="evenodd"
+                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0
+                  6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
+            </svg>
+          </template>
+        </button>
+      </div>
+    </div>
+    <nav
+      :class="navOpen ? 'py-2 h-full' : ''"
+      class="transition-med w-full overflow-auto bg-white h-0 p-0
+      sm:w-auto sm:h-auto sm:overflow-none sm:flex sm:py-0
+        ">
+      {% for entry in navPages %}
+        <a 
+          {% if page.url != entry.url %}{% endif %} 
+          href="{{ entry.url | url }}"
+          alt="Link to {{ entry.key }}" 
+          class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center
+          {% if page.url == entry.url %}font-bold{% endif %}">
+          {{ entry.key }}
+        </a>
+      {% endfor %}
+
+      {# <a
+        href="/about"
+        class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
+        About
+      </a>
+      <a
+        href="/contact"
+        class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
+        Contact
+      </a>
+      <a
+        href="/tech"
+        class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
+        Tech
+      </a>
+      <a
+        href="/music"
+        class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
+        Music
+      </a>
+      <a
+        href="/blog"
+        class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
+        Blog
+      </a> #}
+      <!-- <a href="/cooking" class="block px-2 py-1
+      font-medium rounded hover:bg-gray-200 text-center" > Cooking </a> -->
+      {# <a href="https://patrickxchong.com/admin/#/collections/posts"
+          class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center"
+        >
+          Admin
+        </a> #}
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+{# set absolutePageURL to use later in  canonical and og URLs #}
+{%- set absolutePageUrl -%}{{ page.url | url | absoluteUrl(env.SITE_URL) }}{%- endset -%}
+{# set image paths here so user/editor doesn't have to deal with full paths #}
+{%- set ogImage -%}
+{% if image %}
+  {{ image }}
+{% else %}
+  {{ meta.siteImage }}
+{% endif %}
+{%- endset -%}
+
+{%- set pageTitle -%}
+{% if title %}
+  {{ title }} | {{ meta.siteName }}
+{% else %}
+  {{ meta.siteName }}
+{% endif %}
+{%- endset -%}
+
+{#- General #}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ pageTitle | trim }}</title>
+
+<meta name="author" content="{{ author or meta.authorName }}"/>
+<meta name="description" content="{{ seo.description or excerpt or meta.siteDescription }}"/>
+<link rel="canonical" href="{{ absolutePageUrl }}"/>
+{#- Open Graph #}
+<meta property="og:site_name" content="{{ meta.siteName }}"/>
+<meta property="og:title" content="{{ pageTitle | trim }}"/>
+<meta property="og:description" content="{{ seo.description or excerpt or meta.siteDescription }}"/>
+<meta property="og:url" content="{{ absolutePageUrl }}"/>
+<meta property="og:locale" content="{{ meta.locale }}"/>
+<meta property="og:image" content="{{ ogImage | url | absoluteUrl(env.SITE_URL) }}"/>
+{#- Twitter Card #}
+<meta name="twitter:card" content="summary_large_image"/>
+{#- Favicon #}
+<link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/images/favicon/apple-touch-icon.png' | url }}">
+<link rel="icon" type="image/png" href="{{ '/assets/images/favicon/favicon-32x32.png' | url }}" sizes="32x32">
+<link rel="icon" type="image/png" href="{{ '/assets/images/favicon/favicon-16x16.png' | url }}" sizes="16x16">
+{#- RSS Feed #}
+<link type="application/atom+xml" rel="alternate" href="{{ env.SITE_URL }}/feed.xml" title="RSS Feed for {{ meta.siteName }}">

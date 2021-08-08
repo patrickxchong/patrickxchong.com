@@ -1,0 +1,32 @@
+{% macro cardGithub(repo) %}
+  <div class="py-4 md:p-4 md:w-1/2">
+    <a href="{{repo.url}}"
+        target="_blank" rel="noopener noreferrer"
+        class="h-full flex flex-col p-6 rounded-lg hover:shadow-sm "
+        style="border: 1px solid rgb(209, 213, 218);">
+      <p class="mb-4 font-semibold text-lg text-gray-900">
+        {% svg "github-repo" %}
+        {{repo.name}}
+      </p>
+      <p class="leading-relaxed flex-1">
+        {{repo.description}}
+      </p>
+      <div>
+        <p
+          class="px-3 py-1 mt-4 mb-1 mr-1 inline-block bg-gray-200 rounded-full text-sm font-semibold">
+          {% svg "github-star" %}
+          <span>{{repo.stargazers_count}}</span>
+        </p>
+        <p
+          class="px-3 py-1 mt-4 mb-1 mr-1 inline-block bg-gray-200 rounded-full text-sm font-semibold">
+          {% svg "github-fork" %}
+          <span>{{repo.forks_count}}</span>
+        </p>
+        <p
+          class="px-3 py-1 mt-4 mb-1 mr-1 inline-block bg-gray-200 rounded-full text-sm font-semibold">
+          <span>{{repo.language}}</span>
+        </p>
+      </div>
+    </a>
+  </div>
+{% endmacro %}

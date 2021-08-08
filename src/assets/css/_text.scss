@@ -1,0 +1,36 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	@apply font-semibold text-gray-900;
+}
+p {
+	@apply leading-normal text-gray-900;
+}
+
+h1 {
+	@apply text-4xl;
+}
+h2 {
+	@apply text-3xl;
+}
+h3 {
+	@apply text-2xl;
+}
+h4 {
+	@apply text-xl;
+}
+h5 {
+	@apply text-lg;
+}
+
+a.link-underline {
+	--tw-border-opacity: 0.5;
+	border-color: rgba(107, 114, 128, var(--tw-border-opacity));
+	border-bottom-width: 2px;
+}
+a.link-underline:hover {
+	--tw-border-opacity: 0.75;
+}

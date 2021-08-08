@@ -1,0 +1,16 @@
+---
+title: All Tags
+permalink: /tags/
+layout: layouts/page
+status: published
+---
+<h1
+    class="my-10 m-auto w-full flex flex-wrap items-center justify-center text-2xl sm:text-3xl">
+  {% from "components/scrabble.njk" import scrabble %}
+  {{scrabble("TAGS")}}
+</h1>
+
+<div class="mt-6 flex flex-center flex-wrap">
+  {% set tags = collections.tagList %}
+  {% include "components/tagpills.njk" %}
+</div>
