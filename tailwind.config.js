@@ -5,7 +5,8 @@ module.exports = {
 		'./src/**/*.njk',
 		'./src/**/*.md',
 		'./utils/*.js',
-		'./src/_data/colors.js'
+		'./src/_data/colors.js',
+		'./.eleventy.js'
 	],
 	variants: {}
 };
