@@ -15,32 +15,32 @@
 
   <div>
     <a rel="noreferrer" aria-label="Share on LinkedIn" id="sharevialinkedin" class="{{ colors.socialShareCustom.color or colors.socialShareDefault.color }} hover:{{ colors.socialShareCustom.hover or colors.socialShareDefault.hover }}" alt="Share on LinkedIn" href="https://linkedin.com/shareArticle?mini=true&title={{ title | urlencode }}&url={{ absolutePageUrl }}" target="_blank">
-      {% svg "linkedin", "mx-2 h-6 w-6 fill-current", "LinkedIn logo", "share" %}
+      {% svg "linkedin", "mx-2 h-6 w-6", "LinkedIn logo", "share" %}
     </a>
   </div>
 
   <div>
     <a rel="noreferrer" aria-label="Share on Pinterest" id="shareviapinterest" class="{{ colors.socialShareCustom.color or colors.socialShareDefault.color }} hover:{{ colors.socialShareCustom.hover or colors.socialShareDefault.hover }}" alt="Share on Pinterest" href="https://pinterest.com/pin/create/button/?url={{ absolutePageUrl | urlencode }}&description=&media=" target="_blank">
-      {% svg "pinterest", "mx-2 h-6 w-6 fill-current", "Pinterest logo", "share" %}
+      {% svg "pinterest", "mx-2 h-6 w-6", "Pinterest logo", "share" %}
     </a>
   </a>
 </div>
 
 <div>
   <a rel="noreferrer" aria-label="Share on Reddit" id="shareviareddit" class="{{ colors.socialShareCustom.color or colors.socialShareDefault.color }} hover:{{ colors.socialShareCustom.hover or colors.socialShareDefault.hover }}" alt="Share on Reddit"  href="https://reddit.com/submit?url={{ absolutePageUrl }}&title={{ title | urlencode }}"  target="_blank">
-    {% svg "reddit", "mx-2 h-6 w-6 fill-current", "Reddit logo", "share" %}
+    {% svg "reddit", "mx-2 h-6 w-6", "Reddit logo", "share" %}
   </a>
 </div>
 
 <div>
   <a rel="noreferrer" aria-label="Share on Twitter" id="shareviatwitter" class="{{ colors.socialShareCustom.color or colors.socialShareDefault.color }} hover:{{ colors.socialShareCustom.hover or colors.socialShareDefault.hover }}" alt="Share on Twitter"  href="https://twitter.com/share?text={{ title | urlencode }}&url={{ absolutePageUrl }}">
-    {% svg "twitter", "mx-2 h-6 w-6 fill-current", "Twitter logo", "share" %}
+    {% svg "twitter", "mx-2 h-6 w-6", "Twitter logo", "share" %}
   </a>
 </div>
 
 <div>
   <a rel="noreferrer"  aria-label="Share via email" id="shareviaemail" class="{{ colors.socialShareCustom.color or colors.socialShareDefault.color }} hover:{{ colors.socialShareCustom.hover or colors.socialShareDefault.hover }}" alt="Share via Email"  href="mailto:?subject={{ title | urlencode }}&body={{ absolutePageUrl }}">
-    {% svg "email", "mx-2 h-6 w-6 fill-current", "Send email", "share" %}
+    {% svg "email", "mx-2 h-6 w-6", "Send email", "share" %}
   </a>
 </div>
 

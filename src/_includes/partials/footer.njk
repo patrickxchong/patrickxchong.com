@@ -10,7 +10,7 @@
 				{% for site in social %}
 					{% if site.url %}
 						<a rel="noreferrer" aria-label="Link to {{ site.platform }}" alt="Link to {{ site.platform }}" class="hover:text-gray-200" href="{{ site.url | url }}" target="_blank">
-							{% svg site.platform, "mx-2 h-6 w-6 fill-current", site.platform, "footer" %}
+							{% svg site.platform, "mx-2 h-6 w-6", site.platform, "footer" %}
 						</a>
 					{% endif %}
 				{% endfor %}

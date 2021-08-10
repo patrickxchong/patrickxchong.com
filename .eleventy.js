@@ -1,13 +1,14 @@
 const pluginRss = require('@11ty/eleventy-plugin-rss');
 const pluginNavigation = require('@11ty/eleventy-navigation');
 const syntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
+const svgSprite = require('eleventy-plugin-svg-sprite');
+// const svgSprite = require('../../11ty/eleventy-plugin-svg-sprite');
 
 const collections = require('./utils/collections.js');
 const filters = require('./utils/filters.js');
 const shortcodes = require('./utils/shortcodes.js');
 const pairedshortcodes = require('./utils/paired-shortcodes.js');
 const transforms = require('./utils/transforms.js');
-const svgsprite = require('./utils/svgsprite');
 const image = require('./utils/image');
 
 // fs.utimes('.eleventy.js', new Date(), new Date(), ()=>{})
@@ -16,7 +17,7 @@ module.exports = function (eleventyConfig) {
 	 * beforeBuild hook
 	 * @link https://www.11ty.dev/docs/events/#beforebuild
 	 */
-	eleventyConfig.on('beforeBuild', require("./utils/beforeBuild"));
+	// eleventyConfig.on('beforeBuild', require("./utils/beforeBuild"));
 
 	/**
 	 * Plugins
@@ -25,6 +26,11 @@ module.exports = function (eleventyConfig) {
 	eleventyConfig.addPlugin(pluginRss);
 	eleventyConfig.addPlugin(pluginNavigation);
 	eleventyConfig.addPlugin(syntaxHighlight);
+	eleventyConfig.addPlugin(svgSprite, {
+		path: "./src/assets/svg",
+		globalClasses: "svgicon fill-current",
+		defaultClasses: "h-4 w-4 text-black inline"
+	});
 
 	/**
 	 * Filters
@@ -50,7 +56,6 @@ module.exports = function (eleventyConfig) {
 		eleventyConfig.addShortcode(shortcodeName, shortcodes[shortcodeName]);
 	});
 	eleventyConfig.addShortcode('img', image);
-	eleventyConfig.addAsyncShortcode('svgsprite', svgsprite);
 
 	/**
 	 * Paired Shortcodes

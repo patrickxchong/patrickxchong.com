@@ -1,41 +1,5 @@
 module.exports = {
 	/**
-	 * ===== SVGs =====
-	 * This shortcode is used in layouts and can be used in .md content. 
-	 * 
-	 * The SVGs MUST exist in the /src/assets/svg/ directory and must be named 
-	 * according to the existing examples. 
-	 * 
-	 * Attributes:
-	 *    name ; required, must be same as SVG file name in /src/assets/svg/ (without ".svg")
-	 *    classes : optional but required if you want to control size, color, etc. 
-	 *    desc : optional when used in .md content files
-	 *    location : optional when used in .md content files
-	 * 
-	 * Example:
-	 *  {% svg "instagram", "h-12 w-12 text-blue-500" %}
-
-	 * Sensible fallback defaults are in place.
-	 * "desc" and "location" attribures are required for accessibility and Lighthouse validations
-	 * and are hardcoded in the layouts to provide unique values as required by Lighthouse.
-	 * 
-	 */
-	svg: function (name, classes, desc, location) {
-		const svgClassDefault = 'h-4 w-4 text-black inline';
-		const nameAttr = name ? name : 'piedpiper';
-		const classesAttr = classes
-			? `${classes} fill-current`
-			: `${svgClassDefault} fill-current`;
-		const descAttr = desc ? desc : `${nameAttr} icon`;
-		const locationAttr = location ? location : 'content';
-
-		return `<svg class="${classesAttr}" aria-describedby="symbol-${nameAttr}-desc" aria-labelledby="symbol-${nameAttr}-desc" role="group">
-                <desc id="symbol-${nameAttr}-desc-${locationAttr}">${descAttr}</desc>
-                <use xlink:href="#symbol-${nameAttr}"></use>
-            </svg>`;
-	},
-
-	/**
 	 * My YouTube embed with Title, Start (optional) and Ratio (optional)
 	 * vid     = "youtubeID" : required : default = "oHg5SJYRHA0"
 	 * vtitle  = "Your title for this video" : required : default = "YouTube Video"
