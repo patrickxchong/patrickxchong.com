@@ -1,23 +1,26 @@
-const htmlmin = require('html-minifier')
+const htmlmin = require('html-minifier');
 
 module.exports = {
   htmlmin: function (content, outputPath) {
-    // bail if not production env
-    if (process.env.NODE_ENV !== 'production') {
-      return content
-    }
+    // returned minified content from html files in production
+    if (process.env.NODE_ENV === 'production'
+      && outputPath
+      && outputPath.endsWith('.html')) {
 
-    // returned minified content from html files
-    if (outputPath && outputPath.endsWith('.html')) {
       let minified = htmlmin.minify(content, {
         useShortDoctype: true,
         removeComments: true,
         collapseWhitespace: true,
-      })
+        minifyCSS: true,
+        minifyJS: true,
+        collapseWhitespace: true,
+        conservativeCollapse: true
+      });
 
-      return minified
+      return minified;
+    } else {
+      // no transformation
+      return content;
     }
-
-    return content
   },
-}
+};
