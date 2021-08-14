@@ -17,7 +17,10 @@ Personal website created with Tailwind, Eleventy, and Alpine.js (aka TEA stack).
   - https://github.com/11ty/eleventy-plugin-syntaxhighlight
   - https://github.com/11ty/eleventy-cache-assets
   - https://github.com/11ty/eleventy-plugin-rss
-- [Turbo](https://github.com/hotwired/turbo) - for smooth no full refresh page navigation
+  - https://github.com/patrickxchong/eleventy-plugin-svg-sprite
+- [Alpine.js](https://github.com/alpinejs/alpine)
+- [PostCSS](https://github.com/postcss/postcss)
+- [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
 
 ## Credits
 
