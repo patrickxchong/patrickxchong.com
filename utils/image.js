@@ -13,7 +13,7 @@ module.exports = (src, alt, cls = "") => {
   let options = {
     // widths: [25, 320, 640, 960, 1200, 1800, 2400],
     widths: [600, 900, 1500],
-    formats: ["jpeg", "webp"],
+    formats: ["webp", "jpeg"], // put webp before jpeg so that webp would be evaluated first
     urlPath: "/images/",
     outputDir: "./dist/images/",
     /* =====
@@ -33,7 +33,13 @@ module.exports = (src, alt, cls = "") => {
   let metadata = Image.statsSync(`./src${src}`, options);
 
   let lowestSrc = metadata["jpeg"][0];
-  let sizes = "(min-width: 1024px) 1024px, 100vw";
+
+  let sizes = "(min-width: 768px) 33.3vw, 100vw"; // When screen > 768px, set width to 33.3vw, else it's 100vw 
+
+  // let sizes = "33.3vw";
+  // let sizes = "(min-width: 1024px) 1024px, 100vw";
+  // sizes="(max-width: 640px) 100%, 100%"
+  // sizes = "100vw"
 
   // const placeholder = await sharp(lowestSrc.outputPath)
   //   .resize({ fit: sharp.fit.inside })
