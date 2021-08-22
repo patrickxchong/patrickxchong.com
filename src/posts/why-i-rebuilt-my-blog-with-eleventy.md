@@ -7,7 +7,7 @@ tags:
   - nuxt
   - 11ty
 author: patrick-chong
-date: 2021-08-08T02:31:10.530Z
+date: 2021-08-15T02:31:10.530Z
 image: /assets/images/uploads/eleventy.png
 ---
 
