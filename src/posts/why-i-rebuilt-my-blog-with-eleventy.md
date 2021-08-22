@@ -29,4 +29,5 @@ Edit 1:
 I use [Alpine.js](https://github.com/alpinejs/alpine) as a replacement for Vue.js on this blog. I've not mixed Alpine components with Nunjucks macros yet, but I do foresee possible issues with code duplication when declaring Alpine components with the [Alpine Data](https://alpinejs.dev/globals/alpine-data) syntax. Will have to explore further on this.
 
 P.S. It was pretty exciting to get a 100 Lighthouse score on mobile, not surprising since Eleventy itself doesn't inject any scripts, and [Eleventy Img](https://www.11ty.dev/docs/plugins/image/) handles image processing so well. Thankfully [Alpine.js](https://github.com/alpinejs/alpine) and the [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) (with PurgeCSS) have minimal impact on the site's load time.
-![Patrick Chong blog lighthouse score](/assets/images/uploads/lighthouse-100.png)
+
+<img src="/assets/images/uploads/lighthouse-100.png" alt="Patrick Chong blog lighthouse score" width="100%" height="100%" />
