@@ -4,6 +4,7 @@ excerpt: An free and flexible way to automate API driven actions
 status: published
 tags:
   - tech
+  - tutorial
   - google-apps-script
 author: patrick-chong
 date: 2021-08-24T02:31:10.530Z
