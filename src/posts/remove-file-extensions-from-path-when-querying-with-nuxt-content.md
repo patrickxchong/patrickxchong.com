@@ -6,7 +6,7 @@ tags:
   - tech
   - webdev
   - nuxt
-  - lessonlearnt
+  - lessons
 author: patrick-chong
 date: 2020-09-09T08:13:52.254Z
 image: /assets/images/uploads/nuxt_content_request_failed.png
