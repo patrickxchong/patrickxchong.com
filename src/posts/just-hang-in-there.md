@@ -1,15 +1,14 @@
 ---
 title: Just Hang In There
 excerpt: A song to comfort and encourage myself and others who are struggling
+status: published
 tags:
   - music
 author: patrick-chong
 date: 2021-08-07T02:31:10.530Z
-status: published
 image: /assets/images/uploads/hang-in-there.jpg
 imageHero: true
 ---
-
 > Just hang in there
 > You will get there
 > It's fine to shed a little tear

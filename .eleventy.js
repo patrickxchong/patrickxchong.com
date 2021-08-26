@@ -1,3 +1,4 @@
+require('dotenv').config();
 const pluginRss = require('@11ty/eleventy-plugin-rss');
 const pluginNavigation = require('@11ty/eleventy-navigation');
 const syntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
@@ -11,7 +12,9 @@ const pairedshortcodes = require('./utils/paired-shortcodes.js');
 const transforms = require('./utils/transforms.js');
 const image = require('./utils/image');
 
+const isDev = process.env.NODE_ENV === "development";
 // fs.utimes('.eleventy.js', new Date(), new Date(), ()=>{})
+
 module.exports = function (eleventyConfig) {
 	/**
 	 * beforeBuild hook
@@ -107,6 +110,11 @@ module.exports = function (eleventyConfig) {
 	eleventyConfig.addPassthroughCopy('src/assets/svg/');
 	eleventyConfig.addPassthroughCopy('src/assets/video/');
 	eleventyConfig.addPassthroughCopy('src/assets/css/*.css');
+
+	if (isDev) {
+		// enable Netlify CMS only in development
+		eleventyConfig.addPassthroughCopy('src/admin/*');
+	}
 
 	/**
 	 * Set custom markdown library instance
