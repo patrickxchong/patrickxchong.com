@@ -34,7 +34,7 @@
     "build:postcss": "cross-env NODE_ENV=production postcss src/assets/css/**/[^_]*.scss --dir dist/assets/css --ext css",
     "build": "run-s clean build:postcss build:eleventy --print-label"
   },
-  "devDependencies": {
+  "dependencies": {
     "@11ty/eleventy": "^0.11.1",
     "@11ty/eleventy-cache-assets": "^2.3.0",
     "@11ty/eleventy-img": "^0.9.0",
@@ -54,6 +54,7 @@
     "dotenv": "^8.2.0",
     "eleventy-plugin-svg-sprite": "^1.2.0",
     "html-minifier": "^4.0.0",
+    "linkedom": "^0.11.2",
     "luxon": "^1.25.0",
     "markdown-it": "^11.0.1",
     "markdown-it-anchor": "^8.1.2",

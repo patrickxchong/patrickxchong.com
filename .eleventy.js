@@ -1,16 +1,12 @@
 require('dotenv').config();
 const pluginRss = require('@11ty/eleventy-plugin-rss');
 const pluginNavigation = require('@11ty/eleventy-navigation');
-const syntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
-const svgSprite = require('eleventy-plugin-svg-sprite');
+const pluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
+const pluginSvgSprite = require('eleventy-plugin-svg-sprite');
 // const svgSprite = require('../../11ty/eleventy-plugin-svg-sprite');
 
-const collections = require('./utils/collections.js');
-const filters = require('./utils/filters.js');
-const shortcodes = require('./utils/shortcodes.js');
-const pairedshortcodes = require('./utils/paired-shortcodes.js');
-const transforms = require('./utils/transforms.js');
-const image = require('./utils/image');
+const fg = require('fast-glob');
+const path = require('path');
 
 const isDev = process.env.NODE_ENV === "development";
 // fs.utimes('.eleventy.js', new Date(), new Date(), ()=>{})
@@ -20,7 +16,7 @@ module.exports = function (eleventyConfig) {
 	 * beforeBuild hook
 	 * @link https://www.11ty.dev/docs/events/#beforebuild
 	 */
-	// eleventyConfig.on('beforeBuild', require("./utils/beforeBuild"));
+	// eleventyConfig.on('beforeBuild', require("./src/_11ty/beforeBuild"));
 
 	/**
 	 * Plugins
@@ -28,8 +24,8 @@ module.exports = function (eleventyConfig) {
 	 */
 	eleventyConfig.addPlugin(pluginRss);
 	eleventyConfig.addPlugin(pluginNavigation);
-	eleventyConfig.addPlugin(syntaxHighlight);
-	eleventyConfig.addPlugin(svgSprite, {
+	eleventyConfig.addPlugin(pluginSyntaxHighlight);
+	eleventyConfig.addPlugin(pluginSvgSprite, {
 		path: "./src/assets/svg",
 		globalClasses: "svgicon fill-current",
 		defaultClasses: "h-4 w-4 text-black inline"
@@ -39,44 +35,39 @@ module.exports = function (eleventyConfig) {
 	 * Filters
 	 * @link https://www.11ty.io/docs/filters/
 	 */
-	Object.keys(filters).forEach((filterName) => {
-		eleventyConfig.addFilter(filterName, filters[filterName]);
+	fg.sync("./src/_11ty/filters/[^_]*.js").forEach(filterFile => {
+		eleventyConfig.addFilter(path.parse(filterFile).name, require(filterFile));
 	});
 
 	/**
 	 * Transforms
 	 * @link https://www.11ty.io/docs/config/#transforms
 	 */
-	Object.keys(transforms).forEach((transformName) => {
-		eleventyConfig.addTransform(transformName, transforms[transformName]);
+	fg.sync("./src/_11ty/transforms/[^_]*.js").forEach(transformFile => {
+		eleventyConfig.addTransform(path.parse(transformFile).name, require(transformFile));
 	});
 
 	/**
 	 * Shortcodes
 	 * @link https://www.11ty.io/docs/shortcodes/
 	 */
-	Object.keys(shortcodes).forEach((shortcodeName) => {
-		eleventyConfig.addShortcode(shortcodeName, shortcodes[shortcodeName]);
+	fg.sync("./src/_11ty/shortcodes/[^_]*.js").forEach(shortcodeFile => {
+		eleventyConfig.addShortcode(path.parse(shortcodeFile).name, require(shortcodeFile));
 	});
-	eleventyConfig.addShortcode('img', image);
 
 	/**
 	 * Paired Shortcodes
 	 * @link https://www.11ty.dev/docs/languages/nunjucks/#paired-shortcode
 	 */
-	Object.keys(pairedshortcodes).forEach((shortcodeName) => {
-		eleventyConfig.addPairedShortcode(
-			shortcodeName,
-			pairedshortcodes[shortcodeName]
-		);
+	fg.sync("./src/_11ty/paired-shortcodes/[^_]*.js").forEach(shortcodeFile => {
+		eleventyConfig.addPairedShortcode(path.parse(shortcodeFile).name, require(shortcodeFile));
 	});
-
 
 	/**
 	 * Collections
 	 */
-	Object.keys(collections).forEach((collectionName) => {
-		eleventyConfig.addCollection(collectionName, collections[collectionName]);
+	fg.sync("./src/_11ty/collections/[^_]*.js").forEach(CollectionFile => {
+		eleventyConfig.addCollection(path.parse(CollectionFile).name, require(CollectionFile));
 	});
 
 	/**
