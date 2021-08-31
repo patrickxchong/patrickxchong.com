@@ -68,11 +68,14 @@ collections:
               'food',
               'music',
               'nuxt',
+              'linux',
+              '11ty',
               'python',
+              'google-apps-script',
               'testing',
               'webdev',
               'tutorial',
-              'lessonlearnt',
+              'lessons',
             ],
         }
       - {

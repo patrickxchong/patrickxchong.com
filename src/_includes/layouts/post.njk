@@ -20,8 +20,12 @@ layout: layouts/base
         by {{ postAuthor.name }}
       {# <a class="hover:underline" href="/authors/{{ author }}/"></a> #}
     {% endif %}
-
   </div>
+  {% if env.IS_DEV %}
+  <a href="/admin/#/edit/posts/{{page.fileSlug}}" class="text-blue-600">
+  Edit Post
+  </a>
+  {% endif %}
   {% set fileExt = page.inputPath | getFileExt %}
   <div class="{{ 'markdown' if fileExt == '.md'}} max-w-3xl">
     {{ layoutContent | safe }}
