@@ -1,5 +1,5 @@
 ---
-title: Google Apps Script - Automating Daily Site Rebuilds
+title: Automating Daily Site Rebuilds (Google Apps Script)
 excerpt: An free and flexible way to automate API driven actions
 status: published
 tags:
@@ -116,13 +116,13 @@ function cronHelper(list) {
 
 ## Notes
 
-- Inspired by [Trigger a Netlify Build Every Day with IFTTT](https://www.11ty.dev/docs/quicktips/netlify-ifttt/). Created the code in Google Apps script so that it's more flexible/extensible.
+- Inspired by [Trigger a Netlify Build Every Day with IFTTT](https://www.11ty.dev/docs/quicktips/netlify-ifttt/). Created the code in google-apps-script so that it's more flexible/extensible.
 
 - If the desire is to save the results, then creating the script in connection to Google Sheets would work better.
 
 - Function is named dailyCron/monthlyCron after the Linux [cron](https://en.wikipedia.org/wiki/Cron) utility
 
-## Limitations of Google Apps Script
+## Limitations of google-apps-script
 
 - Script runtime: 6 min/execution (all accounts)
 - URL Fetch calls: 20,000/day (normal Google accounts), 100,000/day (Google Workspace accounts)
