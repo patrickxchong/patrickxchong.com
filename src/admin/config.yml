@@ -97,6 +97,7 @@ collections:
           widget: 'datetime',
           date_format: 'Do MMM YYYY',
           time_format: 'HH:mm',
+          default: "",
           required: false,
         }
       - {
