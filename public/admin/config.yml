@@ -1,0 +1,134 @@
+# Backend https://www.netlifycms.org/docs/configuration-options/#backend
+backend:
+  name: git-gateway
+  branch: main
+
+# when using the default proxy server port
+local_backend: true
+
+# Publish mode https://www.netlifycms.org/docs/configuration-options/#publish-mode
+# publish_mode: editorial_workflow
+
+# Media and Public Folders https://www.netlifycms.org/docs/configuration-options/#media-and-public-folders
+media_folder: 'src/assets/images/uploads' # Media files will be stored in the repo under images/uploads
+public_folder: '/assets/images/uploads'
+
+display_url: https://www.patrickxchong.com
+site_url: http://localhost:8080
+# logo_url: https://mentalogue-blog.netlify.app/logo-frames/logo-f0.svg
+
+# Collections https://www.netlifycms.org/docs/configuration-options/#collections
+collections:
+  - name: 'posts' # Used in routes, e.g., /admin/collections/blog
+    label: 'Posts' # Used in the UI
+    folder: 'src/posts' # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    preview_path: '/{{title}}'
+    summary: '{{title}} - {{status}}'
+    sortable_fields: ['date']
+    view_filters:
+      - label: 'Posts published in 2020'
+        field: date
+        pattern: '2020'
+      - label: Published
+        field: status
+        pattern: 'published'
+      - label: Drafts
+        field: status
+        pattern: 'draft'
+    slug: '{{title}}' # Filename template, e.g., title.md
+    fields: # The fields for each document, usually in front matter
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - {
+          label: 'Excerpt',
+          name: 'excerpt',
+          widget: 'string',
+          pattern: ['^(?=.{20,160}$).*', 'Must have between 20-160 characters'],
+        }
+      - {
+          label: 'Status',
+          name: 'status',
+          widget: 'select',
+          options: ['draft', 'published'],
+          default: 'draft',
+        }
+      - {
+          label: 'Tags',
+          name: 'tags',
+          widget: 'select',
+          multiple: true,
+          create: true,
+          options:
+            [
+              'christianity',
+              'writing',
+              'tech',
+              'design',
+              'cooking',
+              'food',
+              'music',
+              'nuxt',
+              'linux',
+              '11ty',
+              'python',
+              'google-apps-script',
+              'testing',
+              'webdev',
+              'tutorial',
+              'lessons',
+            ],
+        }
+      - {
+          label: 'Author',
+          name: 'author',
+          widget: 'string',
+          default: 'patrick-chong',
+        }
+      - {
+          label: 'Published At',
+          name: 'date',
+          widget: 'datetime',
+          date_format: 'Do MMM YYYY',
+          time_format: 'HH:mm',
+        }
+      - {
+          label: 'Updated At',
+          name: 'updatedAt',
+          widget: 'datetime',
+          date_format: 'Do MMM YYYY',
+          time_format: 'HH:mm',
+          default: "",
+          required: false,
+        }
+      - {
+          label: 'Featured Image',
+          name: 'image',
+          widget: 'image',
+          required: false,
+        }
+      - {
+          label: 'Image Card Position',
+          name: 'imageCardPostPosition',
+          widget: 'select',
+          options:
+            [
+              'bottom',
+              'center',
+              'left',
+              'left-bottom',
+              'left-top',
+              'right',
+              'right-bottom',
+              'right-top',
+              'top',
+            ],
+
+          required: false,
+        }
+      - {
+          label: 'Image Hero',
+          name: 'imageHero',
+          widget: 'boolean',
+          required: false,
+        }
+      - { label: 'Content', name: 'body', widget: 'markdown' }

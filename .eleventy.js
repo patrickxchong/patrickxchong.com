@@ -93,19 +93,14 @@ module.exports = function (eleventyConfig) {
 	 * Passthrough File Copy
 	 * @link https://www.11ty.dev/docs/copy/
 	 */
-	eleventyConfig.addPassthroughCopy('src/*.png');
-	eleventyConfig.addPassthroughCopy('src/*.jpg');
-	eleventyConfig.addPassthroughCopy('src/*.ico');
 	eleventyConfig.addPassthroughCopy('src/robots.txt');
 	eleventyConfig.addPassthroughCopy('src/assets/images/');
 	eleventyConfig.addPassthroughCopy('src/assets/svg/');
 	eleventyConfig.addPassthroughCopy('src/assets/video/');
 	eleventyConfig.addPassthroughCopy('src/assets/css/*.css');
 
-	if (isDev) {
-		// enable Netlify CMS only in development
-		eleventyConfig.addPassthroughCopy('src/admin/*');
-	}
+	// Public folder for static files that don't need to be processed
+	eleventyConfig.addPassthroughCopy({ 'public': "/" });
 
 	/**
 	 * Set custom markdown library instance

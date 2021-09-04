@@ -1,0 +1,13 @@
+blockquote p {
+	white-space: pre-wrap;
+}
+
+.markdown .text > * > * {
+	margin-top: 0px;
+	margin-bottom: 1rem;
+}
+
+img, video {
+	max-width: 60%;
+	height: auto;
+}
