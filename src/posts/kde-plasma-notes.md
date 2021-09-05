@@ -7,7 +7,7 @@ tags:
   - linux
 author: patrick-chong
 date: 2021-09-04T12:03:14.260Z
-updatedAt: ""
+updatedAt: ''
 image: /assets/images/uploads/kde-background.png
 imageHero: true
 ---
@@ -54,3 +54,21 @@ Adapted from: https://askubuntu.com/questions/1195505/how-to-change-how-files-ar
 ## xbacklight command not working
 
 - Solution: https://askubuntu.com/a/1060843
+
+## Launch .desktop files from command line
+
+Helpful to debug/test .desktop files
+
+```shell
+kioclient5 exec <path of .desktop file>
+```
+
+## Update application list after creating .desktop file
+
+Either of these commands would work depending on the use case
+
+- `sudo update-desktop-database`
+- `update-desktop-database ~/.local/share/applications`
+- `kbuildsycoca5`
+
+Source: https://forum.kde.org/viewtopic.php?f=14&t=167056
