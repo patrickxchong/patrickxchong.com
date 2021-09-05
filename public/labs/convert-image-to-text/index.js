@@ -43,12 +43,22 @@ const dispatch = (event, data) => {
   window.dispatchEvent(new CustomEvent(event, { detail: data }));
 };
 
+
+(function loadTesseractCore() {
+  let t = document.createElement("script");
+  t.type = "text/javascript";
+  t.async = !0;
+  t.defer = !0;
+  // Check for WASM support
+  t.src = typeof WebAssembly === 'object' ? 'https://unpkg.com/tesseract.js-core/tesseract-core.wasm.js' : 'https://unpkg.com/tesseract.js-core/tesseract-core.asm.js';
+  let n = document.getElementsByTagName("script")[0];
+  n
+    .parentNode
+    .insertBefore(t, n);
+})();
+
 const runOCR = async (file) => {
-  const corePath = window.navigator.userAgent.indexOf("Edge") > -1
-    ? 'https://unpkg.com/tesseract.js-core@2.1.0/tesseract-core.asm.js'
-    : 'https://unpkg.com/tesseract.js-core@2.1.0/tesseract-core.wasm.js';
   const { data: { text } } = await Tesseract.recognize(file, 'eng', {
-    corePath,
     logger: m => {
       // console.log(m);
       if (m.status === "recognizing text") {
