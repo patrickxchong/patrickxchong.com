@@ -45,7 +45,7 @@
     "@babel/preset-env": "^7.15.0",
     "@mozaic-ds/postcss-sass": "^4.0.0-next.0",
     "alpinejs": "^2.8.0",
-    "autoprefixer": "^10.3.1",
+    "autoprefixer": "^10.3.2",
     "axios": "^0.21.3",
     "babel-loader": "^8.2.2",
     "clean-css": "^4.2.3",
