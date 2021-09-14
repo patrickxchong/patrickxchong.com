@@ -57,7 +57,7 @@
     "linkedom": "^0.11.2",
     "luxon": "^1.25.0",
     "markdown-it": "^11.0.1",
-    "markdown-it-anchor": "^8.1.2",
+    "markdown-it-anchor": "^8.1.3",
     "markdown-it-emoji": "^1.4.0",
     "markdown-it-link-attributes": "^3.0.0",
     "markdown-it-toc-done-right": "^4.2.0",
