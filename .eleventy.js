@@ -93,14 +93,17 @@ module.exports = function (eleventyConfig) {
 	 * Passthrough File Copy
 	 * @link https://www.11ty.dev/docs/copy/
 	 */
-	eleventyConfig.addPassthroughCopy('src/robots.txt');
-	eleventyConfig.addPassthroughCopy('src/assets/images/');
-	eleventyConfig.addPassthroughCopy('src/assets/svg/');
-	eleventyConfig.addPassthroughCopy('src/assets/video/');
-	eleventyConfig.addPassthroughCopy('src/assets/css/*.css');
+	eleventyConfig.addPassthroughCopy('./src/robots.txt');
+	eleventyConfig.addPassthroughCopy('./src/assets/images/');
+	eleventyConfig.addPassthroughCopy('./src/assets/svg/');
+	eleventyConfig.addPassthroughCopy('./src/assets/video/');
+	eleventyConfig.addPassthroughCopy('./src/assets/css/*.css');
 
 	// Public folder for static files that don't need to be processed
-	eleventyConfig.addPassthroughCopy({ 'public': "/" });
+	// any of the 3 below would work
+	eleventyConfig.addPassthroughCopy({ './public': "./" });
+	// eleventyConfig.addPassthroughCopy({ 'public': "." });
+	// eleventyConfig.addPassthroughCopy({ 'public': "/" });
 
 	/**
 	 * Set custom markdown library instance
@@ -127,32 +130,37 @@ module.exports = function (eleventyConfig) {
 
 	/**
 	 * Override BrowserSync Server options
-	 * This so we can have and test a 404 during local dev.
 	 * @link https://www.11ty.dev/docs/config/#override-browsersync-server-options
 	 */
+	eleventyConfig.setBrowserSyncConfig({
+		snippetOptions: {
+			ignorePaths: ["**/admin/**"],
+		},
+	});
 	// eleventyConfig.setBrowserSyncConfig({
 	// 	notify: true,
 	// 	snippetOptions: {
 	// 		rule: {
 	// 			match: /<\/head>/i,
 	// 			fn: function (snippet, match) {
-	// 				return snippet + match
+	// 				return snippet + match;
 	// 			},
 	// 		},
 	// 	},
-	// Set local server 404 fallback
-	// callbacks: {
-	// 	ready: function (err, browserSync) {
-	// 		const content_404 = fs.readFileSync('dist/404.html')
+	// 	// Set local server 404 fallback
+	// 	// This so we can have and test a 404 during local dev.
+	// 	callbacks: {
+	// 		ready: function (err, browserSync) {
+	// 			const content_404 = fs.readFileSync('dist/404.html');
 
-	// 		browserSync.addMiddleware('*', (req, res) => {
-	// 			// Provides the 404 content without redirect.
-	// 			res.write(content_404)
-	// 			res.end()
-	// 		})
+	// 			browserSync.addMiddleware('*', (req, res) => {
+	// 				// Provides the 404 content without redirect.
+	// 				res.write(content_404);
+	// 				res.end();
+	// 			});
+	// 		},
 	// 	},
-	// },
-	// })
+	// });
 
 	return {
 		dir: {
