@@ -6,7 +6,7 @@ tags:
   - tech
 author: patrick-chong
 date: 2020-04-24T02:07:05.782Z
-image: /assets/images/site/patrick-intro.png
+image: /assets/images/uploads/first-personal-site.png
 ---
 
 Yay I finally have a personal site! :D
