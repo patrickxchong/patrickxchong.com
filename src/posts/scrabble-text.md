@@ -3,9 +3,9 @@ title: Scrabble Text
 excerpt: Source code for the scrabble text headers used in patrickxchong.com
 status: published
 tags:
-  - tech
-  - design
-  - webdev
+  - Tech
+  - Design
+  - WebDev
 author: patrick-chong
 date: 2020-05-12T02:31:10.530Z
 image: /assets/images/uploads/scrabble.png

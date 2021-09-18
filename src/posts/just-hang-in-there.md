@@ -3,7 +3,7 @@ title: Just Hang In There
 excerpt: A song to comfort and encourage myself and others who are struggling
 status: published
 tags:
-  - music
+  - Music
 author: patrick-chong
 date: 2021-08-07T02:31:10.530Z
 image: /assets/images/uploads/hang-in-there.jpg

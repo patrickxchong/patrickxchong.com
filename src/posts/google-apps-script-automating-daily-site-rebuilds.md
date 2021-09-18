@@ -3,9 +3,9 @@ title: Automating Daily Site Rebuilds (Google Apps Script)
 excerpt: An free and flexible way to automate API driven actions
 status: published
 tags:
-  - tech
-  - tutorial
-  - google-apps-script
+  - Tech
+  - Tutorial
+  - Google Apps Script
 author: patrick-chong
 date: 2021-08-24T02:31:10.530Z
 image: /assets/images/uploads/lukas-blazek-UAvYasdkzq8-unsplash.jpg

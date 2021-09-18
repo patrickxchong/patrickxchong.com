@@ -3,7 +3,7 @@ title: Domain Name and Personal Branding
 excerpt: Thoughts on building an online presence.
 status: published
 tags:
-  - tech
+  - Tech
 author: patrick-chong
 date: 2020-05-20T01:07:05.782Z
 image: /assets/images/uploads/techCover.jpg

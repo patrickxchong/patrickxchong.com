@@ -3,9 +3,9 @@ title: PatrickxChong Site Favicon
 excerpt: How the site favicon and site theme came to be Scrabble themed
 status: published
 tags:
-  - tech
-  - design
-  - webdev
+  - Tech
+  - Design
+  - WebDev
 author: patrick-chong
 date: 2020-04-26T04:07:05.782Z
 image: /assets/images/uploads/favicon-generator.png

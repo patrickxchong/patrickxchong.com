@@ -3,8 +3,8 @@ title: KDE Plasma Notes
 excerpt: Ongoing list of tips and fixes with KDE Plasma on Manjaro
 status: published
 tags:
-  - tech
-  - linux
+  - Tech
+  - Linux
 author: patrick-chong
 date: 2021-09-04T12:03:14.260Z
 updatedAt: 2021-09-18T13:21:52.041Z

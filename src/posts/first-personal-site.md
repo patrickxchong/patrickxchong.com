@@ -3,7 +3,7 @@ title: First Personal Site!
 excerpt: A project that has been on my mind for a good number of years now.
 status: published
 tags:
-  - tech
+  - Tech
 author: patrick-chong
 date: 2020-04-24T02:07:05.782Z
 image: /assets/images/uploads/first-personal-site.png

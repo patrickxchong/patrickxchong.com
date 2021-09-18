@@ -3,10 +3,10 @@ title: Remove file extensions from path when querying with @nuxt/content
 excerpt: A lesson learnt from setting up @nuxt/content on patrickxchong.com
 status: published
 tags:
-  - tech
-  - webdev
-  - nuxt
-  - lessons
+  - Tech
+  - WebDev
+  - Nuxt
+  - Lessons
 author: patrick-chong
 date: 2020-09-09T08:13:52.254Z
 image: /assets/images/uploads/nuxt_content_request_failed.png

@@ -3,8 +3,8 @@ title: Why I rebuilt my blog with Eleventy
 excerpt: Turns out I don't need a reactive framework, but a templating framework
 status: published
 tags:
-  - tech
-  - nuxt
+  - Tech
+  - Nuxt
   - 11ty
 author: patrick-chong
 date: 2021-08-15T02:31:10.530Z

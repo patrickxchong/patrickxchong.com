@@ -3,7 +3,7 @@ title: Crash Nitro Kart Rescore
 excerpt: How I rescored a video game for a video game music class.
 status: published
 tags:
-  - music
+  - Music
 author: patrick-chong
 date: 2020-04-26T06:12:39.444Z
 image: /assets/images/uploads/crash-nitro-kart.jpg

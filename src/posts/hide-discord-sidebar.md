@@ -4,8 +4,8 @@ excerpt: Chrome extension that installs an unfolding sidebar for Discord
   channels and a button that hides/shows the Discord server list.
 status: published
 tags:
-  - tech
-  - webdev
+  - Tech
+  - WebDev
 author: patrick-chong
 date: 2021-03-18T15:04:21.568Z
 image: /assets/images/uploads/HideDiscordSidebar.png

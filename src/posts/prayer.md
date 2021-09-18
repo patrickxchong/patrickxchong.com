@@ -3,7 +3,7 @@ title: Prayer
 excerpt: Quotes and nuggets of wisdom on prayer
 status: published
 tags:
-  - christianity
+  - Christianity
 author: patrick-chong
 date: 2020-10-18T16:13:28.904Z
 image: /assets/images/uploads/patrick-fore-b_shpu5m3nk-unsplash.jpg

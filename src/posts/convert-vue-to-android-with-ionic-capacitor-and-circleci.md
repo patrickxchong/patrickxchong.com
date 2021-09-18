@@ -3,9 +3,9 @@ title: Convert Vue To Android with Ionic Capacitor And CircleCI
 excerpt: A great way to turn your web app into an android app for fun
 status: published
 tags:
-  - tech
-  - webdev
-  - tutorial
+  - Tech
+  - WebDev
+  - Tutorial
 author: patrick-chong
 date: 2020-06-20T02:31:10.530Z
 image: /assets/images/uploads/npx-cap-init.png

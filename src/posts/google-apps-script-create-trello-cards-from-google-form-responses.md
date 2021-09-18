@@ -4,9 +4,9 @@ excerpt: Directly send data from Google Form into Trello. Create custom cards
   that no Zapier integration can do!
 status: published
 tags:
-  - tech
-  - tutorial
-  - google-apps-script
+  - Tech
+  - Tutorial
+  - Google Apps Script
 author: patrick-chong
 date: 2021-08-31T02:31:10.530Z
 updatedAt: ''
