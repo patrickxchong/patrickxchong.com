@@ -10,14 +10,15 @@ pagination:
     - authors
     - pages
     - post
-permalink: /tags/{{ tag }}/
+permalink: /tags/{{ tag | slug }}/
 eleventyComputed:
-  title: "{{ tag | capitalize }}"
+  title: "{{ tag }}"
 ---
 <h1
     class="py-10 m-auto w-full flex flex-wrap items-center justify-center text-2xl sm:text-3xl">
-  {% from "components/scrabble.njk" import scrabble %}
-  {{scrabble(tag | upper)}}
+  {# {% from "components/scrabble.njk" import scrabble %}
+  {{scrabble(tag | upper)}} #}
+  {{tag}}
 </h1>
 
 {% set posts = collections[tag] | published | reverse %}
@@ -34,7 +35,7 @@ eleventyComputed:
   {% include "components/pagination.njk" %}
 {% endif %} #}
 
-<div class="max-w-3xl m-auto">
+<div class="max-w-3xl m-auto mt-32">
   <h4 class="mb-2 {{ colors.tagPillCustom.text or colors.tagPillDefault.text }}">All Tags</h4>
   <div>
     {% set tags = collections.tagList %}
