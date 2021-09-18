@@ -45,6 +45,15 @@
       class="transition-med w-full overflow-auto bg-white h-0 p-0
       sm:w-auto sm:h-auto sm:overflow-none sm:flex sm:py-0
         ">
+      {% if env.IS_DEV %}
+        <a 
+          href="/admin"
+          alt="Link to admin" 
+          class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
+          Admin
+        </a>
+      {% endif %}
+
       {% for entry in navPages %}
         <a 
           {% if page.url != entry.url %}{% endif %} 
@@ -55,12 +64,7 @@
           {{ entry.key }}
         </a>
       {% endfor %}
-      <a 
-        href="/admin"
-        alt="Link to admin" 
-        class="block px-2 py-1 font-medium rounded hover:bg-gray-200 text-center">
-        Admin
-      </a>
+
 
       {# <a
         href="/about"
