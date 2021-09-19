@@ -1,16 +1,20 @@
-{% macro galleryPost(posts) %}
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <style>
-    .grid-item {
-      width: 400px;
-      max-width: 100%;
-      margin: auto auto 20px;
-    }
-  </style>
-  <div class="mx-auto w-full" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300, "gutter": 20, "fitWidth": true }'>
-    {% from "components/cardPost.njk" import cardPost %}
+
+{% macro galleryPost(posts, readMoreUrl = "/blog") %}
+<section>
+  <h2 class="pb-6 text-center">Recent blog posts</h2>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+    {% from "components/cardVertical.njk" import cardVertical %}
     {% for post in posts %}
-      {{cardPost(post)}}
+      {{cardVertical(post)}}
     {% endfor %}
   </div>
+  
+  <div class="pt-8"></div>
+
+  <a title="Read More »" href="{{readMoreUrl}}" class="w-max m-auto flex items-center px-4 py-2     space-x-3 text-gray-600 transition-colors duration-200 transform border rounded-lg dark:text-gray-200 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+    Read More »
+  </a>
+</section>
+
 {% endmacro %}

@@ -17,5 +17,5 @@ status: published
       </p>
     </div>
   </header>
-  {% from "components/galleryPost2.njk" import galleryPost %}
-  {{galleryPost(collections.post | published | reverse | limit(3))}}
+  {% from "components/galleryPost.njk" import galleryPost %}
+  {{galleryPost(collections.post | published | reverse | limit(6))}}

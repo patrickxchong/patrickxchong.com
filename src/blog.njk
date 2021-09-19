@@ -24,9 +24,9 @@ pagination:
 </div>
 
 <div>
-  {% from "components/cardPost2.njk" import cardPost %}
+  {% from "components/cardResponsive.njk" import cardResponsive %}
   {% for post in posts %}
-    {{cardPost(post)}}
+    {{cardResponsive(post)}}
   {% endfor %}
 </div>
 

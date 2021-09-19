@@ -50,6 +50,6 @@ Technologies I use include:
 </section>
 
 <div class="md:p-4">
-  {% from "components/galleryPost2.njk" import galleryPost %}
+  {% from "components/galleryPost.njk" import galleryPost %}
   {{galleryPost(collections["Tech"] | published | reverse | limit(3), "/tags/tech")}}
 </div>

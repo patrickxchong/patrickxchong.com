@@ -42,5 +42,5 @@ Favourite artists/musicians/genres include:
 </section>
 
 <div class="pt-8"></div>
-{% from "components/galleryPost2.njk" import galleryPost %}
+{% from "components/galleryPost.njk" import galleryPost %}
 {{galleryPost(collections["Music"] | published | reverse | limit(3), "/tags/music")}}
