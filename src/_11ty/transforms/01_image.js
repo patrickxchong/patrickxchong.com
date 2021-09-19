@@ -48,6 +48,10 @@ module.exports = async (content, outputPath) => {
     let src = i.getAttribute('src');
     let sizes = i.getAttribute('data-sizes') || defaultSizes;
 
+    if (i.getAttribute('data-eleventy-img') === "ignore") {
+      return;
+    }
+
     // regex to test if src is from an external URL -> "//"
     // returns null if not external
     if (!src.match(/.*\/\/.*/)) {

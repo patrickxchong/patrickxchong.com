@@ -17,37 +17,46 @@ imageCardPosition: left-top
   <a class="mr-2"
     href="https://chrome.google.com/webstore/detail/hide-discord-sidebar/kaaohmdnmbdagpnenakakpkinddjmenp"
     target="_blank" rel="noopener noreferrer"><img
+      data-eleventy-img="ignore"
       src="https://img.shields.io/chrome-web-store/users/kaaohmdnmbdagpnenakakpkinddjmenp"
       alt="Chrome Web Store"></a>
   <a class="mr-2"
     href="https://chrome.google.com/webstore/detail/hide-discord-sidebar/kaaohmdnmbdagpnenakakpkinddjmenp"
     target="_blank" rel="noopener noreferrer"><img
+      data-eleventy-img="ignore"
       src="https://img.shields.io/chrome-web-store/rating/kaaohmdnmbdagpnenakakpkinddjmenp?label=Chrome"
       alt="Chrome Web Store"></a>
   <a class="mr-2"
     href="https://addons.mozilla.org/firefox/addon/hide-discord-sidebar/"
     target="_blank" rel="noopener noreferrer"><img
+      data-eleventy-img="ignore"
       src="https://img.shields.io/amo/rating/hide-discord-sidebar?label=Firefox"
       alt="Mozilla Add-ons"></a>
   <a class="mr-2" href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"
     rel="noopener noreferrer"><img
+      data-eleventy-img="ignore"
       src="https://img.shields.io/badge/License-GPLv3-blue.svg"
       alt="License: GPL v3"></a>
   <a class="mr-2" href="https://github.com/patrickxchong/hide-discord-sidebar"
     target="_blank" rel="noopener noreferrer">
     <img
+      data-eleventy-img="ignore"
       src="https://img.shields.io/github/stars/patrickxchong/hide-discord-sidebar.svg?style=social&amp;label=Star"
       alt="GitHub stars">
   </a>
   <a class="mr-2" href="https://github.com/patrickxchong/hide-discord-sidebar"
     target="_blank" rel="noopener noreferrer">
     <img
+      data-eleventy-img="ignore"
       src="https://img.shields.io/github/watchers/patrickxchong/hide-discord-sidebar.svg?style=social&amp;label=Watch"
       alt="GitHub watchers">
   </a>
 </div>
-
-![Hide Discord Sidebar on Chrome screenshot](/assets/images/uploads/hide-discord-sidebar.png)
+    
+<img
+  data-sizes="100vw"
+  src="/assets/images/uploads/hide-discord-sidebar.png"
+  alt="Hide Discord Sidebar on Chrome screenshot">
 
 <div class="flex">
   <a href="https://bit.ly/Hide-Discord-Bar"
