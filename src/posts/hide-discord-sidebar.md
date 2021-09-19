@@ -9,7 +9,7 @@ tags:
 author: patrick-chong
 date: 2021-03-18T15:04:21.568Z
 image: /assets/images/uploads/HideDiscordSidebar.png
-imageCardPostPosition: left-top
+imageCardPosition: left-top
 ---
 [[toc]]
 

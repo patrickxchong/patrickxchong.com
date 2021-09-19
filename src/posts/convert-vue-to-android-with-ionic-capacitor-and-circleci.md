@@ -9,7 +9,7 @@ tags:
 author: patrick-chong
 date: 2020-06-20T02:31:10.530Z
 image: /assets/images/uploads/npx-cap-init.png
-imageCardPostPosition: left-top
+imageCardPosition: left-top
 ---
 
 **Note**: I would recommend anyone using Vue.js and wants to turn their webapp into a mobile app to checkout [Quasar](https://quasar.dev). They do it very well out of the box!

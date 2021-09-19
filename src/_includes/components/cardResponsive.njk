@@ -3,12 +3,12 @@
     <div class="flex flex-col lg:flex-row-reverse rounded-lg overflow-hidden shadow-md">
       {% if post.data.image %}
         <a href="{{post.url | url }}">
-        {% set imageCardPostPosition = post.data.imageCardPostPosition or 'center' %}
+        {% set imageCardPosition = post.data.imageCardPosition or 'center' %}
           {# {% img "" + post.data.image,
           post.data.title + " thumbnail",
-          "block h-full w-full lg:max-h-60 lg:w-72 flex-none object-cover object-" + imageCardPostPosition
+          "block h-full w-full lg:max-h-60 lg:w-72 flex-none object-cover object-" + imageCardPosition
            %} #}
-             <img class="block h-full w-full lg:max-h-60 lg:w-72 flex-none object-cover object-{{imageCardPostPosition}}" src="{{ post.data.image }}" alt="{{ post.data.title }} thumbnail">
+             <img class="block h-full w-full lg:max-h-60 lg:w-72 flex-none object-cover object-{{imageCardPosition}}" src="{{ post.data.image }}" alt="{{ post.data.title }} thumbnail">
         </a>
       {% endif %}
       <div class="flex-1 flex flex-col px-6 py-4">

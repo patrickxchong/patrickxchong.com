@@ -109,7 +109,7 @@ collections:
         }
       - {
           label: 'Image Card Position',
-          name: 'imageCardPostPosition',
+          name: 'imageCardPosition',
           widget: 'select',
           options:
             [

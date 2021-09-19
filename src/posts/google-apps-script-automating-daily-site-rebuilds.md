@@ -1,5 +1,5 @@
 ---
-title: Automating Daily Site Rebuilds (Google Apps Script)
+title: Automating Daily Site Rebuilds
 excerpt: An free and flexible way to automate API driven actions
 status: published
 tags:

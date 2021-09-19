@@ -37,6 +37,9 @@ Ongoing collection of resources I found helpful/that I want to refer back to as 
 - SuyinOng: https://www.youtube.com/user/SuyinOng26
 - Swan Thinks: https://www.youtube.com/channel/UCDuyH5z50E8junwzNkCLzDw
 
+## Coding + Trading
+- https://aroussi.com/tag/python
+
 ## Platforms/Tools I Currently Use/Am Exploring
 
 ### Malaysia

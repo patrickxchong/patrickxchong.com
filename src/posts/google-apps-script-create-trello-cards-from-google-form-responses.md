@@ -1,7 +1,6 @@
 ---
-title: Create Trello Cards from Google Form Responses (Google Apps Script)
-excerpt: Directly send data from Google Form into Trello. Create custom cards
-  that no Zapier integration can do!
+title: Create Trello Cards from Google Form Responses
+excerpt: Create custom cards that no Zapier integration can do!
 status: published
 tags:
   - Tech
@@ -94,7 +93,7 @@ ${email}
 }
 ```
 
-Notes
+## Notes
 
 1. Data returned by Google Form's On Form Submit trigger: https://developers.google.com/apps-script/guides/triggers/events?hl=en#form-submit_1
 2. Seems like the data could be easier to manipulate through the use of the `namedValues` field when setup with a [Form Submit trigger on **Google Sheets**](https://developers.google.com/apps-script/guides/triggers/events?hl=en#form-submit) instead, but I've not tried that yet.

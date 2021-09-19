@@ -9,7 +9,7 @@ tags:
 author: patrick-chong
 date: 2020-05-12T02:31:10.530Z
 image: /assets/images/uploads/scrabble.png
-imageCardPostPosition: left-top
+imageCardPosition: left-top
 ---
 I was quite into the scrabble theme after [making the favicon for this site](/patrickxchong-site-favicon/) and hence decided to build on it by creating scrabble theme headings! I believe it can be better/made more dynamic by making the padding sizes more responsive to the font size. I'll try to do that before incorporating it as a vue component on this site. Check the Codepen below for what I have right now:
 
