@@ -21,7 +21,7 @@ eleventyComputed:
   {{tag}}
 </h1>
 
-{% set posts = collections[tag] | published | reverse %}
+{% set posts = collections[tag] | published  %}
 <div>
   {% from "components/cardResponsive.njk" import cardResponsive %}
   {% for post in posts %}

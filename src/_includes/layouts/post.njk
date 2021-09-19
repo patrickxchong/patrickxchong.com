@@ -13,13 +13,17 @@ layout: layouts/base
   <h1>{{ title }}</h1>
   <div class="text-sm mt-2 text-gray-700">
     <time datetime="{{ date | dateToFormat('yyyy-MM-dd') }}">
-      {{ date | dateToFormat("dd LLL yyyy") }}
+      {{ date | dateToFormat("LLL dd, yyyy") }}
     </time>
     {# Only display the Author Block if there is a value for "author" in Post Frontmatter #}
     {% if author %}
       {% set postAuthor = authors | getAuthor(author) %}
         by {{ postAuthor.name }}
       {# <a class="hover:underline" href="/authors/{{ author }}/"></a> #}
+    {% endif %}
+    <br>
+    {% if updatedAt %}
+      Updated on <time datetime="{{ updatedAt | dateToFormat('yyyy-MM-dd') }}">{{ updatedAt | dateToFormat('LLL dd, yyyy') }}</time>
     {% endif %}
   </div>
   {% if env.IS_DEV %}

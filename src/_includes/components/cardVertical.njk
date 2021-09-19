@@ -10,7 +10,11 @@
         <a href="{{post.url | url }}">
           <p class="font-bold text-xl hover:text-gray-700">{{post.data.title}}</p>
           <p class="text-gray-700 text-xs mt-1 mb-2">
+            {% if post.data.updatedAt %}
+            Updated on <time datetime="{{ post.data.updatedAt | dateToFormat('yyyy-MM-dd') }}">{{ post.data.updatedAt | dateToFormat('LLL dd, yyyy') }}</time>
+            {% else %}
             <time datetime="{{ post.date | dateToFormat('yyyy-MM-dd') }}">{{ post.date | dateToFormat('LLL dd, yyyy') }}</time>
+            {% endif %}
           </p>
           <p class="text-gray-700 text-base">
             {{ post.data.excerpt }}

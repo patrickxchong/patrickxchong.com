@@ -51,5 +51,5 @@ Technologies I use include:
 
 <div class="md:p-4">
   {% from "components/galleryPost.njk" import galleryPost %}
-  {{galleryPost(collections["Tech"] | published | reverse | limit(3), "/tags/tech")}}
+  {{galleryPost(collections["Tech"] | published  | limit(3), "/tags/tech")}}
 </div>

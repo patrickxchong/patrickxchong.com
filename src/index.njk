@@ -18,4 +18,4 @@ status: published
     </div>
   </header>
   {% from "components/galleryPost.njk" import galleryPost %}
-  {{galleryPost(collections.post | published | reverse | limit(6))}}
+  {{galleryPost(collections.post | published  | limit(6))}}
