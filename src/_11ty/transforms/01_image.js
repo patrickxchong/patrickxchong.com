@@ -30,7 +30,7 @@ module.exports = async (content, outputPath) => {
     filenameFormat: function (id, src, width, format, options) {
       const extension = path.extname(src);
       const name = path.basename(src, extension).replace(/[/\\?%*:|"<>]/g, '-'); // remove invalid filename characters
-      return `${name}-${width}w.${format}`;
+      return `${name}-${width}w-${id}.${format}`;
     }
   };
 
