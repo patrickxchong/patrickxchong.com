@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="h-full">
+
+<head>
+  <title>Map</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <script>
+    L_NO_TOUCH = false;
+    L_DISABLE_3D = false;
+  </script>
+
+  <script defer
+    src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
+
+  <!-- CSS and JS files for Search Box -->
+  <!-- Geocoding Control -->
+  <script defer src="https://unpkg.com/esri-leaflet@3.0.1/dist/esri-leaflet.js"
+    integrity="sha512-JmpptMCcCg+Rd6x0Dbg6w+mmyzs1M7chHCd9W8HPovnImG2nLAQWn3yltwxXRM7WjKKFFHOAKjjF2SC4CgiFBg=="
+    crossorigin=""></script>
+  <script defer
+    src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"
+    integrity="sha512-vZbMwAf1/rpBExyV27ey3zAEwxelsO4Nf+mfT7s6VTJPUbYmD2KSuTRXTxOFhIYqhajaBU+X5PuFK1QJ1U9Myg=="
+    crossorigin=""></script>
+  <link rel="stylesheet"
+    href="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+
+  <!-- Tailwind -->
+  <!-- <link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    rel="stylesheet"> -->
+  <link href="./tailwind-compiled.min.css" rel="stylesheet">
+</head>
+
+<body class="h-full flex flex-col">
+  <div class="p-4 text-3xl font-bold text-white"
+    style="background: rgb(18 42 72);">
+    Map
+  </div>
+  <div class="flex flex-1">
+    <div id="leaflet_map" class="flex-1"></div>
+
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let leaflet_map = L.map(
+        "leaflet_map",
+        {
+          center: [3.139, 101.6869],
+          zoom: 8,
+          zoomControl: false,
+          preferCanvas: true
+        }
+      );
+      L.control.zoom({ position: "topright" }).addTo(leaflet_map);
+      L.control.scale().addTo(leaflet_map);
+
+      let OpenStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(leaflet_map);
+
+      let CartoDB = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      });
+
+      let OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+      });
+      // let USGSTopo = L.tileLayer(
+      //   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+      //   {
+      //     tileSize: 256, // 256 is default
+      //     minZoom: 1,
+      //     maxZoom: 19,
+      //     attribution: 'Tiles Courtesy <a href="http://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer" target="_blank">USGS</a>'
+      //   }
+      // )
+
+      let Thunderforest_Outdoors = L.tileLayer('https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=5d8ed12bd19f46669a4d93628d8e00b2', {
+        attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        apikey: '5d8ed12bd19f46669a4d93628d8e00b2',
+        maxZoom: 22
+      })
+
+      let Jawg_Terrain = L.tileLayer('https://{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}{r}.png?access-token=6dWp5wmrTzLd17yyuB6pXfKXCmi8H11rvStkSmGvsRRUXCbFj0emZfphnRZWlRzh', {
+        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        minZoom: 0,
+        maxZoom: 22,
+        subdomains: 'abcd',
+        accessToken: '6dWp5wmrTzLd17yyuB6pXfKXCmi8H11rvStkSmGvsRRUXCbFj0emZfphnRZWlRzh'
+      });
+
+
+      let baseMaps = {
+        "OpenStreetMap": OpenStreetMap,
+        "CartoDB": CartoDB,
+        "OpenTopoMap": OpenTopoMap,
+        // "USGSTopo": USGSTopo,
+        "Thunderforest Outdoors": Thunderforest_Outdoors,
+        "Jawg Terrain": Jawg_Terrain
+      };
+
+      let overlayMaps = {};
+      L.control.layers(baseMaps, overlayMaps, { position: "bottomright" }).addTo(leaflet_map);
+
+      let arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider({
+        // API Key to be passed to the ArcGIS Online Geocoding Service - https://developers.arcgis.com
+        apikey: 'AAPKdfcd804448d545b79226193cf361b29aF5SCQKRxmMYoy_uo55R5SRRDONnwxfEe3QMhF7fieYwH67q340A7q50lYOzqljnC',
+        countries: "MY"
+      });
+      let searchControl = new L.esri.Geocoding.geosearch({
+        providers: [arcgisOnline],
+        collapseAfterResult: true,
+        useMapBounds: false
+      }).addTo(leaflet_map);
+
+      let results = new L.LayerGroup().addTo(leaflet_map);
+
+      searchControl.on('results', function (data) {
+        // leaflet_map.flyTo(data.results[0].latlng)
+        // results.clearLayers();
+        if (data.results.length > 0) {
+          let marker = L.marker(data.results[0].latlng).on('click', function (e) {
+            // results.clearLayers();
+          })
+          results.addLayer(marker);
+
+          // marker.bindTooltip(data.results[0].text, { permanent: true, className: "my-label", offset: [0, 0] });
+          // let popup = L.popup({ closeOnClick: false, closeButton: true, autoClose: true, closePopupOnClick: false })
+          //   .setContent(data.results[0].text)
+          marker.bindPopup(data.results[0].text, { closeOnClick: false, closeButton: true, autoClose: false, closePopupOnClick: false }).openPopup();
+        }
+      });
+    })
+  </script>
+</body>
+
+</html>
