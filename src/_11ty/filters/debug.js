@@ -1,4 +1,3 @@
+const util = require('util');
 // {{ something | debug | safe }}
-module.exports = (content) => `<script>
-let data = ${inspect(content)};
-console.log(data);</script>`;
+module.exports = (content) => util.inspect(content);
