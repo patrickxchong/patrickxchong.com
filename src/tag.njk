@@ -1,0 +1,36 @@
+---
+layout: layouts/page
+status: published
+pagination:
+  data: collections.tagPage
+  size: 1
+  alias: tag
+permalink: "{{ tag.pageSlug }}"
+eleventyComputed:
+  title: "{{ tag.tagName }}"
+---
+<h1 class="py-10 m-auto max-w-3xl text-2xl sm:text-3xl">
+  Tag: {{tag.tagName}}
+</h1>
+
+{% set posts = tag.pageData  %}
+<div>
+  {% from "components/cardResponsive.njk" import cardResponsive %}
+  {% for post in posts %}
+    {{cardResponsive(post)}}
+  {% endfor %}
+</div>
+
+
+{% if tag.totalPages > 1 %}
+  {% set pagination = tag.pagination  %}
+  {% include "components/pagination.njk" %}
+{% endif %}
+
+<div class="max-w-3xl m-auto mt-32">
+  <h4 class="mb-2 text-gray-700">All Tags</h4>
+  <div>
+    {% from "components/tagPills.njk" import tagPills %}
+    {{tagPills(collections.tagList)}}
+  </div>
+</div>

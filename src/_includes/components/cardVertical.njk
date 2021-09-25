@@ -22,14 +22,9 @@
         </a>
       </div>
       <div class="px-6 pb-4">
-        {% for tag in post.data.tags %}
-          {# Knock out the first iteration of the loop to drop the default "post" tag generated in `posts/posts.json`. #}
-          {# If there's a better/easier way of doing this, please LMK.  #}
-          {% if not loop.first %}
-            <a href="/tags/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700 bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
-          {% endif %}
+        {% for tag in post.data.tags | filterTagList %}
+          <a href="/tag/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700 bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
         {% endfor %}
-
       </div>
     </div>
   </div>

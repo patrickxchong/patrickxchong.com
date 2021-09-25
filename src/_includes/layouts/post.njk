@@ -38,7 +38,8 @@ layout: layouts/base
   <div class="py-4 mt-12 mb-8 border-t border-b md:justify-between md:items-start md:flex md:flex-row">
 
     <div class="md:w-1/2">
-      {% include "components/tagpills.njk" %}
+      {% from "components/tagPills.njk" import tagPills %}
+      {{tagPills(tags | filterTagList)}}
     </div>
 
     <div class="px-2 pt-6 md:pt-2 md:w-1/2 md:flex md:justify-end">
@@ -76,13 +77,13 @@ layout: layouts/base
 
     <div class="py-2 text-center sm:py-0">
       {% if previousPost %}
-        <a class="{{ colors.prevNextCustom.text or colors.prevNextDefault.text }} hover:{{ colors.prevNextCustom.text or colors.prevNextDefault.textHover }}" href="{{ previousPost.url }}">← {{ previousPost.data.title }}</a>
+        <a class="text-gray-700 hover:text-gray-800" href="{{ previousPost.url }}">← {{ previousPost.data.title }}</a>
       {% endif %}
     </div>
 
     <div class="py-2 text-center sm:py-0">
       {% if nextPost %}
-        <a class="{{ colors.prevNextCustom.text or colors.prevNextDefault.text }} hover:{{ colors.prevNextCustom.text or colors.prevNextDefault.textHover }}" href="{{ nextPost.url }}">{{ nextPost.data.title }} →</a>
+        <a class="text-gray-700 hover:text-gray-800" href="{{ nextPost.url }}">{{ nextPost.data.title }} →</a>
       {% endif %}
     </div>
 

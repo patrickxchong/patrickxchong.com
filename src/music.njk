@@ -43,4 +43,4 @@ Favourite artists/musicians/genres include:
 
 <div class="pt-8"></div>
 {% from "components/galleryPost.njk" import galleryPost %}
-{{galleryPost(collections["Music"] | sortByUpdated | published  | limit(3), "/tags/music")}}
+{{galleryPost(collections["Music"] | sortByUpdated | published  | limit(3), "/tag/music")}}

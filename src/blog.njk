@@ -17,9 +17,9 @@ pagination:
   {{scrabble("BLOG")}}
 </h1>
 
-{% set tags = collections.tagList %}
 <div class="my-5 flex flex-center flex-wrap">
-  {% include "components/tagpills.njk" %}
+  {% from "components/tagPills.njk" import tagPills %}
+  {{tagPills(collections.tagList)}}
 </div>
 
 <div>
