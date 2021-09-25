@@ -4,8 +4,8 @@ module.exports = {
 		'./src/**/*.html',
 		'./src/**/*.njk',
 		'./src/**/*.md',
+		'./public/admin/config.yml',
 		'./utils/*.js',
-		'./src/_data/colors.js',
 		'./.eleventy.js'
 	],
 	variants: {}
