@@ -1,5 +1,7 @@
 const slugify = require("../filters/slugify");
 const getTagList = require("../filters/tagList");
+const sortByUpdated = require("../filters/sortByUpdated");
+const getPublished = require("../filters/published");
 
 module.exports = (collection) => {
   let paginationSize = 8;
@@ -9,6 +11,7 @@ module.exports = (collection) => {
 
   for (let tagName of tagList) {
     let tagItems = collection.getFilteredByTag(tagName);
+    tagItems = sortByUpdated(getPublished(tagItems));
     let pagedItems = chunk(tagItems, paginationSize);
 
     // create array of page slugs
