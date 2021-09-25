@@ -1,0 +1,21 @@
+---
+# from: https://github.com/11ty/eleventy/issues/510#issuecomment-824104799
+pagination:
+  data: redirects
+  size: 1
+  alias: redirect
+redirects:
+  - {"from": "/labs/ocr/index.html", "to": "/labs/convert-image-to-text/"}
+permalink: "{{ redirect.from }}"
+layout: null
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="refresh" content="0; url='{{ redirect.to }}'" />
+</head>
+<body>
+	Redirecting to <a href="{{ redirect.to }}">{{ redirect.to }}</a>
+</body>
+</html>
