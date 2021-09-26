@@ -5,7 +5,8 @@ pagination:
   data: collections.tagPage
   size: 1
   alias: tag
-permalink: "{{ tag.pageSlug }}"
+  addAllPagesToCollections: true
+permalink: "{{ tag.pageUrl }}"
 eleventyComputed:
   title: "{{ tag.tagName }}"
 ---

@@ -5,9 +5,11 @@ pagination:
   size: 1
   alias: redirect
 redirects:
-  - {"from": "/labs/ocr/index.html", "to": "/labs/convert-image-to-text/"}
+  - {"from": "/labs/ocr/", "to": "/labs/convert-image-to-text/"}
 permalink: "{{ redirect.from }}"
 layout: null
+published: true
+eleventyExcludeFromCollections: true
 ---
 <!DOCTYPE html>
 <html lang="en">

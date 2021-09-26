@@ -15,30 +15,30 @@ module.exports = (collection) => {
     let pagedItems = chunk(tagItems, paginationSize);
 
     // create array of page slugs
-    let tagPageSlugs = [];
+    let tagPageUrls = [];
     for (let i = 0; i < pagedItems.length; i++) {
       let tagSlug = slugify(tagName);
-      let pageSlug = i == 0 ? `/tag/${tagSlug}/` : `/tag/${tagSlug}/${i + 1}/`;
-      tagPageSlugs.push(pageSlug);
+      let pageUrl = i == 0 ? `/tag/${tagSlug}/` : `/tag/${tagSlug}/${i + 1}/`;
+      tagPageUrls.push(pageUrl);
     }
     
     for (let pageNumber = 0, max = pagedItems.length; pageNumber < max; pageNumber++) {
       tagMap.push({
         tagName: tagName,
-        pageSlug: tagPageSlugs[pageNumber],
+        pageUrl: tagPageUrls[pageNumber],
         pageData: pagedItems[pageNumber],
-        totalPages: tagPageSlugs.length,
+        totalPages: tagPageUrls.length,
         // minimal reproduction of pagination structure
         // https://www.11ty.dev/docs/pagination/
         pagination: {
           pageNumber: pageNumber,
-          hrefs: tagPageSlugs,
+          hrefs: tagPageUrls,
           href: {
-            all: tagPageSlugs,
-            next: tagPageSlugs[pageNumber + 1] || null,
-            previous: tagPageSlugs[pageNumber - 1] || null,
-            first: tagPageSlugs[0] || null,
-            last: tagPageSlugs[tagPageSlugs.length - 1] || null,
+            all: tagPageUrls,
+            next: tagPageUrls[pageNumber + 1] || null,
+            previous: tagPageUrls[pageNumber - 1] || null,
+            first: tagPageUrls[0] || null,
+            last: tagPageUrls[tagPageUrls.length - 1] || null,
           },
         },
       });
