@@ -27,3 +27,7 @@ Small personal projects to make life easier :)
 - **Map** ([Go to page](/labs/map/), [Github](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map))
 
   - Currently only have normal and elevation type tiles to assess if an area is flood prone
+
+- **Image Transform** ([Go to page](/labs/image-transform/), [Github](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/image-transform))
+
+  - Rotate and flip images in browser for quick previews

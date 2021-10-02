@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paint</title>
+  <script src="//unpkg.com/alpinejs@3.3.1/dist/cdn.min.js" defer></script>
+  <!-- <link href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    rel="stylesheet"> -->
+  <link href="./tailwind-compiled.min.css" rel="stylesheet">
+</head>
+
+<body class="h-full flex flex-col pt-6">
+  <div class="flex-1 flex flex-col px-4 md:px-12 pb-4">
+    <h1 class="text-3xl">
+      Paint
+    </h1>
+    <form class="my-4" x-data="AlpineForm" @submit.prevent
+      @paste.window="pasteHandler">
+      <input type="file" accept="image/*" id="img-input" hidden
+        x-ref="img-input" @change="uploadHandler">
+      <div
+        class="py-4 bg-gray-800 text-white mb-4 flex flex-col items-center justify-center"
+        @drop.stop.prevent="dropHandler" @dragenter.stop.prevent
+        @dragleave.stop.prevent @dragover.stop.prevent>
+        <p class="mb-1">Paste Image,</p>
+        <p class="mb-1">Drag and Drop</p>
+        <p>Or
+          <button class="rounded bg-gray-600 ml-1 px-4 py-1"
+            @click="$refs['img-input'].click()" type="button">
+            Click here to select file
+          </button>
+        </p>
+      </div>
+      <div class="w-full">
+        <div class="relative z-50 mx-auto flex items-center justify-center">
+          <button @click="transform({rotate: 90})"
+            class="m-4 px-4 py-2 rounded text-white inline-block shadow-lg bg-blue-500 hover:bg-blue-600 focus:bg-blue-700"
+            type="button">Rotate Right</button>
+          <button @click="transform({rotate: -90})"
+            class="m-4 px-4 py-2 rounded text-white inline-block shadow-lg bg-blue-500 hover:bg-blue-600 focus:bg-blue-700"
+            type="button">Rotate Left</button>
+          <button @click="transform({scaleY: true})"
+            class="m-4 px-4 py-2 rounded text-white inline-block shadow-lg bg-blue-500 hover:bg-blue-600 focus:bg-blue-700"
+            type="button">Flip Vertical</button>
+          <button @click="transform({scaleX: true})"
+            class="m-4 px-4 py-2 rounded text-white inline-block shadow-lg bg-blue-500 hover:bg-blue-600 focus:bg-blue-700"
+            type="button">Flip Horizontal</button>
+        </div>
+        <template x-if="state.img">
+          <div class="mx-auto" style="width: 90vw; height: 90vw;">
+            <img :src="state.img" alt="Image Output" id="img-output"
+              x-ref="img-output" class="object-scale-down mx-auto"
+              style="max-width: none; max-height: none; transform-origin: bottom center;">
+          </div>
+        </template>
+      </div>
+    </form>
+  </div>
+  <footer class="bg-gray-900 px-4 py-2">
+    <div class="mx-auto text-center text-gray-100">
+      <p>Built with <a class="text-blue-300 hover:underline"
+          href="https://alpinejs.dev/">Alpine.js</a> and
+        <a class="text-blue-300 hover:underline"
+          href="https://tailwindcss.com/">Tailwind
+          CSS</a>
+      </p>
+      <p> Made with <svg viewBox="0 0 1792 1792"
+          preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
+          style="height: 0.8rem; display: inline">
+          <path
+            d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z"
+            fill="#e25555"></path>
+        </svg> by
+        <a class="text-blue-300 hover:underline"
+          href="https://www.patrickxchong.com/">Patrick
+          Chong</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src='./index.js'></script>
+</body>
+
+</html>
