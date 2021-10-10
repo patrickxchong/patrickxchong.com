@@ -2,20 +2,29 @@
 layout: layouts/page
 status: published
 ---
+
 <div class="mx-auto min-h-screen pb-8">
   <header class="flex flex-col flex-center py-12 lg:py-24 ">
     <div class="flex flex-shrink-0 mb-8">
       {% set profile_pic = 'patrick-taiwan.jpg' %}
-      <div class="rounded-full h-48 w-48 lg:h-64 lg:w-64" style="background-image: url(&quot;/assets/images/site/{{profile_pic}}&quot;); background-position: center center; background-size: cover;">
-      <img src="/assets/images/site/patrick-taiwan.jpg" alt="Patrick Chong Profile Image" class="invisible">
+      <div class="rounded-full h-48 w-48 lg:h-64 lg:w-64"
+        style="background-image: url(&quot;/assets/images/site/{{profile_pic}}&quot;); background-position: center center; background-size: cover;">
+        <img src="/assets/images/site/patrick-taiwan.jpg"
+          alt="Patrick Chong Profile Image" class="invisible">
       </div>
     </div>
     <div class="text-center">
-      <h1 class="text-3xl font-semibold text-gray-900 md:text-3xl md:text-4xl">Hi there,</h1>
+      <h1 class="text-3xl font-semibold text-gray-900 md:text-3xl md:text-4xl">
+        Hi there,</h1>
       <p class="leading-relaxed mt-4 text-2xl text-gray-800 m-auto max-w-3xl">
-          My name is Patrick and I'm passionate about <a class="text-blue-600 font-semibold link-underline" href="/tech">tech</a> 👨‍💻, <a class="text-blue-600 font-semibold link-underline" href="/music">music</a> 🎵, food 🍛 and sustainability 🌱.
+        My name is Patrick and I'm passionate about <a
+          class="text-blue-600 font-semibold link-underline"
+          href="/tech">tech</a> 👨‍💻, <a
+          class="text-blue-600 font-semibold link-underline"
+          href="/music">music</a> 🎵, food 🍛 and sustainability 🌱.
       </p>
     </div>
   </header>
   {% from "components/galleryPost.njk" import galleryPost %}
-  {{galleryPost(collections.post | published  | limit(6))}}
+  {{galleryPost(collections.post | published | limit(6))}}
+</div>

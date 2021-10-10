@@ -2,17 +2,23 @@
   <div class="grid-item">
     <div class="flex flex-col h-full rounded-lg overflow-hidden shadow-md">
       {% set postImage = post.data.image or "/assets/images/site/default.jpg" %}
-      <a href="{{post.url | url }}">
-        <img class="w-full md:h-40 object-cover" src="{{ postImage }}" alt="{{ title }} thumbnail">
+      <a href="{{ post.url | url }}">
+        <img class="w-full md:h-40 object-cover" src="{{ postImage }}"
+        alt="{{ title }} thumbnail">
       </a>
       <div class="flex-1 px-6 py-4">
-        <a href="{{post.url | url }}">
-          <p class="font-bold text-xl hover:text-gray-700">{{post.data.title}}</p>
+        <a href="{{ post.url | url }}">
+          <p class="font-bold text-xl hover:text-gray-700">{{ post.data.title }}
+          </p>
           <p class="text-gray-700 text-xs mt-1 mb-2">
             {% if post.data.updatedAt %}
-            Updated on <time datetime="{{ post.data.updatedAt | dateToFormat('yyyy-MM-dd') }}">{{ post.data.updatedAt | dateToFormat('LLL dd, yyyy') }}</time>
+          Updated on
+          <time
+            datetime="{{ post.data.updatedAt | dateToFormat('yyyy-MM-dd') }}">{{
+            post.data.updatedAt | dateToFormat('LLL dd, yyyy') }}</time>
             {% else %}
-            <time datetime="{{ post.date | dateToFormat('yyyy-MM-dd') }}">{{ post.date | dateToFormat('LLL dd, yyyy') }}</time>
+              <time datetime="{{ post.date | dateToFormat('yyyy-MM-dd') }}">{{
+            post.date | dateToFormat('LLL dd, yyyy') }}</time>
             {% endif %}
           </p>
           <p class="text-gray-700 text-base">
@@ -22,7 +28,8 @@
       </div>
       <div class="px-6 pb-4">
         {% for tag in post.data.tags | filterTagList %}
-          <a href="/tag/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700 bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
+          <a href="/tag/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700
+                bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
         {% endfor %}
       </div>
     </div>

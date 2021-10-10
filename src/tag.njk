@@ -14,7 +14,7 @@ eleventyComputed:
   Tag: {{tag.tagName}}
 </h1>
 
-{% set posts = tag.pageData  %}
+{% set posts = tag.pageData %}
 <div>
   {% from "components/cardResponsive.njk" import cardResponsive %}
   {% for post in posts %}
@@ -22,9 +22,8 @@ eleventyComputed:
   {% endfor %}
 </div>
 
-
 {% if tag.totalPages > 1 %}
-  {% set pagination = tag.pagination  %}
+  {% set pagination = tag.pagination %}
   {% include "components/pagination.njk" %}
 {% endif %}
 

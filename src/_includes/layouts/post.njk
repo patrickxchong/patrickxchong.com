@@ -5,7 +5,7 @@ layout: layouts/base
 {% if imageHero %}
   <div class="w-full h-72 lg:h-80 xl:h-96">
     <img src="{{image}}", alt="{{title}} featured image" class="object-cover w-full h-full"
-      data-sizes="100vw" />
+      data-sizes="100vw"/>
   </div>
 {% endif %}
 <article class="max-w-3xl m-auto py-12 {{ 'px-8' if imageHero}}">
@@ -26,9 +26,9 @@ layout: layouts/base
     {% endif %}
   </div>
   {% if env.IS_DEV %}
-  <a href="/admin/#/edit/posts/{{page.fileSlug}}" class="text-blue-600">
-  Edit Post
-  </a>
+    <a href="/admin/#/edit/posts/{{page.fileSlug}}" class="text-blue-600">
+      Edit Post
+    </a>
   {% endif %}
   {% set fileExt = page.inputPath | getFileExt %}
   <div class="{{ 'markdown' if fileExt == '.md'}} max-w-3xl">
@@ -55,18 +55,18 @@ layout: layouts/base
   ></div>
   {# <script async defer src="https://cusdis.com/js/cusdis.es.js"></script> #}
   <script>
-  function initialiseCusdis() {
-    let t = document.createElement("script");
-    t.type = "text/javascript";
-    t.async = !0;
-    t.defer = !0;
-    t.src = "https://cusdis.com/js/cusdis.es.js";
-    let n = document.getElementsByTagName("script")[0];
-    n
-      .parentNode
-      .insertBefore(t, n);
-  }
-  setTimeout(initialiseCusdis, 4000);
+    function initialiseCusdis() {
+      let t = document.createElement("script");
+      t.type = "text/javascript";
+      t.async = !0;
+      t.defer = !0;
+      t.src = "https://cusdis.com/js/cusdis.es.js";
+      let n = document.getElementsByTagName("script")[0];
+      n
+        .parentNode
+        .insertBefore(t, n);
+    }
+    setTimeout(initialiseCusdis, 4000);
   </script>
 
   {# ===== Previous and Next =====  #}

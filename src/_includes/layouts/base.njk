@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     {% include "partials/head.njk" %}
     {% include "partials/styles.njk" %}
   </head>
+
   <body>
     {% svgsprite %}
     <div class="flex flex-col min-h-screen">
       {% include "components/navbar.njk" %}
 
       <div class="flex-grow {{ 'px-8' if not (fullwidth or imageHero) }}">
-        <main class="block py-16 {{ 'container mx-auto' if not (fullwidth or imageHero) else 'max-w-full' }}" id="content">
+        <main
+        class="block py-16 {{ 'container mx-auto' if not (fullwidth or imageHero) else 'max-w-full' }}"
+        id="content">
           {{ content | safe }}
         </main>
       </div>
@@ -19,4 +23,5 @@
     </div>
     {% include "partials/scripts.njk" %}
   </body>
+
 </html>

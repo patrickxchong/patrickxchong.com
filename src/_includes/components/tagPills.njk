@@ -1,8 +1,8 @@
 {% macro tagPills(tagList) %}
-{% for tag in tagList %}
-  <div class="inline-block p-2">
-    <a alt="tagged {{ tag }}" aria-label="tagged {{ tag }}" href="/tag/{{ tag | slug }}/" class="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-full 
+  {% for tag in tagList %}
+    <div class="inline-block p-2">
+      <a alt="tagged {{ tag }}" aria-label="tagged {{ tag }}" href="/tag/{{ tag | slug }}/" class="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-full 
       hover:text-gray-800 hover:bg-gray-300">{{ tag }}</a>
-  </div>
-{% endfor %}
+    </div>
+  {% endfor %}
 {% endmacro %}

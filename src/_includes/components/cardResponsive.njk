@@ -3,8 +3,8 @@
     <div class="flex flex-col lg:flex-row-reverse rounded-lg overflow-hidden shadow-md">
       {% if post.data.image %}
         <a href="{{post.url | url }}">
-        {% set imageCardPosition = post.data.imageCardPosition or 'object-center' %}
-             <img class="block h-full w-full lg:max-h-60 lg:w-72 flex-none object-cover {{imageCardPosition}}" src="{{ post.data.image }}" alt="{{ post.data.title }} thumbnail">
+          {% set imageCardPosition = post.data.imageCardPosition or 'object-center' %}
+          <img class="block h-full w-full lg:max-h-60 lg:w-72 flex-none object-cover {{imageCardPosition}}" src="{{ post.data.image }}" alt="{{ post.data.title }} thumbnail">
         </a>
       {% endif %}
       <div class="flex-1 flex flex-col px-6 py-4">
@@ -17,7 +17,7 @@
             {% if post.data.updatedAt %}
             Updated on <time datetime="{{ post.data.updatedAt | dateToFormat('yyyy-MM-dd') }}">{{ post.data.updatedAt | dateToFormat('LLL dd, yyyy') }}</time>
             {% else %}
-            <time datetime="{{ post.date | dateToFormat('yyyy-MM-dd') }}">{{ post.date | dateToFormat('LLL dd, yyyy') }}</time>
+              <time datetime="{{ post.date | dateToFormat('yyyy-MM-dd') }}">{{ post.date | dateToFormat('LLL dd, yyyy') }}</time>
             {% endif %}
           </p>
           <p class="text-gray-700 text-base">
@@ -26,9 +26,9 @@
         </a>
         <div class="flex-1"></div>
         <div class="mt-4">
-        {% for tag in post.data.tags | filterTagList %}
-          <a href="/tag/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700 bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
-        {% endfor %}
+          {% for tag in post.data.tags | filterTagList %}
+            <a href="/tag/{{ tag | slug }}/" class="inline-block rounded-full px-3 py-1 mb-1 mr-1 text-sm text-gray-700 bg-gray-200 hover:bg-gray-300">{{ tag }}</a>
+          {% endfor %}
         </div>
       </div>
     </div>
