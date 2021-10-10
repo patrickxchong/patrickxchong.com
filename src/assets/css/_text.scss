@@ -34,3 +34,7 @@ a.link-underline {
 a.link-underline:hover {
 	--tw-border-opacity: 0.75;
 }
+
+a.link-blue {
+  @apply text-blue-600 hover:underline;
+}

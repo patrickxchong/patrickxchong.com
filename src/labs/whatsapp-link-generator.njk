@@ -1,0 +1,89 @@
+---
+title: WhatsApp Link Generator
+layout: layouts/page
+status: published
+---
+<h1 class="mt-6 mb-4 text-3xl">
+  {{title}}
+</h1>
+<form class="bg-white" 
+    x-data="{
+      formData: { number: '', message: '' },
+      get waNumber() {
+        {# return this.formData.number || '<phone number>' #}
+        return this.formData.number
+      },
+      get waMessage() {
+        {# return this.formData.message? encodeURIComponent(this.formData.message) : '<message>' #}
+        return encodeURIComponent(this.formData.message)
+      },
+      get waApiLink() {
+        return `https://api.whatsapp.com/send?phone=${this.waNumber}&text=${this.waMessage}`
+      },
+      get waWebLink() {
+        return `https://web.whatsapp.com/send?phone=${this.waNumber}&text=${this.waMessage}`
+      },
+      get waMeLink() {
+        return `https://wa.me/${this.waNumber}/?text=${this.waMessage}`
+      }
+    }">
+  <p class="text-sm mb-2"> You can generate a link with just a number or just a message (Whatsapp does not require both)</p>
+  <div class="mb-4">
+    <label class="block text-gray-700 font-semibold mb-1"
+        for="number">
+        Number
+      </label>
+    <div class="flex items-center">
+      <p class="mr-2">+</p>
+      <input
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-600 focus:shadow-outline"
+        id="number" name="number" type="number" x-model="formData.number" placeholder="60123456789 - include country code and number ">
+    </div>
+  </div>
+  <div class="mb-4">
+    <label class="block text-gray-700 font-semibold mb-1"
+        for="message">
+        Message
+      </label>
+    <textarea
+        class="h-28 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-600 focus:shadow-outline"
+        id="message" name="message" x-model="formData.message" placeholder="Your message here"></textarea>
+  </div>
+  
+  <div class="mt-2">
+    <a :href="waWebLink" target="_blank">
+      <button type="button" 
+      class="mb-2 px-4 py-2 rounded text-white inline-block shadow-lg bg-blue-500 hover:bg-blue-600 focus:bg-blue-700"
+      >Open in WhatsApp Web</button>
+    </a>
+    <button type="button" 
+      @click="copyToClipboard(waWebLink); $dispatch('toast', {message: 'Link Copied!', type: 'success'})"
+      class="mb-2 px-4 py-2 rounded text-white inline-block shadow-lg bg-blue-500 hover:bg-blue-600 focus:bg-blue-700"
+      >Copy WhatsApp Web Link</button>
+  </div>
+  <div class="mt-2">
+    <a :href="waApiLink" target="_blank">
+      <button type="button" 
+      class="mb-2 px-4 py-2 rounded text-white inline-block shadow-lg bg-green-500 hover:bg-green-600 focus:bg-green-700"
+      >Open Cross Platform Link</button>
+    </a>
+    <button type="button"  
+      @click="copyToClipboard(waApiLink); $dispatch('toast', {message: 'Link Copied!', type: 'success'})"
+      class="mb-2 px-4 py-2 rounded text-white inline-block shadow-lg bg-green-500 hover:bg-green-600 focus:bg-green-700"
+      >Copy Cross Platform Link</button>
+  </div>
+  <div class="break-all mt-2">
+    <h4>Generated Links</h4>
+    <p>
+      - Web: <a class="link-blue" :href="waWebLink" x-text="waWebLink" target="_blank"></a>
+    </p>
+    <p>
+      - Cross-Platform (Short): <a class="link-blue" :href="waMeLink" x-text="waMeLink" target="_blank"></a>
+    </p>
+    <p>
+      - Cross-Platform (Long): <a class="link-blue" :href="waApiLink" x-text="waApiLink" target="_blank"></a>
+    </p>
+  </div>
+</form>
+
+{% include "components/toast.njk"%}

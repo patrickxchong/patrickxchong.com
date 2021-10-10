@@ -23,7 +23,7 @@
 }
 
 .markdown a {
-	@apply text-blue-600;
+	@apply text-blue-600 hover:underline;
 }
 
 .markdown strong a {
