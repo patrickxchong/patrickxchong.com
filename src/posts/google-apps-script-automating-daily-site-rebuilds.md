@@ -122,6 +122,8 @@ function cronHelper(list) {
 
 - Function is named dailyCron/monthlyCron after the Linux [cron](https://en.wikipedia.org/wiki/Cron) utility
 
+- An webtool that works for simple use cases is: https://cron-job.org/en/
+
 ## Limitations of google-apps-script
 
 - Script runtime: 6 min/execution (all accounts)
