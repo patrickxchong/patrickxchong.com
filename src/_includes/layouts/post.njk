@@ -4,7 +4,8 @@ layout: layouts/base
 
 {% if imageHero %}
   <div class="w-full h-72 lg:h-80 xl:h-96">
-    <img src="{{image}}", alt="{{title}} featured image" class="object-cover w-full h-full"
+    {% set objectFitClass = imageHeroObjectFit or "object-cover" %}
+    <img src="{{image}}", alt="{{title}} featured image" class="w-full h-full {{objectFitClass}}"
       data-sizes="100vw"/>
   </div>
 {% endif %}

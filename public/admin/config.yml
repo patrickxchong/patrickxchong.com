@@ -76,7 +76,7 @@ collections:
               'WebDev',
               'Tutorial',
               'Lessons',
-              'Personal Finance'
+              'Personal Finance',
             ],
         }
       - {
@@ -98,7 +98,7 @@ collections:
           widget: 'datetime',
           date_format: 'Do MMM YYYY',
           time_format: 'HH:mm',
-          default: "",
+          default: '',
           required: false,
         }
       - {
@@ -123,13 +123,26 @@ collections:
               'object-right-top',
               'object-top',
             ],
-
           required: false,
         }
       - {
           label: 'Image Hero',
           name: 'imageHero',
           widget: 'boolean',
+          required: false,
+        }
+      - {
+          label: 'Image Hero Object Fit',
+          name: 'imageHeroObjectFit',
+          widget: 'select',
+          options:
+            [
+              'object-contain',
+              'object-cover',
+              'object-fill',
+              'object-none',
+              'object-scale-down',
+            ],
           required: false,
         }
       - { label: 'Content', name: 'body', widget: 'markdown' }

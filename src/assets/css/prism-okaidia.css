@@ -29,6 +29,7 @@ pre[class*='language-'] {
 }
 
 /* Code blocks */
+pre,
 pre[class*='language-'] {
 	padding: 1em;
 	margin: 0.5em 0;
@@ -37,7 +38,13 @@ pre[class*='language-'] {
 	position: relative;
 }
 
+/* Copy button */
 pre[class*='language-'] button {
+	display: none;
+}
+
+pre[class*='language-']:hover button {
+	display: block;
 	color: #adb5bd;
 	box-sizing: border-box;
 	transition: 0.2s ease-out;
@@ -53,6 +60,7 @@ pre[class*='language-'] button {
 	border-radius: 0 0.15rem;
 }
 
+pre,
 :not(pre) > code[class*='language-'],
 pre[class*='language-'] {
 	background: #272822;
