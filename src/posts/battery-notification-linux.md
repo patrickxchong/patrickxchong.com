@@ -6,8 +6,8 @@ tags:
   - Tech
   - Linux
 author: patrick-chong
-date: 2021-10-03T02:31:10.530Z
-updatedAt: ''
+date: 2021-07-10T02:31:10.530Z
+updatedAt: ""
 image: /assets/images/uploads/danilo-alvesd-w1p05f4gyng-unsplash.jpg
 ---
 

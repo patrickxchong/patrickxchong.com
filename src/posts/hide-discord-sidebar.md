@@ -8,7 +8,7 @@ tags:
   - WebDev
 author: patrick-chong
 date: 2021-03-18T15:04:21.568Z
-updatedAt: 2021-09-19T11:55:56.239Z
+updatedAt: 2021-10-10T11:55:56.239Z
 image: /assets/images/uploads/hide-discord-sidebar.png
 imageCardPosition: left-top
 ---

@@ -4,13 +4,14 @@ excerpt: A stingy person's guide to free websites and apis.
 status: published
 tags:
   - Tech
+  - WebDev
 author: patrick-chong
 date: 2021-10-16T02:31:10.530Z
 updatedAt: ''
 image: /assets/images/uploads/photo-1522542550221-31fd19575a2d.jpeg
 ---
 
-All platforms have a free tier, with different limitations.
+Personally have tried most of the platforms here. All platforms have a generous free tier, with different limitations.
 
 ### Website + API + Database
 
@@ -19,20 +20,20 @@ All platforms have a free tier, with different limitations.
 - [Firebase](https://firebase.google.com/)
 - [Google Apps Script](https://developers.google.com/apps-script) (if we consider Google Sheets as a database) (Javascript only)
 - [Glitch](https://glitch.com/) (JavaScript only)
-- [PythonAnywhere](https://www.pythonanywhere.com/) (Python only)
+- [PythonAnywhere](https://www.pythonanywhere.com/) (Python only, MySQL)
 
 ### Website + API
 
-- [Vercel](https://vercel.com/patrickxchong)
+- [Vercel](https://vercel.com/) - Currently most of my projects are hosted here thanks to Vercel's generous free plan, this website is on hosted Vercel too!
 - [Netlify](https://netlify.app/)
 
 ### Database + Static File Storage
 
-- [Supabase](https://supabase.io/)
+- [Supabase](https://supabase.io/) (PostgreSQL)
 
 ### Database only
 
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (NoSQL)
 
 ### Website only
 
@@ -41,9 +42,15 @@ All platforms have a free tier, with different limitations.
 ### DNS service
 
 - [Cloudflare](https://www.cloudflare.com/dns/)
+  - Also has [free SSL](https://www.cloudflare.com/ssl/) service
 
 ### Online IDEs
 
+- [CodePen](https://codepen.io/)
+- [CodeTasty](https://codetasty.com/pricing)
+- [CodeSandBox](https://codesandbox.io/)
+- [Gitpod](https://www.gitpod.io/)
+- [Repl.it](https://replit.com/)
 - [Stackblitz](https://stackblitz.com/)
 
 <!-- https://dev.to/fayaz/this-free-tools-for-developers-are-45p3 -->

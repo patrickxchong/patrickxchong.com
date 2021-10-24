@@ -5,7 +5,7 @@ status: published
 tags:
   - Tech
 author: patrick-chong
-date: 2021-10-22T02:31:10.530Z
+date: 2021-09-24T02:31:10.530Z
 updatedAt: ''
 image: /assets/images/uploads/photo-1526628953301-3e589a6a8b74.jpeg
 ---

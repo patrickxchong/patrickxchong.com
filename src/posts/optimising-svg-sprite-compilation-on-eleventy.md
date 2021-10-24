@@ -7,7 +7,7 @@ tags:
   - 11ty
   - Tutorial
 author: patrick-chong
-date: 2020-05-21T02:31:10.530Z
+date: 2025-01-01T02:31:10.530Z
 image: /assets/images/uploads/FrontPage.jpg
 ---
 

@@ -5,7 +5,7 @@ status: draft
 tags:
   - Tech
 author: patrick-chong
-date: 2021-02-22T02:31:10.530Z
+date: 2025-01-01T02:31:10.530Z
 image: /assets/images/uploads/InstaSquare.png
 ---
 
