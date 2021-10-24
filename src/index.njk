@@ -25,6 +25,6 @@ status: published
       </p>
     </div>
   </header>
-  {% from "components/galleryPost.njk" import galleryPost %}
+  {% from "components/galleryPost.njk" import galleryPost with context %}
   {{galleryPost(collections.post | published | limit(6))}}
 </div>

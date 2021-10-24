@@ -1,6 +1,0 @@
-{
-	"layout": "layouts/post",
-	"permalink": "/{{ title | slugify }}/index.html",
-	"tags": ["post"],
-	"author": "{{ meta.author }}"
-}

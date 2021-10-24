@@ -22,7 +22,7 @@ pagination:
 </div>
 
 <div>
-  {% from "components/cardResponsive.njk" import cardResponsive %}
+  {% from "components/cardResponsive.njk" import cardResponsive with context %}
   {% for post in posts %}
     {{cardResponsive(post)}}
   {% endfor %}

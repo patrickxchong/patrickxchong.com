@@ -11,7 +11,7 @@
         <a href="{{post.url | url }}">
           <p class="font-bold text-xl hover:text-gray-700">
             {{post.data.title}}
-            {# {% if env.NODE_ENV != "production" %} ({{post.data.status}}) {% endif %} #}
+            {% if env.IS_DEV %} - {{post.data.status}} {% endif %}
           </p>
           <p class="text-gray-700 text-xs mt-0 mb-2">
             {% if post.data.updatedAt %}

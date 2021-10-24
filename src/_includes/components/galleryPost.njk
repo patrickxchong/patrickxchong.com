@@ -3,7 +3,7 @@
     <h2 class="pb-6 text-center">Recent blog posts</h2>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-      {% from "components/cardVertical.njk" import cardVertical %}
+      {% from "components/cardVertical.njk" import cardVertical with context %}
       {% for post in posts %}
         {{cardVertical(post)}}
       {% endfor %}
