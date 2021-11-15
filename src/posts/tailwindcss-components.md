@@ -31,6 +31,7 @@ imageHeroObjectFit: object-contain
 
 ### Some minimal CSS frameworks as alternatives to Tailwind CSS
 
-- https://github.com/kognise/water.css (3.27 kb) - Classless CSS
+- https://github.com/kognise/water.css (3.27kb) - Classless CSS
 - https://github.com/xz/new.css (4.8kb) - Classless CSS
+- https://github.com/andybrewer/mvp (8kb) - Classless CSS
 - https://picturepan2.github.io/spectre/index.html (~10KB gzipped) - More of a component framework

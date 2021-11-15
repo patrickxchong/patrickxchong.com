@@ -25,6 +25,10 @@ Ongoing collection of resources I found helpful/that I want to refer back to as 
 - Malay based models: https://huggingface.co/malay-huggingface/
 - Malay based datasets: https://github.com/huseinzol05/malay-dataset
 
+## Keras Hyperparameter Optimisation
+
+- https://towardsdatascience.com/hyperparameter-optimization-with-keras-b82e6364ca53
+
 ## Datasets (for machine learning practice)
 
 - https://archive.ics.uci.edu/ml/datasets.php

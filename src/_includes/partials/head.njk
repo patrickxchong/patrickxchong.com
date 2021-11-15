@@ -1,27 +1,16 @@
 {# set absolutePageURL to use later in  canonical and og URLs #}
-{%- set absolutePageUrl -%}{{ page.url | url | absoluteUrl(env.SITE_URL) }}{%- endset -%}
-{# set image paths here so user/editor doesn't have to deal with full paths #}
-{%- set ogImage -%}
-{% if image %}
-  {{ image }}
-{% else %}
-  {{ meta.siteImage }}
-{% endif %}
-{%- endset -%}
+{% set absolutePageUrl = page.url | url | absoluteUrl(env.SITE_URL) %}
 
-{%- set pageTitle -%}
-{% if title %}
-  {{ title }} | {{ meta.siteName }}
-{% else %}
-  {{ meta.siteName }}
-{% endif %}
-{%- endset -%}
+{# set image paths here so user/editor doesn't have to deal with full paths #}
+{% set ogImage = image or meta.siteImage %}
+
+{% set pageTitle = title + " | " + meta.siteName if title else meta.siteName %}
 
 {#- General #}
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ pageTitle | trim }}</title>
+<title>{{ pageTitle| trim }}</title>
 
 <meta name="author" content="{{ author or meta.authorName }}"/>
 <meta name="description" content="{{ seo.description or excerpt or meta.siteDescription }}"/>

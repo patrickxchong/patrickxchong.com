@@ -7,6 +7,7 @@ const Image = require("@11ty/eleventy-img");
 const sharp = require("sharp");
 const path = require('path');
 const { parseHTML } = require('linkedom');
+const slugify = require("../filters/slugify");
 
 module.exports = async (content, outputPath) => {
   if (
@@ -29,7 +30,7 @@ module.exports = async (content, outputPath) => {
     // human readable filename
     filenameFormat: function (id, src, width, format, options) {
       const extension = path.extname(src);
-      const name = path.basename(src, extension).replace(/[/\\?%*:|"<>]/g, '-'); // remove invalid filename characters
+      const name = slugify(path.basename(src, extension).replace(/[/\\?%*:|"<>]/g, '-')); // remove invalid filename characters
       return `${name}-${width}w-${id}.${format}`;
     }
   };
@@ -48,7 +49,7 @@ module.exports = async (content, outputPath) => {
     let src = i.getAttribute('src');
     let sizes = i.getAttribute('data-sizes') || defaultSizes;
 
-    if (i.getAttribute('data-eleventy-img') === "ignore") {
+    if (!src || i.getAttribute('data-eleventy-img') === "ignore") {
       return;
     }
 

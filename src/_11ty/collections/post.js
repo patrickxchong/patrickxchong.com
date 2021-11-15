@@ -1,7 +1,7 @@
 const sortByUpdated = require("../filters/sortByUpdated");
 
 module.exports = (collection) => {
-  let allPosts = sortByUpdated([...collection.getFilteredByGlob('./src/posts/*.md')]);
+  let allPosts = sortByUpdated([...collection.getFilteredByGlob('./src/posts/*.{md,njk}')]);
 
   if (process.env.NODE_ENV !== 'production')
     return allPosts;

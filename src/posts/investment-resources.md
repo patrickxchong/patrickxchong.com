@@ -26,6 +26,7 @@ Ongoing collection of resources I found helpful/that I want to refer back to as 
 - https://finance.yahoo.com/
 - https://www.tradingview.com/
 - https://www.koyfin.com/
+- https://vig.io/ (US only)
 
 ## Youtube
 
