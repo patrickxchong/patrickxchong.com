@@ -10,22 +10,13 @@
       {%- endfor -%}
     </div>
   </section>
-  <style>
-    .image:after {
-      content: '\A';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: rgba(0, 0, 0, 0.2);
-      opacity: 0;
-      transition: all 0.2s;
-    }
+{% endmacro %}
 
-    .image:hover:after {
-      opacity: 1;
-    }
-  </style>
-
+{% macro imageSquare(url, title, width) %}
+  <div x-data="{}" @click="$dispatch('img-modal', {title: '{{title}}', src: '{{url}}'})"
+      class="image relative cursor-pointer w-max">
+    <img src="{{ url }}" alt="{{ title }}"
+          class="max-w-full square object-cover object-center"
+          style="width: {{width or '100%' }}"/>
+  </div>
 {% endmacro %}

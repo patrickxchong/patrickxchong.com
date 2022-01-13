@@ -35,6 +35,12 @@ Ongoing collection of resources I found helpful/that I want to refer back to as 
 - https://github.com/jbrownlee/Datasets
 - Consumer Complaint Database ([website](https://www.consumerfinance.gov/data-research/consumer-complaints/), [zip](https://files.consumerfinance.gov/ccdb/complaints.csv.zip))
 
+## Malaysian Datasets
+
+- https://github.com/tindakmalaysia - GeoJSON and election data
+- https://github.com/syazwimazli/my-shapefile - GeoJSON data
+- https://github.com/MoH-Malaysia/covid19-public / https://github.com/CITF-Malaysia/citf-public - COVID data
+
 ## Others
 
 - https://home.work.caltech.edu/telecourse

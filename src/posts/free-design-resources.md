@@ -1,12 +1,13 @@
 ---
-title: General Design Resources
-excerpt: General Design Resources
-status: draft
+title: Free Design Resources
+excerpt: Free design resources for websites/posters
+status: published
 tags:
+  - Design
   - Tech
 author: patrick-chong
-date: 2025-01-01T02:31:10.530Z
-updatedAt: ""
+date: 2021-11-06T02:31:10.530Z
+updatedAt: ''
 image: /assets/images/uploads/design-collaboration.png
 imageHero: true
 imageHeroObjectFit: object-contain
@@ -22,23 +23,28 @@ imageHeroObjectFit: object-contain
 - https://freestocktextures.com/
 - https://search.creativecommons.org/
 - https://www.publicdomainpictures.net/en/
+- https://designerassets.in/free-photos/
 
 ### Illustrations
 
+- https://designstripe.com/
 - https://2.flexiple.com/scale/all-illustrations
 - https://blush.design/
 - https://icons8.com/illustrations
 
 ### Icons
 
+- https://www.iconshock.com/freeicons/
 - https://icons.getbootstrap.com/
 - https://iconoir.com/
 - https://remixicon.com/
 - https://tablericons.com/
 - https://heroicons.com/
 - https://systemuicons.com/
+- https://iconscout.com/free-icons
 - https://primer.style/octicons/
 - https://jonsuh.com/hamburgers/ - Hamburger icons only
+- https://designerassets.in/freebies/
 
 ### SVG
 
@@ -62,6 +68,7 @@ imageHeroObjectFit: object-contain
 
 - https://signature.email/generator
 - https://shadows.brumm.af/ - CSS Shadows
+- https://cleanup.pictures/ - remove im
 
 ### Other compilations
 
