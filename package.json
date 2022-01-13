@@ -52,7 +52,7 @@
     "cross-env": "^7.0.3",
     "cssnano": "^5.0.8",
     "dotenv": "^8.2.0",
-    "eleventy-plugin-svg-sprite": "^1.2.1",
+    "eleventy-plugin-svg-sprite": "^1.2.2",
     "exifr": "^7.1.3",
     "html-minifier": "^4.0.0",
     "linkedom": "^0.11.2",

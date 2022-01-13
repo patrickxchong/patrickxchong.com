@@ -3,7 +3,7 @@ const pluginRss = require('@11ty/eleventy-plugin-rss');
 const pluginNavigation = require('@11ty/eleventy-navigation');
 const pluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
 const pluginSvgSprite = require('eleventy-plugin-svg-sprite');
-// const svgSprite = require('../../11ty/eleventy-plugin-svg-sprite');
+// const pluginSvgSprite = require('../../11ty/eleventy-plugin-svg-sprite');
 
 const fg = require('fast-glob');
 const path = require('path');
