@@ -1,0 +1,28 @@
+{
+  "name": "Open Image In New Tab",
+  "short_name": "Img New Tab",
+  "version": "0.0.1",
+  "description": "Open Image In New Tab with CTRL+SHIFT+Click",
+  "manifest_version": 2,
+  "permissions": [
+    "<all_urls>",
+    "tabs"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://docs.google.com//*",
+        "<all_urls>"
+      ],
+      "js": [
+        "contentScript.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}
