@@ -9,6 +9,7 @@ pagination:
   data: collections.post 
   size: 8
   alias: posts
+permalink: "blog/{% if pagination.pageNumber != 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}"
 ---
 <h1
     class="my-10 m-auto w-full flex flex-wrap items-center justify-center text-2xl sm:text-3xl">
