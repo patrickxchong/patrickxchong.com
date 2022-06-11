@@ -4,12 +4,15 @@ excerpt: Create custom cards that no Zapier integration can do!
 status: published
 tags:
   - Tech
+  - Automation
   - Tutorial
   - Google Apps Script
 author: patrick-chong
 date: 2021-08-31T02:31:10.530Z
 updatedAt: ''
 image: /assets/images/uploads/google-form-to-trello.png
+imageHero: true
+imageHeroObjectFit: object-cover
 ---
 
 The [Zapier integration between Google Form and Trello](https://zapier.com/apps/google-forms/integrations/trello/11016/create-trello-cards-from-new-google-forms-responses) only allows one to add color labels and custom text labels separately, but the custom text labels added by Trello were not matched with the right color label. To circumvent that, I created a custom google-apps-script that emails the Google Form response as a card to Trello directly (guide to set up Trello Board email [here](https://help.trello.com/article/809-creating-cards-by-email))

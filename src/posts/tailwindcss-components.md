@@ -21,7 +21,7 @@ imageHeroObjectFit: object-contain
 - https://www.gustui.com/docs
 - https://flowbite.com/docs/components/alerts/
 - https://blocks.wickedtemplates.com/ (some with Alpine.js)
-- https://tailzilla.app/ (not working as of Oct 24, 2021)
+- https://postsrc.com/components
 - [More Tailwind CSS Component resources here](https://dev.to/narottam04/free-tailwind-components-for-your-next-project-2gka)
 
 ### Full Page Demos

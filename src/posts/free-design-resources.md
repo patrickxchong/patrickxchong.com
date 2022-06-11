@@ -7,7 +7,7 @@ tags:
   - Tech
 author: patrick-chong
 date: 2021-11-06T02:31:10.530Z
-updatedAt: ''
+updatedAt: 2022-06-09T01:07:17.485Z
 image: /assets/images/uploads/design-collaboration.png
 imageHero: true
 imageHeroObjectFit: object-contain
@@ -28,6 +28,7 @@ imageHeroObjectFit: object-contain
 ### Illustrations
 
 - https://designstripe.com/
+- https://www.manypixels.co/gallery
 - https://2.flexiple.com/scale/all-illustrations
 - https://blush.design/
 - https://icons8.com/illustrations
@@ -66,9 +67,20 @@ imageHeroObjectFit: object-contain
 
 ### Other resources
 
-- https://signature.email/generator
+- https://www.canva.com/ - Create good looking designs easily, I use this a lot!
+- https://signature.email/generator - Email signature image
+- https://dimmy.club/ - Device mockups
 - https://shadows.brumm.af/ - CSS Shadows
-- https://cleanup.pictures/ - remove im
+- https://svgco.de/ - Image to SVG
+- https://www.codepng.app/ - Code to Image
+- https://gifcap.dev/ - Screen recording to gif
+- https://www.screensizes.app/ - Device screensize and resolutions
+- https://ojoy.zaps.dev/ - Upscale images
+- https://neural.love/video - Upscale videos and images
+- https://redact.photo/ - Redact photos
+- https://cleanup.pictures/ - Remove objects from images
+- https://express.adobe.com/tools/remove-background - Remove background from images
+- https://runwayml.com/ - Remove background from video
 
 ### Other compilations
 

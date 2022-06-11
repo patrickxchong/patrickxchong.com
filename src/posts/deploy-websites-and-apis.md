@@ -1,13 +1,13 @@
 ---
 title: Deploy websites and APIs (for free)
-excerpt: A stingy person's guide to free websites and apis.
+excerpt: A frugal person's guide to free websites and apis.
 status: published
 tags:
   - Tech
   - WebDev
 author: patrick-chong
 date: 2021-10-16T02:31:10.530Z
-updatedAt: ''
+updatedAt: 2022-06-09T13:07:17.485Z
 image: /assets/images/uploads/photo-1522542550221-31fd19575a2d.jpeg
 ---
 
@@ -16,11 +16,14 @@ Personally have tried most of the platforms here. All platforms have a generous 
 ### Website + API + Database
 
 - [Deta](https://www.deta.sh/) - Totally free. Something quite new that I found out, still exploring and built a couple of prototypes with it. Apparently they will have an [alternative way to generate revenue](https://docs.deta.sh/docs/home#how-are-you-going-to-make-money).
-- [Heroku](https://www.heroku.com/)
+- [Fly](https://fly.io/) - generous free plan, able to host three servers with Heroku style buildpacks or using docker, 3GB storage/postgres databases, no slow-startup issue
+- [Railway](https://railway.app/) - generous free plan, able to host 2-3 postgres databases and servers
+- [Heroku](https://www.heroku.com/) - generous free plan, slow-startup issue due to servers sleeping after 30 minutes of inactivity
 - [Firebase](https://firebase.google.com/)
 - [Google Apps Script](https://developers.google.com/apps-script) (if we consider Google Sheets as a database) (Javascript only)
 - [Glitch](https://glitch.com/) (JavaScript only)
 - [PythonAnywhere](https://www.pythonanywhere.com/) (Python only, MySQL)
+- [Render](https://render.com/) - very limited free plan, PG database expires after 90 days, not recommended
 
 ### Website + API
 
@@ -34,6 +37,8 @@ Personally have tried most of the platforms here. All platforms have a generous 
 ### Database only
 
 - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (NoSQL)
+- [Grist](https://www.getgrist.com/) (Spreadsheet-like)
+- [Airtable](https://www.airtable.com/pricing) (Spreadsheet-like)
 
 ### Website only
 

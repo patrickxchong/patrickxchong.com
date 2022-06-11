@@ -5,6 +5,7 @@ status: published
 tags:
   - Tech
   - Linux
+  - Automation
 author: patrick-chong
 date: 2021-07-10T02:31:10.530Z
 updatedAt: ""
