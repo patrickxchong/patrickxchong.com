@@ -94,12 +94,16 @@ sudo flatpak override com.wps.Office --unshare=network
 sudo flatpak override com.wps.Office --share=network
 ```
 
-Notes:
+## Setup fcitx5 for Mandarin typing support
+https://jeffreytse.net/computer/2020/11/19/how-to-use-fcitx5-elegantly-on-arch-linux.html
+
+
+**Notes:**
 
 - .desktop files can be found at `/var/lib/flatpak/exports/share/applications`
 - I can't seem to get the flatpak apps to run in GTK+ UI (based on the steps provided at https://wiki.archlinux.org/title/WPS_Office#Use_GTK+_UI), running `env GTK2_RC_FILES=/usr/share/themes/Breath/gtk-2.0/gtkrc flatpak run com.wps.Office -style=gtk+` still opens WPS Office in Qt mode, suggestions on how to fix that are welcome!
 
-Sources:
+**Sources:**
 
 - https://flathub.org/apps/details/com.wps.Office
 - https://askubuntu.com/a/1320083
