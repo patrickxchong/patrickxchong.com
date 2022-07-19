@@ -20,6 +20,10 @@ Small personal projects to make life easier :)
 
   - Accept direct image pasting, drag & drop and file uploads. Images are processed in the browser and are not sent to an external server (privacy guaranteed!)
 
+- **QR Reader** ([Go to page](/labs/qr/), [Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/qr))
+
+  - Accept direct image pasting, drag & drop and file uploads. Images are processed in the browser and are not sent to an external server (privacy guaranteed!)
+
 - **RapidPlan - MyRapid trip planner** ([Go to page](https://rapidplan.patrickxchong.com/), [Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map))
 
   - Check trip duration and cost of LRT, MRT and BRT trips in the Klang Valley.
