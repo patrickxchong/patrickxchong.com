@@ -5,6 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Reader</title>
+  <script
+    src="https://browser.sentry-cdn.com/7.7.0/bundle.min.js"
+    integrity="sha384-zVycKakbFST6m0pi9RFIAnb5nw7mrA1n/mE4C8grImB4B6iqCp/0LHOcTIu9AI7+"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    Sentry.init({
+      dsn: 'https://ec97f402646e4cbcbc1313521088a14a@o334328.ingest.sentry.io/5237594',
+      // integrations: [new BrowserTracing()],
+
+      // Set tracesSampleRate to 1.0 to capture 100%
+      // of transactions for performance monitoring.
+      // We recommend adjusting this value in production
+      tracesSampleRate: 1.0,
+    })
+  </script>
   <script src="//unpkg.com/alpinejs@3.3.1/dist/cdn.min.js" defer></script>
   <script src="./jsQR.js" defer></script>
 
