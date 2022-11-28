@@ -62,7 +62,6 @@
         </div>
       </template>
     </div>
-
     <div class="flex-1" x-data="{ result: '' }"
       @complete.window="result = $event.detail.data">
       <template x-if="result">
@@ -90,7 +89,7 @@
             </button>
 
           </div>
-          <p class="bg-gray-100 rounded text-gray-900 p-4 whitespace-pre"
+          <p class="bg-gray-100 rounded text-gray-900 p-4 whitespace-pre-wrap break-words"
             x-text="result">
           </p>
           <p class="text-xs">* accuracy of results depends image quality and jsQR</p>
