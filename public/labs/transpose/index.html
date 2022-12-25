@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}
+  Transpose
+{% endblock %}
+
+{% block page_content %}
+  <section class="my-8 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-center">Chord Transposer</h1>
+    <form class="flex flex-col items-center my-8">
+      <label for="chords">Original chords and lyrics:</label>
+      <textarea id="chords" name="chords" class="p-1 max-w-2xl w-full h-64">
+        G/B Em C D
+        <br>
+        A/C# F#m D E
+        <br>
+        B/D# G#m E F#
+        <br>
+        Bb/D Gm Eb F
+        <br>
+        Cmaj7/E Am7 Fsus2 G7
+        <br>
+        F## C##
+        <br>
+        Fbb Cbb
+
+      </textarea>
+      <div class="flex flex-row items-center justify-center my-3">
+        <div>
+          <label for="originalKey">Original key:</label>
+          <select name="originalKey" id="originalKey">
+            <option value="C">C</option>
+            <option value="C#">C#</option>
+            <option value="Db">Db</option>
+            <option value="D">D</option>
+            <option value="D#">D#</option>
+            <option value="Eb">Eb</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="Gb">Gb</option>
+            <option value="G">G</option>
+            <option value="G#">G#</option>
+            <option value="Ab">Ab</option>
+            <option value="A">A</option>
+            <option value="A#">A#</option>
+            <option value="Bb">Bb</option>
+            <option value="B">B</option>
+          </select>
+        </div>
+
+        <div class="mx-8">
+          <label for="transposedKey">Transposed key:</label>
+          <select name="transposedKey" id="transposedKey">
+            <option value="C">C</option>
+            <option value="C#">C#</option>
+            <option value="Db">Db</option>
+            <option value="D" selected="selected">D</option>
+            <option value="D#">D#</option>
+            <option value="Eb">Eb</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="Gb">Gb</option>
+            <option value="G">G</option>
+            <option value="G#">G#</option>
+            <option value="Ab">Ab</option>
+            <option value="A">A</option>
+            <option value="A#">A#</option>
+            <option value="Bb">Bb</option>
+            <option value="B">B</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="transposeAmount">Transpose by:</label>
+          <input type="number" id="transposeAmount" name="transposeAmount" value="2"><br>
+        </div>
+      </div>
+
+      <button type="button" id="transposeButton">Transpose</button>
+    </form>
+    <p class="text-center">Transposed chords and lyrics:</p>
+    <div class="whitespace-pre-wrap max-w-2xl mx-auto" id="transposedChords"></div>
+  </section>
+
+  <style>
+    textarea {
+      /*width: 40em;
+      height: 20em;
+      font-size: 1em;
+      padding: 0.5em;*/
+      border: 1px solid #ccc;
+    }
+
+    input[type=number] {
+      width: 5rem;
+      height: 2rem;
+      font-size: 1rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+    }
+
+    #transposeButton {
+      width: 10rem;
+      height: 2rem;
+      font-size: 1rem;
+      margin-top: 1rem;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #transposeButton:hover {
+      background-color: #45a049;
+    }
+
+    #transposed {
+      white-space: pre-wrap;
+    }
+  </style>
+  <script src="{{ url_for('static', path='/scripts/transpose.js') }}"></script>
+{% endblock %}
