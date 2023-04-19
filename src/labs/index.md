@@ -16,6 +16,10 @@ Small personal projects to make life easier :)
 
   - Generate cross platform WhatsApp links or open number/message directly in WhatsApp Web
 
+- **Tailwind Compiler** ([Go to page](https://labs.patrickxchong.com/tailwind-compiler)
+
+  - Tool to compile HTML snippets with Tailwind.CSS classes into a minified CSS.
+
 - **Convert Image to Text** ([Go to page](/labs/convert-image-to-text/), [Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/convert-image-to-text))
 
   - Accept direct image pasting, drag & drop and file uploads. Images are processed in the browser and are not sent to an external server (privacy guaranteed!)
