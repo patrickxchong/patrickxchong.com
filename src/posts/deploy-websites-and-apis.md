@@ -7,7 +7,7 @@ tags:
   - WebDev
 author: patrick-chong
 date: 2021-10-16T02:31:10.530Z
-updatedAt: 2022-06-09T13:07:17.485Z
+updatedAt: 2023-04-22T13:07:17.485Z
 image: /assets/images/uploads/photo-1522542550221-31fd19575a2d.jpeg
 ---
 
@@ -18,11 +18,8 @@ Personally have tried most of the platforms here. All platforms have a generous 
 - [Deta](https://www.deta.sh/) - Totally free. Something quite new that I found out, still exploring and built a couple of prototypes with it. Apparently they will have an [alternative way to generate revenue](https://docs.deta.sh/docs/home#how-are-you-going-to-make-money).
 - [Fly](https://fly.io/) - generous free plan, able to host three servers with Heroku style buildpacks or using docker, 3GB storage/postgres databases, no slow-startup issue
 - [Railway](https://railway.app/) - generous free plan, able to host 2-3 postgres databases and servers
-- [Heroku](https://www.heroku.com/) - generous free plan, slow-startup issue due to servers sleeping after 30 minutes of inactivity
-- [Firebase](https://firebase.google.com/)
 - [Google Apps Script](https://developers.google.com/apps-script) (if we consider Google Sheets as a database) (Javascript only)
 - [Glitch](https://glitch.com/) (JavaScript only)
-- [PythonAnywhere](https://www.pythonanywhere.com/) (Python only, MySQL)
 - [Render](https://render.com/) - very limited free plan, PG database expires after 90 days, not recommended
 
 ### Website + API

@@ -7,7 +7,7 @@ tags:
   - Tech
 author: patrick-chong
 date: 2021-11-06T02:31:10.530Z
-updatedAt: 2022-06-09T01:07:17.485Z
+updatedAt: 2023-04-22T01:07:17.485Z
 image: /assets/images/uploads/design-collaboration.png
 imageHero: true
 imageHeroObjectFit: object-contain
@@ -49,6 +49,7 @@ imageHeroObjectFit: object-contain
 
 ### SVG
 
+- https://www.svgrepo.com/
 - https://glyphs.fyi/
 - https://svgbox.net/iconsets/ - svgicon as a service
 - https://freesvg.org/
