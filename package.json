@@ -28,7 +28,7 @@
     "debug:eleventy": "cross-env DEBUG=Eleventy* NODE_ENV=development eleventy --serve --incremental",
     "dev:eleventy": "cross-env NODE_ENV=development eleventy --serve --incremental",
     "dev:postcss": "postcss src/assets/css/**/[^_]*.scss --dir dist/assets/css --ext css --watch --verbose",
-    "dev:netlifycms": "netlify-cms-proxy-server",
+    "dev:netlifycms": "decap-server",
     "dev": "npm-run-all clean --parallel dev:* --print-label",
     "build:eleventy": "cross-env NODE_ENV=production eleventy",
     "build:postcss": "cross-env NODE_ENV=production postcss src/assets/css/**/[^_]*.scss --dir dist/assets/css --ext css",
