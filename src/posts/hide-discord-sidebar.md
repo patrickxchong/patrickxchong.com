@@ -79,11 +79,11 @@ Hide Discord Sidebar is a Chrome extension for Discord users who find the Discor
 
 ## How did it come about?
 
-Hide Discord Sidebar a little tool I built to solve a small problem I had. It started when my partner and I started using Discord to streamline the conversations we have on various topics (music/food/tech/travel etc) and we didn't like the space taken up by the server and channel sidebars. So I decided to give myself the opportunity to learn how to build a Chrome extension so that I can customize the Discord interface. The code itself is relatively simple. Just some CSS to minimize the channels sidebar initially and to expand it on hover, and a button that hides/shows the server sidebar with Javascript.
+Hide Discord Sidebar a little tool I built to solve a small problem I had. I was using Discord to keep in touch with some friend groups and didn't like the space taken up by the server and channel sidebars. So I decided to give myself the opportunity to learn how to build a Chrome extension so that I can customize the Discord interface. The code itself is relatively simple. Just some CSS to minimize the channels sidebar initially and to expand it on hover, and a button that hides/shows the server sidebar with Javascript.
 
 ## Final Thoughts
 
-Fast forward to two years, Hide Discord Sidebar currently has 5000+ users (as of Oct 2020). Although it would require fixing whenever a Discord update breaks it (which happened around 3 times so far), maintaining the extension is relatively painless since I would consider the functionality of the extension to be complete (and so there's no need to build new features).
+Fast forward to two years, Hide Discord Sidebar currently has 10000+ users (as of Oct 2023). Although it would require fixing whenever a Discord update breaks it (which happens from time to time), maintaining the extension is relatively painless since I would consider the functionality of the extension to be complete (and so there's no need to build new features).
 
 ## Install Hide Discord Sidebar
 
@@ -102,5 +102,4 @@ Fast forward to two years, Hide Discord Sidebar currently has 5000+ users (as of
   </a>
 </div>
 
-Source code: https://github.com/patrickxchong/hide-discord-sidebar (Give the
-repo a star if you like!)
+Source code: https://github.com/patrickxchong/hide-discord-sidebar (Give the repo a star if you like!)
