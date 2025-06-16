@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Worship Team Icebreakers</title>
+		<!-- Tailwind CSS CDN -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			body {
+				font-family: 'Inter', sans-serif;
+				background: linear-gradient(
+					to bottom right,
+					#e0f2fe,
+					#f3e8ff,
+					#fee2e2
+				); /* Gradient from light blue to light purple to light pink */
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			/* Active state for category buttons */
+			/* These classes will be added/removed by JavaScript */
+			.category-btn-active {
+				background-color: #eff6ff !important; /* bg-blue-50 - !important to ensure override */
+				border-color: #60a5fa !important; /* border-blue-400 - !important to ensure override */
+				box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+					0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 4px rgba(96, 165, 250, 0.5) !important; /* shadow-lg and ring-2 ring-blue-300 */
+			}
+
+			/* Style for the main "Get Random Question" button */
+			.get-question-btn-style {
+				background-image: linear-gradient(
+					to right,
+					#a78bfa,
+					#6366f1
+				); /* from-purple-500 to-indigo-600 */
+				color: white;
+				font-weight: 600; /* font-semibold */
+				padding-top: 0.75rem; /* py-3 */
+				padding-bottom: 0.75rem; /* py-3 */
+				padding-left: 2rem; /* px-8 */
+				padding-right: 2rem; /* px-8 */
+				border-radius: 9999px; /* rounded-full */
+				box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+					0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+				transition-property: all;
+				transition-duration: 300ms;
+				transition-timing-function: ease-in-out;
+				transform: scale(1);
+				outline: none; /* focus:outline-none */
+			}
+			.get-question-btn-style:hover {
+				transform: scale(1.05);
+				background-image: linear-gradient(
+					to right,
+					#9333ea,
+					#4f46e5
+				); /* hover:from-purple-600 hover:to-indigo-700 */
+			}
+			.get-question-btn-style:focus {
+				box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.5); /* ring-4 ring-purple-300 - Adjusted for direct CSS */
+			}
+		</style>
+	</head>
+	<body class="p-4">
+		<div class="container mx-auto max-w-3xl space-y-8">
+			<!-- Changed max-w-4xl to max-w-3xl -->
+
+			<h1 class="text-4xl font-bold text-center text-gray-900 mb-8">
+				🎶 Worship Team Icebreakers
+			</h1>
+
+			<div class="flex flex-wrap justify-center gap-4 mb-8">
+				<!-- Category Buttons -->
+				<button
+					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
+					data-category="All Questions"
+				>
+					<span class="mr-2">✨</span> All Questions
+				</button>
+				<button
+					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
+					data-category="Music-Related Icebreakers"
+				>
+					<span class="mr-2">🎶</span> Music Icebreakers
+				</button>
+				<button
+					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
+					data-category="Worship Journey Questions"
+				>
+					<span class="mr-2">🎤</span> Worship Journey
+				</button>
+				<button
+					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
+					data-category="Lighthearted & Fun"
+				>
+					<span class="mr-2">🎉</span> Lighthearted & Fun
+				</button>
+				<button
+					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
+					data-category="Team Reflection"
+				>
+					<span class="mr-2">🛠️</span> Team Reflection
+				</button>
+			</div>
+
+			<div class="text-center mb-8">
+				<button id="getRandomQuestionBtn" class="get-question-btn-style">
+					<span class="mr-2">🎲</span> Get Random Question
+				</button>
+			</div>
+
+			<div
+				id="questionDisplay"
+				class="flex flex-col justify-center relative min-h-[120px] bg-gradient-to-br from-indigo-50 to-blue-100 p-8 rounded-xl shadow-inner text-center text-xl font-normal text-gray-800 border-2 border-indigo-200"
+			>
+				<span id="currentQuestion"
+					>👆 Select a category above to get started with your icebreaker
+					questions!</span
+				>
+				<span
+					id="questionCategory"
+					class="absolute bottom-2 right-4 text-sm text-gray-500 font-medium hidden"
+				></span>
+			</div>
+		</div>
+
+		<script>
+			// Define the questions categorized
+			const questions = {
+				'Music-Related Icebreakers': [
+					'What’s a worship song that always moves you no matter how many times you hear it?',
+					'What’s a worship song you wish more churches sang?',
+					'If you could lead worship with any Christian artist/band, who would it be?',
+					'What was the first worship song you ever played/sang on stage?',
+					'Which worship song do you secretly hope we don’t play again soon?',
+					'What’s the most challenging worship song you’ve ever had to play or sing?',
+				],
+				'Worship Journey Questions': [
+					'What drew you to serve in worship in the first first place?',
+					'What has God taught you through serving in worship?',
+					'How has serving on the worship team helped shape your relationship with God?',
+					'How has your perspective on worship changed over time?',
+				],
+				'Lighthearted & Fun': [
+					'What’s your go-to karaoke song?',
+					'What’s one non-musical talent you have that most people don’t know about?',
+					'If you could learn an instrument that you’ve not mastered/played before, what would it be?',
+					'What genre of music do you listen to outside of church music?',
+				],
+				'Team Reflection': [
+					'What’s one thing you appreciate about someone else on the team?',
+					'What’s one thing you’ve learned from someone else on the team?',
+					'How do you usually feel after serving on a Sunday? Energized? Reflective? Tired? Hungry?',
+					'What helps you feel most encouraged or supported on the team?',
+					'What’s something small that would make serving in the worship team more enjoyable for you?',
+				],
+			}
+
+			const currentQuestionSpan = document.getElementById('currentQuestion')
+			const questionCategorySpan = document.getElementById('questionCategory')
+			// Select buttons directly by their class, which is now applied via Tailwind utilities
+			const categoryButtons = document.querySelectorAll(
+				'.text-gray-800.font-semibold.py-3.px-6.rounded-full'
+			)
+			const getRandomQuestionBtn = document.getElementById(
+				'getRandomQuestionBtn'
+			)
+
+			let currentSelectedCategory = null
+			let lastDisplayedQuestion = null
+			let lastDisplayedQuestionCategory = null
+
+			/**
+			 * Gets a random question from a specified category or all questions,
+			 * ensuring it's not the same as the last displayed question (if applicable).
+			 * @param {string} category - The category name, or "All Questions" for any question.
+			 * @returns {{question: string, category: string} | null} An object containing the random question and its original category, or null if no new question can be found.
+			 */
+			function getRandomQuestion(category) {
+				let possibleQuestions = []
+				let chosenCategory = category
+
+				if (category === 'All Questions') {
+					for (const key in questions) {
+						if (questions.hasOwnProperty(key)) {
+							possibleQuestions = possibleQuestions.concat(questions[key])
+						}
+					}
+				} else if (questions.hasOwnProperty(category)) {
+					possibleQuestions = questions[category]
+				} else {
+					return null
+				}
+
+				if (possibleQuestions.length === 0) {
+					return null
+				}
+
+				let availableQuestions = possibleQuestions.filter((q) => {
+					if (category === 'All Questions') {
+						return q !== lastDisplayedQuestion
+					} else {
+						return !(
+							q === lastDisplayedQuestion &&
+							category === lastDisplayedQuestionCategory
+						)
+					}
+				})
+
+				if (availableQuestions.length === 0 && possibleQuestions.length > 0) {
+					availableQuestions = possibleQuestions
+				}
+
+				const randomIndex = Math.floor(
+					Math.random() * availableQuestions.length
+				)
+				const question = availableQuestions[randomIndex]
+
+				if (category === 'All Questions') {
+					for (const key in questions) {
+						if (
+							questions.hasOwnProperty(key) &&
+							questions[key].includes(question)
+						) {
+							chosenCategory = key
+							break
+						}
+					}
+				}
+
+				return { question: question, category: chosenCategory }
+			}
+
+			// Event listener for category buttons
+			categoryButtons.forEach((button) => {
+				button.addEventListener('click', () => {
+					// Remove 'active' class from all buttons
+					categoryButtons.forEach((btn) =>
+						btn.classList.remove('category-btn-active')
+					)
+					// Add 'active' class to the clicked button
+					button.classList.add('category-btn-active')
+					currentSelectedCategory = button.dataset.category
+					currentQuestionSpan.textContent =
+						"Click '🎲 Get Random Question' to get a question!"
+					questionCategorySpan.classList.add('hidden')
+				})
+			})
+
+			// Event listener for the "Get Random Question" button
+			getRandomQuestionBtn.addEventListener('click', () => {
+				if (!currentSelectedCategory) {
+					currentSelectedCategory = 'All Questions'
+					categoryButtons.forEach((btn) => {
+						btn.classList.remove('category-btn-active')
+						if (btn.dataset.category === 'All Questions') {
+							btn.classList.add('category-btn-active')
+						}
+					})
+				}
+
+				const result = getRandomQuestion(currentSelectedCategory)
+
+				if (result) {
+					currentQuestionSpan.textContent = result.question
+					questionCategorySpan.textContent = `Category: ${result.category}`
+					questionCategorySpan.classList.remove('hidden')
+
+					lastDisplayedQuestion = result.question
+					lastDisplayedQuestionCategory = result.category
+				} else {
+					currentQuestionSpan.textContent =
+						'No questions available for this selection.'
+					questionCategorySpan.classList.add('hidden')
+				}
+			})
+		</script>
+	</body>
+</html>
