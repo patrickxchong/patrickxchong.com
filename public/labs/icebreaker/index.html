@@ -70,10 +70,8 @@
 		</style>
 	</head>
 	<body class="p-4">
-		<div class="container mx-auto max-w-3xl space-y-8">
-			<!-- Changed max-w-4xl to max-w-3xl -->
-
-			<h1 class="text-4xl font-bold text-center text-gray-900 mb-8">
+		<div class="container mx-auto max-w-3xl space-y-4">
+			<h1 class="text-4xl font-bold text-center text-gray-900 mb-6">
 				🎶 Worship Team Icebreakers
 			</h1>
 
@@ -81,15 +79,15 @@
 				<!-- Category Buttons -->
 				<button
 					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
-					data-category="All Questions"
+					data-category="Any Question"
 				>
-					<span class="mr-2">✨</span> All Questions
+					<span class="mr-2">✨</span> Any Question
 				</button>
 				<button
 					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
-					data-category="Music-Related Icebreakers"
+					data-category="Music-Related"
 				>
-					<span class="mr-2">🎶</span> Music Icebreakers
+					<span class="mr-2">🎶</span> Music-Related
 				</button>
 				<button
 					class="text-gray-800 font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75 border-2 bg-white hover:bg-gray-100 border-gray-800 focus:ring-gray-400 whitespace-nowrap"
@@ -111,11 +109,11 @@
 				</button>
 			</div>
 
-			<div class="text-center mb-8">
+			<!-- <div class="text-center mb-8">
 				<button id="getRandomQuestionBtn" class="get-question-btn-style">
 					<span class="mr-2">🎲</span> Get Random Question
 				</button>
-			</div>
+			</div> -->
 
 			<div
 				id="questionDisplay"
@@ -127,7 +125,7 @@
 				>
 				<span
 					id="questionCategory"
-					class="absolute bottom-2 right-4 text-sm text-gray-500 font-medium hidden"
+					class="absolute bottom-1 right-2 text-xs text-gray-500 font-medium hidden"
 				></span>
 			</div>
 		</div>
@@ -135,7 +133,7 @@
 		<script>
 			// Define the questions categorized
 			const questions = {
-				'Music-Related Icebreakers': [
+				'Music-Related': [
 					'What’s a worship song that always moves you no matter how many times you hear it?',
 					'What’s a worship song you wish more churches sang?',
 					'If you could lead worship with any Christian artist/band, who would it be?',
@@ -179,16 +177,16 @@
 			let lastDisplayedQuestionCategory = null
 
 			/**
-			 * Gets a random question from a specified category or all questions,
+			 * Gets a random question from a specified category or Any Question,
 			 * ensuring it's not the same as the last displayed question (if applicable).
-			 * @param {string} category - The category name, or "All Questions" for any question.
+			 * @param {string} category - The category name, or "Any Question" for any question.
 			 * @returns {{question: string, category: string} | null} An object containing the random question and its original category, or null if no new question can be found.
 			 */
 			function getRandomQuestion(category) {
 				let possibleQuestions = []
 				let chosenCategory = category
 
-				if (category === 'All Questions') {
+				if (category === 'Any Question') {
 					for (const key in questions) {
 						if (questions.hasOwnProperty(key)) {
 							possibleQuestions = possibleQuestions.concat(questions[key])
@@ -205,7 +203,7 @@
 				}
 
 				let availableQuestions = possibleQuestions.filter((q) => {
-					if (category === 'All Questions') {
+					if (category === 'Any Question') {
 						return q !== lastDisplayedQuestion
 					} else {
 						return !(
@@ -224,7 +222,7 @@
 				)
 				const question = availableQuestions[randomIndex]
 
-				if (category === 'All Questions') {
+				if (category === 'Any Question') {
 					for (const key in questions) {
 						if (
 							questions.hasOwnProperty(key) &&
@@ -249,19 +247,33 @@
 					// Add 'active' class to the clicked button
 					button.classList.add('category-btn-active')
 					currentSelectedCategory = button.dataset.category
-					currentQuestionSpan.textContent =
-						"Click '🎲 Get Random Question' to get a question!"
-					questionCategorySpan.classList.add('hidden')
+					const result = getRandomQuestion(currentSelectedCategory)
+
+					if (result) {
+						currentQuestionSpan.textContent = result.question
+						questionCategorySpan.textContent = `Category: ${result.category}`
+						questionCategorySpan.classList.remove('hidden')
+
+						lastDisplayedQuestion = result.question
+						lastDisplayedQuestionCategory = result.category
+					} else {
+						currentQuestionSpan.textContent =
+							'No questions available for this selection.'
+						questionCategorySpan.classList.add('hidden')
+					}
+					// currentQuestionSpan.textContent =
+					// 	"Click '🎲 Get Random Question' to get a question!"
+					// questionCategorySpan.classList.add('hidden')
 				})
 			})
 
 			// Event listener for the "Get Random Question" button
 			getRandomQuestionBtn.addEventListener('click', () => {
 				if (!currentSelectedCategory) {
-					currentSelectedCategory = 'All Questions'
+					currentSelectedCategory = 'Any Question'
 					categoryButtons.forEach((btn) => {
 						btn.classList.remove('category-btn-active')
-						if (btn.dataset.category === 'All Questions') {
+						if (btn.dataset.category === 'Any Question') {
 							btn.classList.add('category-btn-active')
 						}
 					})
