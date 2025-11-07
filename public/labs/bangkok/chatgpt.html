@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bangkok 4-Day Budget Itinerary</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto py-6 px-4">
+    <h1 class="text-3xl font-bold text-center mb-4">Bangkok 4-Day Budget Itinerary (13–16 Nov)</h1>
+    <p class="text-center text-gray-600 mb-6">Each day includes attractions, food highlights, travel tips, and an embedded map.</p>
+
+    <div class="flex justify-center mb-4 space-x-2">
+      <button onclick="showDay('day1')" class="bg-blue-500 text-white px-4 py-2 rounded">Day 1</button>
+      <button onclick="showDay('day2')" class="bg-blue-500 text-white px-4 py-2 rounded">Day 2</button>
+      <button onclick="showDay('day3')" class="bg-blue-500 text-white px-4 py-2 rounded">Day 3</button>
+      <button onclick="showDay('day4')" class="bg-blue-500 text-white px-4 py-2 rounded">Day 4</button>
+    </div>
+
+    <div id="content">
+      <div id="day1" class="day-section">
+        <h2 class="text-2xl font-semibold mb-2">Day 1: Lumpini Park – Siam – Chinatown</h2>
+        <iframe src="https://www.google.com/maps/d/embed?mid=1R2E4gLb0AexAMPLE_day1" width="100%" height="380" class="rounded mb-3"></iframe>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Morning:</strong> Lumpini Park (free), early walk, coconut ice cream (~THB50, RM7)</li>
+          <li><strong>Midday:</strong> Bangkok Art & Culture Centre (free), MBK/Siam lunch (~THB50–60, RM7–9)</li>
+          <li><strong>Evening:</strong> Chinatown street food tour (noodle soup, satay, dim sum ~THB100 total, RM15)</li>
+          <li><strong>Travel:</strong> BTS/MRT (total ~THB100/day, RM15); use Rabbit card or cash</li>
+          <li class="text-yellow-700">⚠️ Crowds in Chinatown peak after 7pm; keep bags secure.</li>
+        </ul>
+      </div>
+
+      <div id="day2" class="day-section hidden">
+        <h2 class="text-2xl font-semibold mb-2">Day 2: Bang Krachao – Terminal21 – Ratchada</h2>
+        <iframe src="https://www.google.com/maps/d/embed?mid=1R2E4gLb0AexAMPLE_day2" width="100%" height="380" class="rounded mb-3"></iframe>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Morning:</strong> Bang Krachao ferry + bike (~THB150, RM22), nature ride</li>
+          <li><strong>Afternoon:</strong> Terminal21 food court (basil rice, green curry ~THB60, RM9)</li>
+          <li><strong>Evening:</strong> Ratchada Train Market – seafood, mango sticky rice (~THB120, RM18)</li>
+          <li><strong>Travel:</strong> BTS + boat (~THB100 total, RM15); cash or QR for taxi/motorbike</li>
+          <li class="text-yellow-700">⚠️ Few shops in Bang Krachao – bring water and bug spray</li>
+        </ul>
+      </div>
+
+      <div id="day3" class="day-section hidden">
+        <h2 class="text-2xl font-semibold mb-2">Day 3: Chatuchak Market – Victory Monument</h2>
+        <iframe src="https://www.google.com/maps/d/embed?mid=1R2E4gLb0AexAMPLE_day3" width="100%" height="380" class="rounded mb-3"></iframe>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Morning:</strong> Chatuchak Market (ice cream, boat noodles, souvenirs ~THB100–150, RM15–22)</li>
+          <li><strong>Afternoon:</strong> Chatuchak Park or JJ Mall rest; drinks (~THB30, RM5)</li>
+          <li><strong>Evening:</strong> Boat noodles at Victory Monument (~THB40, RM6)</li>
+          <li><strong>Travel:</strong> BTS/MRT (~THB100/day, RM15); cash for most vendors</li>
+          <li class="text-yellow-700">⚠️ Watch for pickpockets; wear a backpack in front.</li>
+        </ul>
+      </div>
+
+      <div id="day4" class="day-section hidden">
+        <h2 class="text-2xl font-semibold mb-2">Day 4: Final Walk – Lumpini or Riverfront</h2>
+        <iframe src="https://www.google.com/maps/d/embed?mid=1R2E4gLb0AexAMPLE_day4" width="100%" height="380" class="rounded mb-3"></iframe>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Morning:</strong> Optional revisit to Lumpini Park or Wang Lang Market</li>
+          <li><strong>Afternoon:</strong> Terminal21 or MBK for last meal (~THB60–100, RM9–15)</li>
+          <li><strong>Travel:</strong> Keep costs low with BTS/MRT (~THB80, RM12)</li>
+          <li class="text-yellow-700">⚠️ Some malls and shops close earlier on Sundays</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showDay(dayId) {
+      document.querySelectorAll('.day-section').forEach(day => day.classList.add('hidden'));
+      document.getElementById(dayId).classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

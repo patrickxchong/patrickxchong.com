@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangkok 4-Day Solo Trip Itinerary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #e44d26, #f16529);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .quick-info {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #e44d26;
+        }
+        
+        .day-navigation {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .day-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .day-tab.active {
+            border-bottom: 3px solid #e44d26;
+            color: #e44d26;
+            font-weight: bold;
+        }
+        
+        .day-tab:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .day-content {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .day-content.active {
+            display: block;
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .day-title {
+            font-size: 1.8rem;
+            color: #e44d26;
+        }
+        
+        .day-theme {
+            font-style: italic;
+            color: #666;
+        }
+        
+        .itinerary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .itinerary-table th {
+            background-color: #f16529;
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+        }
+        
+        .itinerary-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .itinerary-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .budget-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        
+        .budget-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #e44d26;
+        }
+        
+        .map-placeholder {
+            background-color: #e9ecef;
+            height: 200px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .food-item {
+            display: inline-block;
+            background-color: #ffe8e0;
+            padding: 5px 10px;
+            margin: 5px 5px 5px 0;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .day-theme {
+                margin-top: 5px;
+            }
+            
+            .itinerary-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bangkok 4-Day Solo Trip</h1>
+            <p class="subtitle">Low Budget Itinerary • November 13-16 • Hotel near Big C Ratchadamri</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="quick-info">
+            <h2>Quick Trip Information</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Daily Budget</h3>
+                    <p>RM 50-100 (approx. ฿385-770)</p>
+                </div>
+                <div class="info-card">
+                    <h3>Hotel Location</h3>
+                    <p>Near Big C Supercenter Ratchadamri</p>
+                </div>
+                <div class="info-card">
+                    <h3>Payment Methods</h3>
+                    <p>Cash essential for markets & street food</p>
+                </div>
+                <div class="info-card">
+                    <h3>Best Transport</h3>
+                    <p>BTS Skytrain & public boats</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="day-navigation">
+            <div class="day-tab active" data-day="day1">Day 1: Thursday</div>
+            <div class="day-tab" data-day="day2">Day 2: Friday</div>
+            <div class="day-tab" data-day="day3">Day 3: Saturday</div>
+            <div class="day-tab" data-day="day4">Day 4: Sunday</div>
+        </section>
+        
+        <!-- Day 1 Content -->
+        <section id="day1" class="day-content active">
+            <div class="day-header">
+                <h2 class="day-title">Day 1: Thursday</h2>
+                <p class="day-theme">Arrival & Local Exploration (Ratchaprasong Area)</p>
+            </div>
+            
+            <table class="itinerary-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                        <th>Food to Try</th>
+                        <th>Budget & Transport</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2:00 PM</td>
+                        <td>Check-in & Settle</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>3:00 PM</td>
+                        <td><strong>Erawan Shrine</strong> - Free Hindu shrine with cultural performances</td>
+                        <td>-</td>
+                        <td><strong>Free</strong>. Walk from hotel.</td>
+                    </tr>
+                    <tr>
+                        <td>4:00 PM</td>
+                        <td><strong>CentralWorld & Siam Paragon</strong> - Explore malls & food courts</td>
+                        <td>
+                            <span class="food-item">Som Tum</span>
+                            <span class="food-item">Khao Soi</span>
+                        </td>
+                        <td><strong>Food:</strong> ฿150-250 (RM 20-32). Walk or 1 BTS stop to Siam.</td>
+                    </tr>
+                    <tr>
+                        <td>5:30 PM</td>
+                        <td><strong>Lumpini Park</strong> - Bangkok's "Green Lung", watch monitor lizards</td>
+                        <td>-</td>
+                        <td><strong>Free</strong>. Walk from hotel.</td>
+                    </tr>
+                    <tr>
+                        <td>7:30 PM</td>
+                        <td><strong>Patpong Night Market</strong> - Famous market (be prepared for touts)</td>
+                        <td>-</td>
+                        <td><strong>Free to browse</strong>. BTS to Sala Daeng.</td>
+                    </tr>
+                    <tr>
+                        <td>8:30 PM</td>
+                        <td><strong>Dinner at Convent Road</strong> - Local eateries away from market chaos</td>
+                        <td>
+                            <span class="food-item">Kuay Teow Reua</span>
+                            <span class="food-item">Moo Ping</span>
+                        </td>
+                        <td><strong>Food:</strong> ฿120-200 (RM 15-26). Walk from Patpong.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="budget-section">
+                <div class="budget-title">Daily Estimated Spend: ฿470 (RM 61)</div>
+            </div>
+            
+            <div class="map-placeholder">
+                Map: Hotel → Erawan Shrine → CentralWorld → Siam Paragon → Lumpini Park → Patpong Night Market → Convent Road
+            </div>
+        </section>
+        
+        <!-- Day 2 Content -->
+        <section id="day2" class="day-content">
+            <div class="day-header">
+                <h2 class="day-title">Day 2: Friday</h2>
+                <p class="day-theme">Markets, Culture & Jazz</p>
+            </div>
+            
+            <table class="itinerary-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                        <th>Food to Try</th>
+                        <th>Budget & Transport</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>9:00 AM</td>
+                        <td><strong>Chatuchak Weekend Market</strong> - One of the world's largest markets</td>
+                        <td>
+                            <span class="food-item">Coconut Ice Cream</span>
+                            <span class="food-item">Grilled Squid</span>
+                            <span class="food-item">Thai-style Sausages</span>
+                        </td>
+                        <td><strong>Free entry</strong>. BTS to Mo Chit. <strong>Food/Drink:</strong> ฿200 (RM 26).</td>
+                    </tr>
+                    <tr>
+                        <td>1:00 PM</td>
+                        <td><strong>Or Tor Kor Market</strong> - Gourmet fresh market next to Chatuchak</td>
+                        <td>
+                            <span class="food-item">Mango Sticky Rice</span>
+                            <span class="food-item">Grilled Prawns</span>
+                            <span class="food-item">Thai Desserts</span>
+                        </td>
+                        <td><strong>Food:</strong> ฿250 (RM 32). Walk from Chatuchak.</td>
+                    </tr>
+                    <tr>
+                        <td>3:00 PM</td>
+                        <td><strong>Jim Thompson House</strong> - Traditional Thai house & silk museum</td>
+                        <td>-</td>
+                        <td><strong>Entry:</strong> ฿200 (RM 26). BTS to National Stadium.</td>
+                    </tr>
+                    <tr>
+                        <td>7:00 PM</td>
+                        <td><strong>Dinner in Victory Monument</strong> - Area known for boat noodle alley</td>
+                        <td>
+                            <span class="food-item">Boat Noodles</span>
+                        </td>
+                        <td><strong>Food:</strong> ฿150 (RM 20). BTS to Victory Monument.</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 PM</td>
+                        <td><strong>Saxophone Pub</strong> - Legendary live music bar (blues, jazz, R&B)</td>
+                        <td>-</td>
+                        <td><strong>1 Drink:</strong> ฿200+ (RM 26+). BTS to Victory Monument.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="budget-section">
+                <div class="budget-title">Daily Estimated Spend: ฿1,000 (RM 130)</div>
+                <p><em>Note: This is over your lower budget due to the Jim Thompson entry and jazz pub, but you can adjust by skipping Jim Thompson.</em></p>
+            </div>
+            
+            <div class="map-placeholder">
+                Map: Hotel → Chatuchak Market → Or Tor Kor Market → Jim Thompson House → Victory Monument → Saxophone Pub
+            </div>
+        </section>
+        
+        <!-- Day 3 Content -->
+        <section id="day3" class="day-content">
+            <div class="day-header">
+                <h2 class="day-title">Day 3: Saturday</h2>
+                <p class="day-theme">Old City & River Crossings</p>
+            </div>
+            
+            <table class="itinerary-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                        <th>Food to Try</th>
+                        <th>Budget & Transport</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>8:00 AM</td>
+                        <td><strong>View Wat Arun from Across the River</strong> - Free view of Temple of Dawn</td>
+                        <td>-</td>
+                        <td><strong>Transport:</strong> ฿30 (RM 4). BTS to Saphan Taksin, then public ferry.</td>
+                    </tr>
+                    <tr>
+                        <td>10:00 AM</td>
+                        <td><strong>Talad Phlu (Phlu Market)</strong> - Local, non-touristy market</td>
+                        <td>
+                            <span class="food-item">Khanom Bueang</span>
+                            <span class="food-item">Hoy Tod</span>
+                        </td>
+                        <td><strong>Food:</strong> ฿150 (RM 20). BTS to Talad Phlu.</td>
+                    </tr>
+                    <tr>
+                        <td>1:00 PM</td>
+                        <td>Free Time / Rest - Escape the midday heat</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>5:00 PM</td>
+                        <td><strong>Talad Rot Fai Srinakarin</strong> - Original "Train Market" with vintage section</td>
+                        <td>
+                            <span class="food-item">Suki Haeng</span>
+                            <span class="food-item">Lobster Noodles</span>
+                        </td>
+                        <td><strong>Free entry</strong>. Taxi/Bolt from BTS Udom Suk (฿100-150). <strong>Food:</strong> ฿300 (RM 39).</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 PM</td>
+                        <td><strong>The Roof @ 38th Bar</strong> - Affordable rooftop view</td>
+                        <td>-</td>
+                        <td><strong>1 Drink:</strong> ฿250 (RM 32). BTS to Phrom Phong.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="budget-section">
+                <div class="budget-title">Daily Estimated Spend: ฿1,030 (RM 134)</div>
+                <p><em>Note: Transport cost is higher due to taxi to Rot Fai. Split with friends to reduce cost.</em></p>
+            </div>
+            
+            <div class="map-placeholder">
+                Map: Hotel → Wat Arun Viewpoint → Talad Phlu → Talad Rot Fai Srinakarin → The Roof @ 38th Bar
+            </div>
+        </section>
+        
+        <!-- Day 4 Content -->
+        <section id="day4" class="day-content">
+            <div class="day-header">
+                <h2 class="day-title">Day 4: Sunday</h2>
+                <p class="day-theme">Green Space & Last-Minute Souvenirs</p>
+            </div>
+            
+            <table class="itinerary-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                        <th>Food to Try</th>
+                        <th>Budget & Transport</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>8:00 AM</td>
+                        <td><strong>Bang Krachao</strong> - "Bangkok's Green Lung", cycling paths</td>
+                        <td>-</td>
+                        <td><strong>Bike Rental:</strong> ฿100 (RM 13). BTS to Bang Na, then taxi/motorcycle to pier, boat (฿10).</td>
+                    </tr>
+                    <tr>
+                        <td>12:00 PM</td>
+                        <td><strong>Lunch in Bang Krachao</strong> - Riverside restaurant</td>
+                        <td>
+                            <span class="food-item">Pla Pao</span>
+                            <span class="food-item">Som Tum</span>
+                        </td>
+                        <td><strong>Lunch:</strong> ฿200 (RM 26).</td>
+                    </tr>
+                    <tr>
+                        <td>2:00 PM</td>
+                        <td><strong>Big C Supercenter Ratchadamri</strong> - Last-minute souvenir shopping</td>
+                        <td>-</td>
+                        <td><strong>Souvenirs:</strong> Your budget. Walk from hotel.</td>
+                    </tr>
+                    <tr>
+                        <td>4:00 PM</td>
+                        <td>Head to Airport</td>
+                        <td>-</td>
+                        <td><strong>Transport:</strong> ฿45 (RM 6). BTS to Phaya Thai, then Airport Rail Link.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="budget-section">
+                <div class="budget-title">Daily Estimated Spend: ฿555 (RM 72) + Souvenirs</div>
+            </div>
+            
+            <div class="map-placeholder">
+                Map: Hotel → Bang Krachao → Big C Supercenter → Airport
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Bangkok 4-Day Solo Trip Itinerary • Budget: RM 50-100 per day • November 13-16, 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dayTabs = document.querySelectorAll('.day-tab');
+            
+            dayTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and content
+                    dayTabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const dayId = this.getAttribute('data-day');
+                    document.getElementById(dayId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

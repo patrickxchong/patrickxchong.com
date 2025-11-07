@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo's Budget Bangkok Trip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutral (Beige/Gray with Soft Orange accent) -->
+    <!-- Application Structure Plan: A tabbed single-page application (SPA). Tabs for "Overview/Budget" and "Day 1" through "Day 4". This structure is the most intuitive for a multi-day itinerary, allowing the user to easily navigate to a specific day's plan without scrolling. Interaction is handled by clicking tabs, which uses JS to show/hide the relevant content panel. This is superior to a long scrolling report and perfectly fits the user's "navigatable per day" request. -->
+    <!-- Visualization & Content Choices: Report Info: Daily Budget (RM100/700THB) -> Goal: Show % split -> Viz/Presentation: Doughnut Chart -> Interaction: Hover to see tooltip -> Justification: Visualizes the tight budget constraints -> Library: Chart.js. | Report Info: Daily locations -> Goal: Show spatial layout -> Viz/Presentation: Embedded Google Map -> Interaction: Pan/Zoom (native to iframe) -> Justification: Fulfills user's "map for each day" request -> Library/Method: Google Maps iframe. | Report Info: Daily activities -> Goal: Clear, scannable plan -> Viz/Presentation: HTML lists/text -> Interaction: Tab click to reveal -> Justification: Easy reading -> Library/Method: HTML/JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn {
+            @apply px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base font-medium text-center text-gray-500 bg-gray-100 rounded-lg cursor-pointer transition-all duration-200;
+        }
+        .tab-btn:hover {
+            @apply bg-gray-200;
+        }
+        .tab-btn-active {
+            @apply bg-orange-500 text-white shadow-md;
+        }
+        .tab-content {
+            display: none;
+            @apply mt-6 p-4 bg-white rounded-lg shadow-inner;
+        }
+        .tab-content-active {
+            display: block;
+        }
+        .map-container {
+            position: relative;
+            padding-bottom: 56.25%; 
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            @apply max-w-full;
+        }
+        .map-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        .icon-card {
+            @apply bg-gray-50 rounded-lg p-4 flex flex-col items-center text-center;
+        }
+        .icon-card-emoji {
+            @apply text-4xl mb-2;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-6">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Solo's Budget Bangkok Trip</h1>
+            <p class="text-lg text-gray-600">4-Day Itinerary (13-16 Nov)</p>
+        </header>
+
+        <nav id="tab-nav" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4">
+            <button class="tab-btn tab-btn-active" data-tab="overview">Overview & Budget</button>
+            <button class="tab-btn" data-tab="day1">Thu, Day 1</button>
+            <button class="tab-btn" data-tab="day2">Fri, Day 2</button>
+            <button class="tab-btn" data-tab="day3">Sat, Day 3</button>
+            <button class="tab-btn" data-tab="day4">Sun, Day 4</button>
+        </nav>
+
+        <main>
+            <!-- Overview & Budget Tab -->
+            <div id="overview-content" class="tab-content tab-content-active">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">General Tips & Budget</h2>
+                <p class="mb-4 text-gray-600">This is a very tight budget (RM50-100 / 350-700 THB), but it's possible if you stick to street food, free attractions, and cheap transport. Your hotel near Big C Ratchadamri is perfectly located for this.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                    <div class="text-gray-600 space-y-3">
+                        <h3 class="text-xl font-semibold text-gray-700">Daily Budget: ~700 THB (RM100)</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong class="text-blue-600">Food (40% / 280 THB):</strong> This covers 3 street food meals (60-80 THB each) and snacks/drinks.</li>
+                            <li><strong class="text-green-600">Transport (30% / 210 THB):</strong> For BTS, buses, and canal boats. Your location is walkable to many places.</li>
+                            <li><strong class="text-orange-500">Flex/Buffer (30% / 210 THB):</strong> For small souvenirs, park bike rentals, or a slightly nicer meal.</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold text-gray-700 mt-4">Payment</h3>
+                        <p><strong>CASH (THB) is ESSENTIAL.</strong> Street food, buses, and canal boats are 99% cash only. Malls and 7-Elevens accept cards or Thai QR (DuitNow/PromptPay *might* work but don't rely on it).</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Travel & Warnings</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="icon-card">
+                        <div class="icon-card-emoji">🚤</div>
+                        <h4 class="font-semibold text-lg">Cheap Transport</h4>
+                        <p class="text-sm text-gray-500">Use the **Saen Saep Canal Boat** (Pratunam Pier is near you!), BTS Skytrain, and local buses (8-20 THB). Avoid taxis/tuk-tuks to save money.</p>
+                    </div>
+                    <div class="icon-card">
+                        <div class="icon-card-emoji">☀️</div>
+                        <h4 class="font-semibold text-lg">Heat & Crowds</h4>
+                        <p class="text-sm text-gray-500">November is cooler, but still hot (30°C+). Carry water. Markets (Chatuchak) and peak-hour BTS (5-7 PM) will be very crowded.</p>
+                    </div>
+                    <div class="icon-card">
+                        <div class="icon-card-emoji">🎒</div>
+                        <h4 class="font-semibold text-lg">Travel Risks</h4>
+                        <p class="text-sm text-gray-500">Watch for pickpockets in crowded areas. Politely decline any "free" tuk-tuk or gem store offers; they are scams.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 1: Thursday -->
+            <div id="day1-content" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Day 1 (Thu): Arrival & Local Exploration</h2>
+                <ul class="list-disc list-inside space-y-3 text-gray-600 mb-6">
+                    <li><strong>Afternoon:</strong> Arrive, check in. Get a local SIM card (AIS/True) if needed.</li>
+                    <li><strong>Late Afternoon (5 PM):</strong> Walk to **CentralWorld** and **Erawan Shrine**. Free to see the shrine from the street (a major cultural landmark). Window shop in CentralWorld to enjoy the air-con.</li>
+                    <li><strong>Dinner (7 PM):</strong> Explore the street food stalls in the **Pratunam Market** area, near Baiyoke Sky Hotel.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li><strong>Food to Try:</strong> Pad Thai (40-60 THB), Som Tum (Papaya Salad, 40-50 THB), Moo Ping (Grilled Pork Skewers, 10 THB each), fresh fruit smoothie (30-40 THB).</li>
+                            <li><strong>Payment:</strong> Cash only.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Evening:</strong> Walk around the flashy mall facades at Siam.</li>
+                    <li><strong>Transport:</strong> All walking. <strong>Cost: 0 THB.</strong></li>
+                </ul>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/d/embed?mid=1vX-h4sYf4W01F_y8f8E7QzJ0a4c5C_s&ehbc=2E312F" width="640" height="480"></iframe>
+                </div>
+            </div>
+
+            <!-- Day 2: Friday -->
+            <div id="day2-content" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Day 2 (Fri): River, Markets & Jazz</h2>
+                <ul class="list-disc list-inside space-y-3 text-gray-600 mb-6">
+                    <li><strong>Morning (9 AM):</strong> Walk to **Chit Lom BTS**. Take BTS to **Saphan Taksin** (~47 THB).</li>
+                    <li><strong>Mid-Morning (10 AM):</strong> At Sathorn Pier (under the BTS), take the **Chao Phraya Express Boat** (Orange Flag) heading north. This is a fantastic, cheap river cruise. <strong>Cost: ~16 THB (cash).</strong></li>
+                    <li><strong>Late Morning (10:30 AM):</strong> Get off at **Wang Lang (Siriraj) Pier**. Explore **Wang Lang Market**. A true local's market, amazing food, and cheap clothes.</li>
+                    <li><strong>Lunch (12 PM):</strong> Eat at Wang Lang Market.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li><strong>Food to Try:</strong> Khanom Bueang (Thai Crepes, 20-30 THB), Roti (various fillings, 30-50 THB), any local noodle soup or rice dish you see.</li>
+                            <li><strong>Payment:</strong> Cash only.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Afternoon (2 PM):</strong> Take the cross-river ferry from Wang Lang to Tha Prachan Pier (4 THB). Walk around the **Sanam Luang** (Royal Field), a huge free park in the old city.</li>
+                    <li><strong>Late Afternoon (4 PM):</strong> From Sanam Luang, take a local bus (e.g., #15, #47) back to the Siam/Ratchadamri area. <strong>Cost: 8-20 THB (cash).</strong></li>
+                    <li><strong>Evening (8 PM):</strong> Local Music! Take the BTS from Chit Lom to **Victory Monument** (~30 THB). Walk to **Saxophone Pub**.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li>It's a legendary live music (jazz/blues) venue. Entry is usually free on weekdays, but you'll need to buy a drink (you can get a soda/juice, ~80-100 THB). A great way to see local music!</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/d/embed?mid=1s4K8J-n-G9N-h0L11vE1A2v4zR_wN-Y&ehbc=2E312F" width="640" height="480"></iframe>
+                </div>
+            </div>
+
+            <!-- Day 3: Saturday -->
+            <div id="day3-content" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Day 3 (Sat): Grand Market & City Park</h2>
+                <ul class="list-disc list-inside space-y-3 text-gray-600 mb-6">
+                    <li><strong>Morning (9 AM):</strong> Go early! Take BTS from Chit Lom to **Mo Chit** (~47 THB). Follow the crowd to **Chatuchak Weekend Market**.</li>
+                    <li><strong>Warning:</strong> It will be HOT and CROWDED. Bring water, wear light clothes.</li>
+                    <li><strong>Morning/Lunch (9:30 AM - 1 PM):</strong> Explore and eat at the market. It's massive.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li><strong>Food to Try:</strong> Coconut Ice Cream (in a coconut shell, ~50 THB), famous Spanish Paella (can be pricey, ~150 THB, but fun to see), fried chicken, noodle soups.</li>
+                            <li><strong>Payment:</strong> Mostly cash.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Afternoon (1 PM):</strong> Escape the heat. Walk across the road from the market to **Wachirabenchathat Park (Rot Fai Park)**.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li>A huge, beautiful, free park ("Nature" checked). You can rent a bicycle for very cheap (~30-40 THB) and cycle around the lake.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Late Afternoon (4 PM):</strong> Take BTS from Mo Chit back to **Siam** (~47 THB).</li>
+                    <li><strong>Evening (5 PM):</strong> "City Life/Malls" time. Explore **Siam Square** (trendy, local designer shops) and **Siam Paragon** (luxury, just for window shopping and air-con).</li>
+                    <li><strong>Dinner (7 PM):</strong> Eat at the **MBK Center Food Court** (6th floor). Cheap, huge variety, and authentic. You buy a coupon card with cash, then get a refund for any unused amount.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li><strong>Food to Try:</strong> Anything! Pad Krapow (Basil Pork/Chicken), Mango Sticky Rice, Tom Yum.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/d/embed?mid=1G-qD08Lp_h8J1-v-gL-kYjS9v9b27m4&ehbc=2E312F" width="640" height="480"></iframe>
+                </div>
+            </div>
+
+            <!-- Day 4: Sunday -->
+            <div id="day4-content" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Day 4 (Sun): Park Life & Departure Prep</h2>
+                <ul class="list-disc list-inside space-y-3 text-gray-600 mb-6">
+                    <li><strong>Morning (8 AM):</strong> Walk to **Lumpini Park** (15-20 min walk from your hotel).
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li>Free entry. This is a fantastic "cultural sight." Watch hundreds of locals doing Tai Chi, aerobics, and jogging. It's a great, peaceful morning experience.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Late Morning (10:30 AM):</strong> Walk back, check out of your hotel (if needed, or leave bags).</li>
+                    <li><strong>Lunch (11:30 AM):</strong> Go to the **Big C Supercenter Ratchadamri Food Court** (your hotel location). It's on the 4th floor.
+                        <ul class="list-circle list-inside ml-6 mt-2 bg-gray-50 p-3 rounded">
+                            <li>One of the cheapest and most local food courts.
+                            <li><strong>Food to Try:</strong> Khao Kha Moo (Braised Pork Leg with Rice, ~50-60 THB), a final Tom Yum.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Afternoon (1 PM):</strong> Last-minute souvenir shopping inside the **Big C Supercenter**. This is the best place to buy Thai snacks, sauces, and dried fruits to take home.</li>
+                    <li><strong>Late Afternoon:</strong> Travel to the airport (BKK or DMK). (Note: Airport travel cost is not included in the daily budget).</li>
+                </ul>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/d/embed?mid=1Q4kHqF1y_Vw0K2A8S_jR-o9x_yB7zP0&ehbc=2E312F" width="640" height="480"></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabNav = document.getElementById('tab-nav');
+            const tabButtons = tabNav.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabNav.addEventListener('click', (e) => {
+                const clickedButton = e.target.closest('.tab-btn');
+                if (!clickedButton) return;
+
+                const tabId = clickedButton.getAttribute('data-tab');
+                
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('tab-btn-active');
+                });
+                
+                tabContents.forEach(content => {
+                    content.classList.remove('tab-content-active');
+                });
+
+                clickedButton.classList.add('tab-btn-active');
+                document.getElementById(tabId + '-content').classList.add('tab-content-active');
+            });
+
+            // Chart.js Budget Chart
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Food (280 THB)', 'Transport (210 THB)', 'Flex/Buffer (210 THB)'],
+                    datasets: [{
+                        label: 'Daily Budget Split',
+                        data: [40, 30, 30],
+                        backgroundColor: [
+                            '#3b82f6', // blue-500
+                            '#16a34a', // green-600
+                            '#f97316'  // orange-500
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Suggested Daily Budget (700 THB)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

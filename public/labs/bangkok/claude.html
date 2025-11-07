@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bangkok Budget Trip | Nov 13-16</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+
+      header p {
+        font-size: 1.1em;
+        opacity: 0.95;
+      }
+
+      .budget-summary {
+        background: #fff3cd;
+        padding: 20px;
+        border-left: 5px solid #ffc107;
+        margin: 20px;
+        border-radius: 8px;
+      }
+
+      .budget-summary h3 {
+        color: #856404;
+        margin-bottom: 10px;
+      }
+
+      .nav-tabs {
+        display: flex;
+        background: #f8f9fa;
+        border-bottom: 3px solid #dee2e6;
+        overflow-x: auto;
+      }
+
+      .nav-tab {
+        flex: 1;
+        padding: 18px 20px;
+        text-align: center;
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-size: 1em;
+        font-weight: 600;
+        color: #6c757d;
+        transition: all 0.3s;
+        white-space: nowrap;
+      }
+
+      .nav-tab:hover {
+        background: #e9ecef;
+      }
+
+      .nav-tab.active {
+        background: white;
+        color: #667eea;
+        border-bottom: 3px solid #667eea;
+        margin-bottom: -3px;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .day-content {
+        display: none;
+      }
+
+      .day-content.active {
+        display: block;
+        animation: fadeIn 0.4s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .day-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+      }
+
+      .day-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 8px;
+      }
+
+      .day-budget {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 1.1em;
+      }
+
+      .activity {
+        background: #f8f9fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #667eea;
+      }
+
+      .activity h3 {
+        color: #667eea;
+        margin-bottom: 12px;
+        font-size: 1.4em;
+      }
+
+      .activity h4 {
+        color: #495057;
+        margin: 15px 0 10px 0;
+        font-size: 1.1em;
+      }
+
+      .time-badge {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .info-row {
+        margin: 8px 0;
+        padding-left: 10px;
+      }
+
+      .warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px;
+        margin: 12px 0;
+        border-radius: 5px;
+        color: #856404;
+      }
+
+      .food-list {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+      }
+
+      .food-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .food-item:last-child {
+        border-bottom: none;
+      }
+
+      .price {
+        color: #28a745;
+        font-weight: 600;
+      }
+
+      .payment-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+
+      .cash-only {
+        background: #dc3545;
+        color: white;
+      }
+
+      .card-ok {
+        background: #28a745;
+        color: white;
+      }
+
+      .mixed {
+        background: #ffc107;
+        color: #333;
+      }
+
+      .tips-section {
+        background: #d4edda;
+        border-left: 5px solid #28a745;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 25px 0;
+      }
+
+      .tips-section h3 {
+        color: #155724;
+        margin-bottom: 12px;
+      }
+
+      .route-map {
+        background: #e7f3ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 5px solid #0066cc;
+      }
+
+      .route-map h4 {
+        color: #0066cc;
+        margin-bottom: 10px;
+      }
+
+      footer {
+        background: #343a40;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 0;
+        }
+
+        .container {
+          border-radius: 0;
+        }
+
+        header h1 {
+          font-size: 1.5em;
+        }
+
+        .nav-tab {
+          font-size: 0.9em;
+          padding: 15px 10px;
+        }
+
+        .content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🇹🇭 Bangkok Budget Adventure</h1>
+        <p>November 13-16, 2025 | Solo Trip Itinerary</p>
+        <p>📍 Starting Point: Big C Ratchadamri</p>
+      </header>
+
+      <div class="budget-summary">
+        <h3>💰 Budget Overview</h3>
+        <p><strong>Daily Budget:</strong> RM50-100 (฿375-750) per day</p>
+        <p><strong>4-Day Total:</strong> RM200-400 (฿1,500-3,000)</p>
+        <p><strong>Exchange Rate:</strong> ~1 MYR = 7.5 THB</p>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="showDay('overview')">
+          📋 Overview
+        </button>
+        <button class="nav-tab" onclick="showDay('day1')">Thu 13</button>
+        <button class="nav-tab" onclick="showDay('day2')">Fri 14</button>
+        <button class="nav-tab" onclick="showDay('day3')">Sat 15</button>
+        <button class="nav-tab" onclick="showDay('day4')">Sun 16</button>
+        <button class="nav-tab" onclick="showDay('tips')">💡 Tips</button>
+      </nav>
+
+      <div class="content">
+        <!-- OVERVIEW -->
+        <div id="overview" class="day-content active">
+          <div class="day-header">
+            <h2>Trip Overview</h2>
+            <p>Your complete guide to Bangkok on a budget</p>
+          </div>
+
+          <div class="tips-section">
+            <h3>🎯 Quick Start Checklist</h3>
+            <div class="info-row">
+              ✅ Download offline Google Maps for Bangkok
+            </div>
+            <div class="info-row">
+              ✅ Get a Rabbit card at BTS Chit Lom (฿200 = ฿100 deposit + ฿100
+              credit)
+            </div>
+            <div class="info-row">
+              ✅ Withdraw cash at Big C ATM (keep small bills: ฿20, ฿50, ฿100)
+            </div>
+            <div class="info-row">
+              ✅ Download Grab/Bolt apps for backup transport
+            </div>
+            <div class="info-row">
+              ✅ Notify your bank you're traveling to Thailand
+            </div>
+          </div>
+
+          <div class="activity">
+            <h3>🗓️ Daily Themes</h3>
+            <div class="info-row">
+              <strong>Thursday:</strong> Local Markets & River Life (Klong Toey,
+              Benjakitti Park, JJ Green)
+            </div>
+            <div class="info-row">
+              <strong>Friday:</strong> City Life & Neighborhoods (Lumpini Park,
+              MBK, Ari, Jazz)
+            </div>
+            <div class="info-row">
+              <strong>Saturday:</strong> CHATUCHAK WEEKEND MARKET + Night Market
+            </div>
+            <div class="info-row">
+              <strong>Sunday:</strong> River Exploration & Chinatown
+            </div>
+          </div>
+
+          <div class="activity">
+            <h3>💸 Expected Costs</h3>
+            <div class="food-list">
+              <div class="food-item">
+                <strong>Food per day:</strong>
+                <span class="price">฿150-275 (RM20-36)</span>
+              </div>
+              <div class="food-item">
+                <strong>Transport per day:</strong>
+                <span class="price">฿75-125 (RM10-16)</span>
+              </div>
+              <div class="food-item">
+                <strong>Activities:</strong>
+                <span class="price"
+                  >฿0-50 (RM0-7) - Almost everything is FREE!</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="warning">
+            <strong>⚠️ Weather Alert:</strong> Mid-November temperature 25-33°C,
+            humidity 70-80%. Possible rain showers. Bring: umbrella, water
+            bottle, sunscreen, hat, and light breathable clothes.
+          </div>
+        </div>
+
+        <!-- DAY 1 -->
+        <div id="day1" class="day-content">
+          <div class="day-header">
+            <h2>Day 1: Thursday, Nov 13</h2>
+            <p>Local Markets & River Life</p>
+            <div class="day-budget">Budget: ฿280-420 (RM37-56)</div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 8:00-12:00</span>
+            <h3>🍊 Klong Toey Market</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              BTS Chit Lom → Queen Sirikit
+              <span class="price">฿26 (RM3.50)</span> + 10min walk
+            </div>
+            <div class="info-row">
+              OR Grab: <span class="price">฿60-80 (RM8-11)</span>
+            </div>
+
+            <h4>🍽️ Must-Try Food</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Khao tom (rice porridge) -
+                <span class="price">฿30-40 (RM4-5.50)</span>
+              </div>
+              <div class="food-item">
+                Fresh fruit smoothies -
+                <span class="price">฿20-30 (RM2.50-4)</span>
+              </div>
+              <div class="food-item">
+                Grilled pork skewers (moo ping) -
+                <span class="price">฿10 each (RM1.30)</span>
+              </div>
+              <div class="food-item">
+                Pad krapow with rice -
+                <span class="price">฿40-50 (RM5.50-6.50)</span>
+              </div>
+            </div>
+            <span class="payment-badge cash-only">💵 CASH ONLY</span>
+
+            <div class="warning">
+              <strong>⚠️ Warning:</strong> Very crowded, wet floors, strong
+              market smells. Best time: 7:00-10:00am before it gets too hot and
+              crowded.
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 12:30-15:00</span>
+            <h3>🌳 Benjakitti Park</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              Walk or Grab <span class="price">฿40-50 (RM5.50-7)</span> to Queen
+              Sirikit MRT
+            </div>
+
+            <h4>ℹ️ Info</h4>
+            <div class="info-row">💸 FREE entry</div>
+            <div class="info-row">🌳 Lake views, cycling track, rest areas</div>
+            <div class="info-row">
+              🍴 Lunch: EmQuartier food court or street food nearby
+              <span class="price">฿60-80 (RM8-11)</span>
+            </div>
+
+            <div class="warning">
+              <strong>⚠️ Note:</strong> Hot and humid - bring water and
+              sunscreen. Best to visit late afternoon for cooler weather.
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 15:30-18:00</span>
+            <h3>🥭 Or Tor Kor Market</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              MRT Queen Sirikit → Kamphaeng Phet
+              <span class="price">฿16 (RM2)</span>
+            </div>
+
+            <h4>🍽️ Must-Try</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Mango sticky rice - <span class="price">฿60-80 (RM8-11)</span>
+              </div>
+              <div class="food-item">
+                Fresh tropical fruits -
+                <span class="price">฿30-50 (RM4-7)</span>
+              </div>
+              <div class="food-item">
+                Pre-made curries - <span class="price">฿60-100 (RM8-13)</span>
+              </div>
+            </div>
+            <span class="payment-badge mixed">💳 Cash Preferred, Some QR</span>
+
+            <div class="info-row">
+              📝 Premium fresh market next to Chatuchak, less crowded
+              15:00-17:00
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 18:30-21:00</span>
+            <h3>🎵 JJ Green Night Market</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">5min walk from Or Tor Kor Market</div>
+
+            <h4>🍽️ Dinner Options</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Grilled seafood - <span class="price">฿60-100 (RM8-13)</span>
+              </div>
+              <div class="food-item">
+                Som tam (papaya salad) -
+                <span class="price">฿40-60 (RM5.50-8)</span>
+              </div>
+              <div class="food-item">
+                BBQ skewers -
+                <span class="price">฿10-20 each (RM1.30-2.50)</span>
+              </div>
+              <div class="food-item">
+                Pad thai - <span class="price">฿50-70 (RM7-9)</span>
+              </div>
+            </div>
+            <span class="payment-badge cash-only">💵 CASH ONLY</span>
+
+            <div class="info-row">
+              🎵 Live music (various genres, sometimes jazz!)
+            </div>
+            <div class="info-row">⏰ Opens 17:00, best time 18:00-21:00</div>
+          </div>
+
+          <div class="route-map">
+            <h4>🗺️ Day 1 Route</h4>
+            <p>
+              Ratchadamri → Klong Toey Market → Benjakitti Park → Or Tor Kor
+              Market → JJ Green → Back to Ratchadamri
+            </p>
+          </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div id="day2" class="day-content">
+          <div class="day-header">
+            <h2>Day 2: Friday, Nov 14</h2>
+            <p>City Life & Local Neighborhoods</p>
+            <div class="day-budget">Budget: ฿250-400 (RM33-53)</div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 9:00-12:00</span>
+            <h3>🦎 Lumpini Park</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              BTS Chit Lom → Sala Daeng <span class="price">฿16 (RM2)</span> or
+              15min walk
+            </div>
+
+            <h4>ℹ️ Activities</h4>
+            <div class="info-row">💸 FREE entry</div>
+            <div class="info-row">🦎 Monitor lizards spotting</div>
+            <div class="info-row">
+              🚣 Paddle boats <span class="price">฿40 for 30min (RM5.50)</span>
+            </div>
+            <div class="info-row">🏃 Jogging track, locals exercising</div>
+
+            <h4>🍽️ Breakfast</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Jok (congee) - <span class="price">฿30-40 (RM4-5.50)</span>
+              </div>
+              <div class="food-item">
+                Khanom krok (coconut pancakes) -
+                <span class="price">฿20-30 (RM2.50-4)</span>
+              </div>
+            </div>
+
+            <div class="warning">
+              <strong>⚠️ Best Time:</strong> 6:00-9:00am when it's cooler and
+              locals are exercising. Gets very hot after 10am!
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 12:30-15:30</span>
+            <h3>🏢 MBK Center & Siam Area</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              BTS Sala Daeng → Siam <span class="price">฿16 (RM2)</span>
+            </div>
+
+            <h4>ℹ️ Activities</h4>
+            <div class="info-row">💸 FREE browsing</div>
+            <div class="info-row">
+              📱 Electronics, souvenirs, people watching
+            </div>
+            <div class="info-row">
+              🏬 Alternative: Walk to CentralWorld (5min) for free AC and window
+              shopping
+            </div>
+
+            <h4>🍽️ Lunch</h4>
+            <div class="info-row">
+              MBK food court: <span class="price">฿50-80 (RM7-11)</span>
+            </div>
+            <span class="payment-badge mixed"
+              >💳 Load Card System (like coupons)</span
+            >
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 16:00-18:30</span>
+            <h3>🎨 Ari Neighborhood</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              BTS Siam → Ari <span class="price">฿26 (RM3.50)</span>
+            </div>
+
+            <h4>ℹ️ Activities</h4>
+            <div class="info-row">💸 FREE to explore hipster local area</div>
+            <div class="info-row">🎨 Street art, indie cafes, vinyl shops</div>
+
+            <h4>🍽️ Snacks</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Coconut ice cream - <span class="price">฿35-50 (RM4.50-7)</span>
+              </div>
+              <div class="food-item">
+                Boat noodles (kuay teaw reua) -
+                <span class="price">฿10-15 per bowl (RM1.30-2)</span>
+              </div>
+            </div>
+            <span class="payment-badge mixed">💳 Mix of Cash and QR</span>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 19:00-22:00</span>
+            <h3>🎷 Jazz Evening Options</h3>
+
+            <h4>Option A: Jazz Venues</h4>
+            <div class="info-row">🎵 The Jam International or Brown Sugar</div>
+            <div class="info-row">⏰ Music starts around 20:00-21:00</div>
+            <div class="info-row">
+              💸 Minimum order <span class="price">฿150-200 (RM20-27)</span> for
+              soft drinks/food
+            </div>
+
+            <div class="warning">
+              <strong>⚠️ Note:</strong> Call ahead to confirm schedule and if
+              alcohol-free seating available. Most jazz venues serve alcohol.
+            </div>
+
+            <h4>Option B: Free Alternative</h4>
+            <div class="info-row">
+              🎪 CentralWorld rooftop or Siam Square for street performers
+            </div>
+            <div class="info-row">💸 FREE</div>
+          </div>
+
+          <div class="route-map">
+            <h4>🗺️ Day 2 Route</h4>
+            <p>
+              Ratchadamri → Lumpini Park → Siam/MBK → Ari → Jazz venue/Siam
+              Square → Ratchadamri
+            </p>
+          </div>
+        </div>
+
+        <!-- DAY 3 -->
+        <div id="day3" class="day-content">
+          <div class="day-header">
+            <h2>Day 3: Saturday, Nov 15</h2>
+            <p>CHATUCHAK WEEKEND MARKET DAY! 🎉</p>
+            <div class="day-budget">Budget: ฿250-400 (RM33-53)</div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 8:00-13:00</span>
+            <h3>🛍️ CHATUCHAK WEEKEND MARKET</h3>
+            <p
+              style="
+                font-size: 1.2em;
+                color: #dc3545;
+                font-weight: 600;
+                margin: 10px 0;
+              "
+            >
+              ⭐ World's Largest Weekend Market - 27 Sections!
+            </p>
+
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              BTS Chit Lom → Mo Chit <span class="price">฿31 (RM4)</span>
+            </div>
+            <div class="info-row">Alternative: MRT Kamphaeng Phet</div>
+
+            <h4>🗺️ Key Sections to Visit</h4>
+            <div class="food-list">
+              <div class="food-item">
+                <strong>Section 1:</strong> Clothing & accessories
+              </div>
+              <div class="food-item">
+                <strong>Section 7-8:</strong> Used items & antiques
+              </div>
+              <div class="food-item">
+                <strong>Section 25-26:</strong> Plants & gardening
+              </div>
+              <div class="food-item">
+                <strong>Section 27:</strong> Food area (your lunch spot!)
+              </div>
+            </div>
+
+            <h4>🍽️ Must-Try Food</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Coconut ice cream - <span class="price">฿30-40 (RM4-5.50)</span>
+              </div>
+              <div class="food-item">
+                Grilled squid - <span class="price">฿50-80 (RM7-11)</span>
+              </div>
+              <div class="food-item">
+                Fresh coconut juice -
+                <span class="price">฿20-30 (RM2.50-4)</span>
+              </div>
+              <div class="food-item">
+                Mango sticky rice - <span class="price">฿60-80 (RM8-11)</span>
+              </div>
+              <div class="food-item">
+                Pad see ew - <span class="price">฿40-60 (RM5.50-8)</span>
+              </div>
+            </div>
+            <span class="payment-badge cash-only">💵 90% CASH ONLY</span>
+
+            <div class="warning">
+              <strong>🚨 CRITICAL WARNINGS:</strong><br />
+              • Extremely crowded 11am-5pm - arrive EARLY!<br />
+              • Very hot & humid - bring water, towel, hat<br />
+              • Easy to get lost - download market map<br />
+              • Pickpockets in crowds - keep valuables in front<br />
+              • Take breaks in AC sections
+            </div>
+
+            <div class="tips-section">
+              <strong>💡 Pro Strategy:</strong> Visit sections clockwise, start
+              at 8am before crowds, take AC breaks every hour, keep small bills
+              handy.
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 14:00-17:00</span>
+            <h3>😴 Rest Break</h3>
+            <div class="info-row">
+              Option A: Return to hotel to escape the heat
+            </div>
+            <div class="info-row">
+              Option B: Relax at Chatuchak Park (adjacent, FREE, shaded)
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 17:30-21:00</span>
+            <h3>🌙 Talad Rot Fai Ratchada (Vintage Night Market)</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              MRT Kamphaeng Phet → Thailand Cultural Centre
+              <span class="price">฿16 (RM2)</span>
+            </div>
+
+            <h4>ℹ️ Activities</h4>
+            <div class="info-row">💸 FREE entry</div>
+            <div class="info-row">🎵 Live music, vintage vibes</div>
+            <div class="info-row">
+              📸 Photo spot: Rooftop of Esplanade mall for aerial view (FREE)
+            </div>
+
+            <h4>🍽️ Dinner Options</h4>
+            <div class="food-list">
+              <div class="food-item">
+                BBQ buffet - <span class="price">฿100-150 (RM13-20)</span>
+              </div>
+              <div class="food-item">
+                Seafood platters - <span class="price">฿80-120 (RM11-16)</span>
+              </div>
+              <div class="food-item">
+                Thai desserts (kanom) -
+                <span class="price">฿30-50 (RM4-7)</span>
+              </div>
+              <div class="food-item">
+                Fresh oysters - <span class="price">฿60-80 (RM8-11)</span>
+              </div>
+            </div>
+            <span class="payment-badge mixed">💳 Mostly Cash, Some QR</span>
+          </div>
+
+          <div class="route-map">
+            <h4>🗺️ Day 3 Route</h4>
+            <p>
+              Ratchadamri → Chatuchak Market (morning) → Hotel Rest → Talad Rot
+              Fai Ratchada → Ratchadamri
+            </p>
+          </div>
+        </div>
+
+        <!-- DAY 4 -->
+        <div id="day4" class="day-content">
+          <div class="day-header">
+            <h2>Day 4: Sunday, Nov 16</h2>
+            <p>River Exploration & Departure Prep</p>
+            <div class="day-budget">Budget: ฿220-360 (RM29-48)</div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 8:00-11:30</span>
+            <h3>🚢 Chao Phraya River Boat Tour</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">
+              BTS Chit Lom → Saphan Taksin
+              <span class="price">฿26 (RM3.50)</span>
+            </div>
+            <div class="warning">
+              <strong>⚠️ Important:</strong> Walk DOWN to river level (not the
+              fancy tourist pier). Look for the local boat pier.
+            </div>
+
+            <h4>🚤 Orange Flag Boat (Local Commuter Boat)</h4>
+            <div class="food-list">
+              <div class="food-item">
+                <strong>All-day pass:</strong>
+                <span class="price">฿60 (RM8)</span> - BEST VALUE!
+              </div>
+              <div class="food-item">
+                <strong>Single trips:</strong>
+                <span class="price">฿15-20 (RM2-2.50)</span>
+              </div>
+              <div class="food-item">⏰ Operating hours: 6:00-19:00</div>
+              <div class="food-item">🕐 Every 15-20 minutes</div>
+            </div>
+            <span class="payment-badge cash-only">💵 CASH ONLY at pier</span>
+
+            <h4>🛑 Stop 1: Pak Klong Talad (Flower Market)</h4>
+            <div class="info-row">🚢 Pier: Saphan Phut/Memorial Bridge</div>
+            <div class="info-row">⏰ Open 24 hours (best early morning)</div>
+            <div class="info-row">💸 FREE to walk around</div>
+            <div class="info-row">🌸 Photography, wholesale flowers</div>
+            <div class="warning">
+              <strong>⚠️ Warning:</strong> Crowded, watch for motorbikes!
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 9:30-11:30</span>
+            <h3>🏮 Chinatown (Yaowarat)</h3>
+            <div class="info-row">📍 Just 5min walk from Flower Market</div>
+            <div class="info-row">
+              ⏰ Best time: 9am-12pm (less chaotic than evening)
+            </div>
+
+            <h4>🍽️ Brunch Must-Try</h4>
+            <div class="food-list">
+              <div class="food-item">
+                Guay jub (rolled noodle soup) -
+                <span class="price">฿40-60 (RM5.50-8)</span>
+              </div>
+              <div class="food-item">
+                Dim sum -
+                <span class="price">฿25-40 per basket (RM3.30-5.50)</span>
+              </div>
+              <div class="food-item">
+                Chinese donuts (pa thong ko) -
+                <span class="price">฿20 (RM2.50)</span>
+              </div>
+              <div class="food-item">
+                Soy milk - <span class="price">฿15-20 (RM2-2.50)</span>
+              </div>
+            </div>
+            <span class="payment-badge cash-only">💵 CASH ONLY</span>
+
+            <h4>🏛️ Activities</h4>
+            <div class="info-row">💸 FREE to explore</div>
+            <div class="info-row">
+              🏛️ Yaowarat Road architecture (no temples needed!)
+            </div>
+            <div class="info-row">
+              🛍️ Gold shops, traditional medicine stores
+            </div>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 12:00-14:00</span>
+            <h3>🏢 Terminal 21 (Airport-Themed Mall)</h3>
+            <h4>📍 Transport</h4>
+            <div class="info-row">Return via boat to Saphan Taksin</div>
+            <div class="info-row">
+              BTS Saphan Taksin → Asok <span class="price">฿26 (RM3.50)</span>
+            </div>
+
+            <h4>ℹ️ Activities</h4>
+            <div class="info-row">💸 FREE, great AC rest spot</div>
+            <div class="info-row">
+              🌍 Each floor themed as different city (Tokyo, London, Paris,
+              etc.)
+            </div>
+            <div class="info-row">🛍️ Last minute shopping</div>
+
+            <h4>🍽️ Lunch</h4>
+            <div class="info-row">
+              Food court: <span class="price">฿60-80 (RM8-11)</span>
+            </div>
+            <span class="payment-badge mixed">💳 Load Card System</span>
+          </div>
+
+          <div class="activity">
+            <span class="time-badge">⏰ 14:30-17:00</span>
+            <h3>🏨 Final Options</h3>
+
+            <h4>Option A: Rest & Pack</h4>
+            <div class="info-row">Return to hotel near Big C</div>
+            <div class="info-row">
+              Pack, organize photos, rest before departure
+            </div>
+
+            <h4>Option B: Pratunam Market</h4>
+            <div class="info-row">🚶 10min walk from Big C Ratchadamri</div>
+            <div class="info-row">⏰ Best time: 15:00-18:00 (less crowded)</div>
+            <div class="info-row">💸 FREE to explore</div>
+            <div class="info-row">🛍️ Cheap clothes, last-minute souvenirs</div>
+            <div class="info-row">
+              🍽️ Street snacks: <span class="price">฿30-50 (RM4-7)</span>
+            </div>
+            <span class="payment-badge cash-only">💵 Mostly Cash</span>
+          </div>
+
+          <div class="route-map">
+            <h4>🗺️ Day 4 Route</h4>
+            <p>
+              Ratchadamri → Saphan Taksin (boat pier) → Flower Market →
+              Chinatown → Back to Saphan Taksin → Terminal 21 →
+              Ratchadamri/Pratunam
+            </p>
+          </div>
+        </div>
+
+        <!-- TIPS -->
+        <div id="tips" class="day-content">
+          <div class="day-header">
+            <h2>💡 Essential Tips & Info</h2>
+            <p>Everything you need to know for a smooth trip</p>
+          </div>
+
+          <div class="tips-section">
+            <h3>🚇 Transport Guide</h3>
+            <h4>Rabbit Card (BTS)</h4>
+            <div class="info-row">
+              💳 Cost: ฿200 (฿100 deposit + ฿100 credit)
+            </div>
+            <div class="info-row">
+              📍 Buy at: Any BTS station (get yours at Chit Lom on Day 1)
+            </div>
+            <div class="info-row">
+              💰 Saves: ฿2-5 per trip, skip ticket queues
+            </div>
+            <div class="info-row">⚡ Top-up: 7-Eleven or BTS stations</div>
+
+            <h4>Cheap Transport Options (Ranked)</h4>
+            <div class="food-list">
+              <div class="food-item">
+                1. <strong>BTS/MRT:</strong>
+                <span class="price">฿16-44/trip (RM2-6)</span> - Most reliable
+              </div>
+              <div class="food-item">
+                2. <strong>Orange Flag Boat:</strong>
+                <span class="price">฿15-20/trip (RM2-2.50)</span> - Scenic!
+              </div>
+              <div class="food-item">
+                3. <strong>Public Bus:</strong>
+                <span class="price">฿8-15 (RM1-2)</span> - Hot, crowded, slow
+              </div>
+              <div class="food-item">
+                4. <strong>Grab (Share):</strong>
+                <span class="price">฿40-100 (RM5.50-13)</span> - Split with
+                friends
+              </div>
+              <div class="food-item">
+                5. <strong>Walking:</strong> FREE - Use Google Maps offline
+              </div>
+            </div>
+          </div>
+
+          <div class="tips-section">
+            <h3>📱 Essential Apps</h3>
+            <div class="info-row">
+              📍 <strong>Google Maps:</strong> Download offline Bangkok map
+            </div>
+            <div class="info-row">
+              🗣️ <strong>Google Translate:</strong> Download Thai language
+              offline
+            </div>
+            <div class="info-row">
+              🚗 <strong>Grab/Bolt:</strong> Transport apps (Bolt often cheaper)
+            </div>
+            <div class="info-row">
+              💱 <strong>XE Currency:</strong> Real-time exchange rates
+            </div>
+            <div class="info-row">
+              🚌 <strong>ViaBus:</strong> Bangkok bus routes
+            </div>
+            <div class="info-row">
+              🗺️ <strong>Moovit:</strong> Public transport planning
+            </div>
+          </div>
+
+          <div class="warning">
+            <h3>⚠️ Important Warnings</h3>
+            <h4>Weather (Mid-November)</h4>
+            <div class="info-row">🌡️ Temperature: 25-33°C (77-91°F)</div>
+            <div class="info-row">💧 Humidity: 70-80%</div>
+            <div class="info-row">🌧️ Rain: Possible short showers</div>
+            <div class="info-row">
+              🎒 Bring: Umbrella, water bottle, sunscreen, hat, light clothes
+            </div>
+
+            <h4>Crowd Warnings</h4>
+            <div class="info-row">
+              🚨 <strong>WORST crowds:</strong> Chatuchak 11am-3pm Sat/Sun
+            </div>
+            <div class="info-row">
+              🏮 <strong>Chinatown:</strong> Crazy in evenings, go morning
+              instead
+            </div>
+            <div class="info-row">
+              🚇 <strong>BTS/MRT rush hours:</strong> 7-9am, 5-7pm
+            </div>
+          </div>
+
+          <div class="activity">
+            <h3>🛡️ Safety Tips</h3>
+            <div class="info-row">
+              👜 <strong>Pickpockets:</strong> Markets & crowded BTS - keep
+              valuables in front pockets
+            </div>
+            <div class="info-row">
+              🚕 <strong>Scams:</strong> Tuk-tuk drivers near tourist spots -
+              politely ignore
+            </div>
+            <div class="info-row">
+              🍜 <strong>Food safety:</strong> Eat where locals eat, avoid empty
+              stalls
+            </div>
+            <div class="info-row">
+              🌡️ <strong>Heat exhaustion:</strong> Take AC breaks every 2 hours,
+              hydrate constantly
+            </div>
+            <div class="info-row">
+              💧 <strong>Water:</strong> Bottled water only, available
+              everywhere (฿7-10)
+            </div>
+            <div class="info-row">
+              🚻 <strong>Bathrooms:</strong> 7-Eleven has clean toilets (small
+              purchase expected)
+            </div>
+          </div>
+
+          <div class="activity">
+            <h3>💰 Money Tips</h3>
+            <div class="info-row">
+              🏦 <strong>ATM:</strong> Use Big C or 7-Eleven ATMs (lower fees)
+            </div>
+            <div class="info-row">
+              💵 <strong>Small bills:</strong> Keep ฿20, ฿50, ฿100 for street
+              food
+            </div>
+            <div class="info-row">
+              💳 <strong>Notify bank:</strong> Tell your bank you're traveling
+              to Thailand
+            </div>
+            <div class="info-row">
+              🚫 <strong>Large bills:</strong> Markets rarely have change for
+              ฿1000 notes
+            </div>
+            <div class="info-row">
+              📊 <strong>Cash vs Card:</strong> 70% cash, 30% card/QR in Bangkok
+            </div>
+          </div>
+
+          <div class="tips-section">
+            <h3>🎵 Jazz Scene Notes</h3>
+            <div class="info-row">
+              🍺 Most Bangkok jazz venues serve alcohol
+            </div>
+            <div class="info-row">
+              🎸 <strong>Parking Toys (Thonglor):</strong> Jazz cafe with
+              non-alcohol options
+            </div>
+            <div class="info-row">
+              ☀️ <strong>Sunday Jazz Brunch:</strong> Various hotels (check
+              current schedules)
+            </div>
+            <div class="info-row">
+              🎭 <strong>FREE alternative:</strong> Street performers at Siam
+              Square, CentralWorld plaza (especially weekends)
+            </div>
+            <div class="info-row">
+              📞 <strong>Pro tip:</strong> Call venues ahead to confirm schedule
+            </div>
+          </div>
+
+          <div class="tips-section">
+            <h3>👥 Tips for Friends Joining</h3>
+            <p><strong>Best activities to invite friends:</strong></p>
+            <div class="info-row">
+              🎨 <strong>Friday evening:</strong> Ari neighborhood or Siam
+              Square street performers
+            </div>
+            <div class="info-row">
+              🛍️ <strong>Saturday morning:</strong> Chatuchak Market (arrive
+              together at 9am!)
+            </div>
+            <div class="info-row">
+              🌙 <strong>Saturday evening:</strong> Talad Rot Fai night market
+            </div>
+            <div class="info-row">
+              🍜 <strong>Sunday morning:</strong> River boat tour + Chinatown
+              dim sum
+            </div>
+            <div class="info-row">
+              💡 <strong>Transport:</strong> Split Grab costs, makes it cheaper
+              than BTS sometimes!
+            </div>
+          </div>
+
+          <div class="activity">
+            <h3>📊 Final Budget Breakdown</h3>
+            <div class="food-list">
+              <div class="food-item">
+                <strong>Day 1 (Thursday):</strong>
+                <span class="price">฿280-420 (RM37-56)</span>
+              </div>
+              <div class="food-item">
+                <strong>Day 2 (Friday):</strong>
+                <span class="price">฿250-400 (RM33-53)</span>
+              </div>
+              <div class="food-item">
+                <strong>Day 3 (Saturday):</strong>
+                <span class="price">฿250-400 (RM33-53)</span>
+              </div>
+              <div class="food-item">
+                <strong>Day 4 (Sunday):</strong>
+                <span class="price">฿220-360 (RM29-48)</span>
+              </div>
+              <div
+                class="food-item"
+                style="
+                  border-top: 2px solid #667eea;
+                  margin-top: 10px;
+                  padding-top: 10px;
+                  font-size: 1.1em;
+                "
+              >
+                <strong>TOTAL 4 DAYS:</strong>
+                <span class="price">฿1,000-1,580 (RM130-210)</span>
+              </div>
+            </div>
+
+            <div class="warning" style="margin-top: 15px">
+              <strong>🎉 Great news!</strong> You'll be comfortably within your
+              RM200-400 budget with plenty left over for souvenirs, treats, or
+              emergencies!
+            </div>
+          </div>
+
+          <div class="tips-section">
+            <h3>🌟 Pro Traveler Final Tips</h3>
+            <div class="info-row">
+              ⏰ <strong>Golden rule:</strong> Start early (8am) before heat and
+              crowds
+            </div>
+            <div class="info-row">
+              💧 <strong>Hydration:</strong> Buy big water bottles at 7-Eleven
+              (฿15 for 1.5L)
+            </div>
+            <div class="info-row">
+              🎒 <strong>Day bag essentials:</strong> Water, umbrella, tissues,
+              small bills, phone charger
+            </div>
+            <div class="info-row">
+              📸 <strong>Photos:</strong> Ask before photographing street
+              vendors (usually okay with smile)
+            </div>
+            <div class="info-row">
+              🙏 <strong>Thai greeting:</strong> "Sawasdee krap" (male) /
+              "Sawasdee ka" (female)
+            </div>
+            <div class="info-row">
+              🍴 <strong>Food rule:</strong> If locals are lining up, join them!
+            </div>
+            <div class="info-row">
+              ❄️ <strong>AC breaks:</strong> 7-Eleven, malls, BTS stations when
+              you need to cool down
+            </div>
+            <div class="info-row">
+              📱 <strong>Free WiFi:</strong> Most malls and cafes, use for
+              Grab/maps
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p><strong>🇹🇭 Have an amazing trip to Bangkok!</strong></p>
+        <p style="margin-top: 10px">
+          You'll eat like royalty on your budget. The city is most magical in
+          early mornings and late evenings.
+        </p>
+        <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8">
+          💡 Tip: Bookmark this page for offline access during your trip!
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      function showDay(dayId) {
+        // Hide all day contents
+        const allDays = document.querySelectorAll(".day-content");
+        allDays.forEach((day) => day.classList.remove("active"));
+
+        // Remove active class from all tabs
+        const allTabs = document.querySelectorAll(".nav-tab");
+        allTabs.forEach((tab) => tab.classList.remove("active"));
+
+        // Show selected day
+        document.getElementById(dayId).classList.add("active");
+
+        // Highlight active tab - find which button was clicked
+        const clickedButton = event.currentTarget;
+        clickedButton.classList.add("active");
+      }
+    </script>
+  </body>
+</html>

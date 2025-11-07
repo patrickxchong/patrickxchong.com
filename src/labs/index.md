@@ -47,3 +47,10 @@ Small personal projects to make life easier :)
 - **COVID dashboard** ([Go to page](https://datastudio.google.com/s/s8gdYST88Js))
 
   - new cases and vaccinations by state
+
+- **Bangkok Trip** 
+
+  - ([ChatGPT](/labs/bangkok/chatgpt.html))
+  - ([Gemini](/labs/bangkok/gemini.html))
+  - ([Claude](/labs/bangkok/claude.html))
+  - ([Deepseek](/labs/bangkok/deepseek.html))
