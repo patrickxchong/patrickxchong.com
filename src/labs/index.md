@@ -62,7 +62,7 @@ Small personal projects to make life easier :)
     - [Sleep Flashcards](/labs/stories/health-sleep-flashcards.html) - Old version of template
     - [Sleep Interactive (Long)](/labs/stories/health-sleep-interactive-long.html)
     - [Sleep Interactive (Short)](/labs/stories/health-sleep-interactive-short.html)
-```
+```txt
 Prompt used:
 Using the uploaded file as a template, populate this with content on how to sleep well at night.
 
@@ -75,7 +75,7 @@ Add reflection questions per page to make it more engaging
   - Itinerary
     - [Seoul](/labs/stories/itinerary-seoul.html)
     - [Singapore](/labs/stories/itinerary-singapore.html)
-```
+```txt
 Prompt used:
 Using the uploaded file as a template, populate this with an itinerary for a 3 day trip in Seoul
 
@@ -92,7 +92,7 @@ Add reflection questions per page to make it more engaging
     - [Acts](/labs/stories/biblestudy-acts.html)
     - [1 John](/labs/stories/biblestudy-1john.html)
     - [1 John v2](/labs/stories/biblestudy-1john-v2.html)
-```
+```txt
 Prompt used:
 Using the uploaded file as a template, populate this with a study on the book of 1 John (ESV)
 
