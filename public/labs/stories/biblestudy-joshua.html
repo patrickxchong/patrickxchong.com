@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Book of Joshua Study</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #1c1917; /* Stone-900 */
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f5f5f4; /* Stone-100 */
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #292524, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.35);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fbbf24; /* Amber-400 */
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reflection-card {
+            background-color: #fffbeb; /* Amber-50 */
+            border-left: 4px solid #d97706; /* Amber-600 */
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .bible-verse {
+            font-family: Georgia, serif;
+            font-style: italic;
+            color: #44403c; /* Stone-700 */
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e7e5e4;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .bible-verse::before {
+            content: "“";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-size: 3rem;
+            color: #fcd34d; /* Amber-300 */
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-stone-900 text-amber-500 border border-stone-700 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>⚔️</span> Inventory
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-stone-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <!-- Background Decoration -->
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-amber-600 rounded-full blur-[100px] opacity-30"></div>
+                    <div class="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-red-900 rounded-full blur-[100px] opacity-30"></div>
+                </div>
+
+                <div class="relative z-10 mb-8">
+                    <div class="text-8xl animate-float relative z-10">🛡️</div>
+                    <div class="text-4xl absolute -top-2 -right-4 animate-bounce delay-700">🎺</div>
+                </div>
+                
+                <h1 class="text-6xl font-black mb-2 tracking-tighter text-amber-500">JOSHUA</h1>
+                <p class="text-stone-400 text-lg mb-8 tracking-widest uppercase text-xs font-bold">Conquest & Courage</p>
+                
+                <div class="glass-card bg-stone-800/80 border-stone-700 px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="goToSlide(1, event)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                        <p class="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Study Overview</p>
+                    </div>
+                    <p class="text-sm font-semibold text-stone-200 leading-relaxed">
+                        A 12-part journey on how to possess your promises, fight battles, and leave a legacy.
+                    </p>
+                    <div class="mt-3 text-xs text-amber-500 font-bold flex items-center gap-1 border-t border-stone-700 pt-2">
+                        BEGIN JOURNEY <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: CONTEXT -->
+        <div class="slide bg-stone-100" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">The Transition</h2>
+                <p class="text-stone-500 text-sm font-medium">Deuteronomy 34 -> Joshua 1</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bible-verse text-sm">
+                    "Moses my servant is dead. Now then, you and all these people, get ready to cross the Jordan River into the land I am about to give to them." (Joshua 1:2)
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
+                    <h3 class="text-amber-700 font-bold text-base mb-2">Context Keys</h3>
+                    <ul class="space-y-3 text-sm text-stone-600 leading-relaxed">
+                        <li class="flex gap-2">
+                            <span>🏜️</span>
+                            <span><strong>End of Wandering:</strong> 40 years of funeral marches in the desert are over. The old generation has passed.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span>👑</span>
+                            <span><strong>New Leadership:</strong> Moses (Lawgiver) is gone. Joshua (General) steps up. It shifts from "Maintenance" to "Conquest."</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🤔</span>
+                        <h4 class="font-bold text-amber-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        Is there a "Moses" (a past leader, method, or season) in your life that has "died," forcing you to step into a new role or season?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: CHAPTER 1 - COMMISSION -->
+        <div class="slide bg-amber-50" data-index="2">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">The Command</h2>
+                <p class="text-amber-700 text-sm font-bold uppercase tracking-wide">Be Strong & Courageous</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-amber-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-stone-800">The 4-Fold Command</h3>
+                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">v6, v7, v9, v18</span>
+                    </div>
+                    <p class="text-sm text-stone-600">
+                        God repeats "Be strong and courageous" four times in one chapter. Why? Because the task ahead (Giants & Walled Cities) was terrifying.
+                    </p>
+                </div>
+
+                <div class="bg-stone-800 p-4 rounded-2xl shadow-md text-white">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">📜</span>
+                        <h3 class="font-bold">The Secret to Success</h3>
+                    </div>
+                    <p class="text-sm text-stone-300 leading-relaxed">
+                        Joshua 1:8 is the only place in the OT where the word "Success" is used. The condition? <br>
+                        <strong class="text-amber-400">Meditate on the Law day and night.</strong>
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">⚔️</span>
+                        <h4 class="font-bold text-amber-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        Courage is not the absence of fear, but obedience in the presence of fear. What command are you hesitating to obey due to fear?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: CHAPTER 2 - RAHAB -->
+        <div class="slide bg-white" data-index="3">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-stone-800">Unlikely Hero</h2>
+                </div>
+                <p class="text-red-600 text-sm font-medium">The Scarlet Cord</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="relative h-48 bg-stone-900 rounded-xl overflow-hidden shadow-lg mb-2">
+                    <!-- Simple visualization of the wall -->
+                    <div class="absolute bottom-0 left-0 right-0 h-24 bg-stone-700"></div>
+                    <div class="absolute bottom-24 left-10 w-12 h-12 bg-stone-600"></div> <!-- Window -->
+                    <div class="absolute bottom-24 left-14 w-1 h-32 bg-red-600 z-10 shadow-[0_0_10px_rgba(220,38,38,0.8)]"></div> <!-- Cord -->
+                    <div class="absolute top-4 left-4 text-white z-20">
+                        <h3 class="font-bold text-lg">Rahab</h3>
+                        <p class="text-xs text-stone-400">Prostitute. Gentile. Ancestor of Jesus.</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-5 rounded-2xl border border-red-100">
+                    <h3 class="text-red-900 font-bold text-sm mb-1">A Contrast of Faith</h3>
+                    <p class="text-sm text-stone-700 leading-relaxed">
+                        The Israelites had God's law but often lacked faith. Rahab had zero background but risked everything on a rumor of God's power.
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card bg-white border-l-4 border-red-500">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🧣</span>
+                        <h4 class="font-bold text-red-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        God's grace reaches the "lowest" places. Who are you judging that God might be preparing to use for His glory?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: CHAPTER 3-4 - THE JORDAN -->
+        <div class="slide bg-blue-50" data-index="4">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Crossing Over</h2>
+                <p class="text-stone-500 text-sm">The River Jordan</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-blue-100">
+                    <div class="flex items-start gap-3">
+                        <span class="text-3xl">🌊</span>
+                        <div>
+                            <h3 class="text-blue-900 font-bold text-base">Wet Feet First</h3>
+                            <p class="text-sm text-stone-600 mt-2">
+                                Unlike the Red Sea (which parted <em>before</em> they walked), the Jordan only parted <em>after</em> the priests stepped into the floodwaters.
+                            </p>
+                            <p class="text-xs font-bold text-blue-600 mt-2 uppercase">Faith activates the miracle.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-stone-200 p-5 rounded-2xl border border-stone-300">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-stone-800 font-bold">The 12 Stones</h3>
+                        <div class="flex gap-1">
+                            <div class="w-3 h-3 rounded-full bg-stone-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-stone-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-stone-500"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-stone-700">
+                        They built a monument at Gilgal. Why? Because humans are prone to amnesia. We forget God's miracles as soon as new problems arise.
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🪨</span>
+                        <h4 class="font-bold text-amber-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        What is a "stone of remembrance" in your life—a past victory you need to revisit to gain courage for today?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: CHAPTER 5 - CONSECRATION -->
+        <div class="slide bg-stone-900 text-stone-200" data-index="5">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-white mb-2">Pause to Purify</h2>
+                <p class="text-amber-500 text-sm">Consecration before Conquest</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-5 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm leading-relaxed text-stone-400">
+                    Before the battle of Jericho, God orders a pause. Two strange things happen:
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-stone-800 p-3 rounded-xl border border-stone-700">
+                        <div class="text-2xl mb-1">🔪</div>
+                        <h4 class="font-bold text-white text-sm">Circumcision</h4>
+                        <p class="text-xs text-stone-400 mt-1">Renewing the covenant mark.</p>
+                    </div>
+                    <div class="bg-stone-800 p-3 rounded-xl border border-stone-700">
+                        <div class="text-2xl mb-1">🍷</div>
+                        <h4 class="font-bold text-white text-sm">Passover</h4>
+                        <p class="text-xs text-stone-400 mt-1">Remembering redemption.</p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-900/30 p-4 rounded-xl border border-amber-900/50">
+                    <h3 class="font-bold text-amber-500 mb-2">The Commander</h3>
+                    <p class="text-sm text-stone-300 italic">
+                        Joshua asks the Figure with the sword: "Are you for us or our enemies?"<br>
+                        The reply: <strong>"Neither. I am the Commander of the Lord's Army."</strong>
+                    </p>
+                    <p class="text-xs text-stone-400 mt-2">
+                        God doesn't take sides. We take His side.
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="bg-stone-800 border-l-4 border-amber-500 p-4 rounded-r-xl">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🦶</span>
+                        <h4 class="font-bold text-amber-500 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-400 italic">
+                        Are you rushing into battle without stopping to align your heart? Success requires holiness, not just strategy.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: CHAPTER 6 - JERICHO -->
+        <div class="slide bg-orange-50" data-index="6">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Jericho</h2>
+                <p class="text-orange-600 text-sm font-bold">The Strategy of Silence</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="flex items-center justify-center py-4">
+                    <div class="relative w-32 h-32 flex items-center justify-center">
+                        <div class="absolute inset-0 border-4 border-stone-400 rounded-full animate-ping opacity-20"></div>
+                        <div class="absolute inset-2 border-4 border-stone-800 rounded-full flex items-center justify-center bg-stone-200">
+                            <span class="text-4xl">🎺</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="font-bold text-stone-800 mb-2">The Battle Plan</h3>
+                    <ol class="list-decimal pl-5 space-y-2 text-sm text-stone-600">
+                        <li>March around the city once for 6 days.</li>
+                        <li><strong>Stay completely silent.</strong></li>
+                        <li>On day 7, march 7 times.</li>
+                        <li>Blow the trumpets and SHOUT.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-orange-100 p-4 rounded-xl text-xs text-orange-900 font-medium">
+                    "When the people heard the sound... the wall collapsed." (Josh 6:20)
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🤫</span>
+                        <h4 class="font-bold text-amber-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        Can you trust God when His methods seem ridiculous? Sometimes God commands silence to ensure the victory is unmistakably His.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: CHAPTER 7 - AI & ACHAN -->
+        <div class="slide bg-stone-200" data-index="7">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Defeat at Ai</h2>
+                <p class="text-stone-500 text-sm">The Cost of Hidden Sin</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-stone-800">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-stone-800">The Contrast</h3>
+                        <span class="text-2xl">📉</span>
+                    </div>
+                    <p class="text-sm text-stone-600 mt-2 leading-relaxed">
+                        Jericho (a huge city) fell easily. Ai (a tiny village) defeated Israel. Why?
+                        <br><br>
+                        <strong>Achan</strong> stole gold, silver, and a robe, hiding them under his tent.
+                    </p>
+                </div>
+
+                <div class="bg-stone-300 p-4 rounded-xl">
+                    <h3 class="font-bold text-stone-800 text-sm mb-1">Corporate Consequence</h3>
+                    <p class="text-xs text-stone-700">
+                        "Israel has sinned." God held the whole nation accountable for one man's hidden sin. Our private sins have public consequences.
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card bg-stone-50 border-stone-600">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">⛺</span>
+                        <h4 class="font-bold text-stone-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        Is there anything "buried in your tent"? Hidden compromise leads to public defeat. What do you need to confess today?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: CHAPTER 10 - SUN STANDS STILL -->
+        <div class="slide bg-yellow-50" data-index="8">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Audacious Prayer</h2>
+                <p class="text-yellow-600 text-sm font-bold">The Longest Day</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="relative h-40 bg-gradient-to-b from-blue-400 to-yellow-200 rounded-2xl flex items-center justify-center overflow-hidden shadow-inner">
+                    <div class="absolute top-4 left-4 animate-spin-slow">
+                         <span class="text-6xl text-yellow-400 drop-shadow-lg">☀️</span>
+                    </div>
+                    <div class="z-10 bg-white/80 backdrop-blur px-4 py-2 rounded-lg text-center">
+                        <p class="text-xs font-bold text-stone-600">"Sun, stand still over Gibeon!"</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-yellow-200">
+                    <p class="text-sm text-stone-700 leading-relaxed">
+                        Joshua needed more daylight to finish the battle. He didn't ask for protection; he asked for a cosmic alteration. God listened.
+                    </p>
+                    <div class="mt-3 text-xs bg-yellow-100 text-yellow-800 p-2 rounded">
+                        "There has never been a day like it before or since." (Josh 10:14)
+                    </div>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card border-yellow-500 bg-yellow-50">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🗣️</span>
+                        <h4 class="font-bold text-yellow-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        Are your prayers polite or audacious? Are you asking God to change the environment so you can complete the victory?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: CALEB -->
+        <div class="slide bg-stone-50" data-index="9">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Caleb's Request</h2>
+                <p class="text-stone-500 text-sm">Wholly Followed the Lord</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="flex items-center gap-4 p-4 border rounded-2xl bg-white shadow-sm">
+                    <div class="bg-stone-100 p-3 rounded-full text-2xl">🏔️</div>
+                    <div>
+                        <h4 class="font-bold text-stone-800">Age 85</h4>
+                        <p class="text-xs text-stone-500">
+                            "I am as strong this day as I was in the day that Moses sent me."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="font-bold text-stone-800 text-sm mb-2">"Give Me This Mountain"</h3>
+                    <p class="text-sm text-stone-700">
+                        Caleb didn't ask for a nice retirement condo by the Jordan. He asked for Hebron—the place where the giants (Anakim) lived. He wanted to fight the hardest battle at age 85.
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">💪</span>
+                        <h4 class="font-bold text-amber-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        Spiritual passion shouldn't fade with age. Are you looking for comfort, or are you still willing to take mountains for God?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: CHAPTER 24 - FAREWELL -->
+        <div class="slide bg-stone-100" data-index="10">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">The Choice</h2>
+                <p class="text-stone-500 text-sm">Joshua's Final Words</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bible-verse text-sm">
+                    "Choose for yourselves this day whom you will serve... But as for me and my household, we will serve the Lord." (Joshua 24:15)
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200">
+                    <p class="text-sm text-stone-700 leading-relaxed">
+                        Joshua gathers the elders. He recounts history (Abraham to now). He warns them that God is a jealous God. He demands a decision. Neutrality is not an option.
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+                    <div class="flex-1 bg-stone-200 p-3 rounded-xl text-center">
+                        <span class="block text-2xl mb-1">🗿</span>
+                        <span class="text-xs font-bold text-stone-600">Gods of Egypt</span>
+                    </div>
+                    <div class="flex-1 bg-amber-200 p-3 rounded-xl text-center border-2 border-amber-500">
+                        <span class="block text-2xl mb-1">🔥</span>
+                        <span class="text-xs font-bold text-amber-800">Yahweh</span>
+                    </div>
+                    <div class="flex-1 bg-stone-200 p-3 rounded-xl text-center">
+                        <span class="block text-2xl mb-1">🌳</span>
+                        <span class="text-xs font-bold text-stone-600">Gods of Amorites</span>
+                    </div>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="reflection-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🗳️</span>
+                        <h4 class="font-bold text-amber-800 text-sm">Reflection</h4>
+                    </div>
+                    <p class="text-sm text-stone-700 italic">
+                        This choice is daily. Have you made the decision for your "household" (finances, family, future) to serve the Lord exclusively?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: SUMMARY/END -->
+        <div class="slide bg-stone-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="11">
+            <h2 class="text-3xl font-bold mb-4 text-amber-500">Study Complete</h2>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12">
+                <div class="bg-stone-800 p-4 rounded-xl flex items-center gap-4 text-left border border-stone-700">
+                    <div class="text-2xl">🦁</div>
+                    <div class="text-xs text-stone-300">
+                        <strong class="block text-white text-sm mb-1">Courage</strong>
+                        Rooted in God's presence, not your ability.
+                    </div>
+                </div>
+                <div class="bg-stone-800 p-4 rounded-xl flex items-center gap-4 text-left border border-stone-700">
+                    <div class="text-2xl">📖</div>
+                    <div class="text-xs text-stone-300">
+                        <strong class="block text-white text-sm mb-1">Obedience</strong>
+                        The prerequisite for victory (Jericho vs Ai).
+                    </div>
+                </div>
+                <div class="bg-stone-800 p-4 rounded-xl flex items-center gap-4 text-left border border-stone-700">
+                    <div class="text-2xl">🏠</div>
+                    <div class="text-xs text-stone-300">
+                        <strong class="block text-white text-sm mb-1">Legacy</strong>
+                        "As for me and my house..."
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-amber-600 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto border border-amber-500">
+                Restart Study ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY (WARRIOR'S INVENTORY) -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        
+        <div class="bg-stone-100 rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-stone-800">Spiritual Inventory</h3>
+                    <p class="text-xs text-stone-500">Equip yourself for the battle</p>
+                </div>
+                <button onclick="toggleCalculator(event)" class="text-stone-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Stats -->
+            <div class="bg-white p-4 rounded-2xl mb-4 space-y-3 shadow-sm border border-stone-200">
+                <div class="flex justify-between items-center">
+                    <div class="text-center">
+                        <div class="text-xs font-bold text-stone-500 uppercase">Faith</div>
+                        <div class="text-lg font-black text-amber-600" id="stat-faith">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs font-bold text-stone-500 uppercase">Obedience</div>
+                        <div class="text-lg font-black text-blue-600" id="stat-obedience">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs font-bold text-stone-500 uppercase">Courage</div>
+                        <div class="text-lg font-black text-red-600" id="stat-courage">0</div>
+                    </div>
+                </div>
+                <div class="w-full bg-stone-200 rounded-full h-2 mt-2">
+                    <div id="bar-total" class="bg-stone-800 h-2 rounded-full w-0 transition-all duration-300"></div>
+                </div>
+                <div class="text-center text-[10px] text-stone-400 font-bold" id="rank-text">RANK: SCOUT</div>
+            </div>
+
+            <!-- Action List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetCalc()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-200 rounded-xl hover:bg-red-50 transition-colors">Reset Inventory</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Database of "Actions" to add to inventory
+        const actionDb = [
+            { name: "Meditate on Word", type: "faith", val: 10, icon: "📜" },
+            { name: "Step of Faith", type: "faith", val: 15, icon: "🌊" },
+            { name: "Consecrate Heart", type: "obedience", val: 20, icon: "❤️" },
+            { name: "Obey Odd Command", type: "obedience", val: 25, icon: "🎺" },
+            { name: "Confess Hidden Sin", type: "obedience", val: 30, icon: "⛺" },
+            { name: "Pray Audaciously", type: "faith", val: 20, icon: "☀️" },
+            { name: "Face Giants", type: "courage", val: 25, icon: "🏔️" },
+            { name: "Choose God Daily", type: "courage", val: 15, icon: "🗳️" },
+            { name: "Build Memorial", type: "faith", val: 10, icon: "🪨" },
+            { name: "Be Strong", type: "courage", val: 10, icon: "🦁" }
+        ];
+
+        let inventory = { faith: 0, obedience: 0, courage: 0 };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- CALCULATOR / INVENTORY ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            list.innerHTML = "";
+            actionDb.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'flex justify-between items-center p-3 bg-white border border-stone-200 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-transform mb-2';
+                
+                let typeColor = 'text-stone-500';
+                if(item.type === 'faith') typeColor = 'text-amber-600';
+                if(item.type === 'obedience') typeColor = 'text-blue-600';
+                if(item.type === 'courage') typeColor = 'text-red-600';
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div>
+                            <div class="text-sm font-bold text-stone-800">${item.name}</div>
+                            <div class="text-[10px] uppercase font-bold ${typeColor}">${item.type} +${item.val}</div>
+                        </div>
+                    </div>
+                    <div class="text-[10px] font-bold text-stone-500 bg-stone-100 px-3 py-1 rounded pointer-events-none">+ Add</div>
+                `;
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    addToInventory(item);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function addToInventory(item) {
+            inventory[item.type] += item.val;
+            renderInventory();
+        }
+
+        function resetCalc() {
+            inventory = { faith: 0, obedience: 0, courage: 0 };
+            renderInventory();
+        }
+
+        function renderInventory() {
+            document.getElementById('stat-faith').innerText = inventory.faith;
+            document.getElementById('stat-obedience').innerText = inventory.obedience;
+            document.getElementById('stat-courage').innerText = inventory.courage;
+            
+            const total = inventory.faith + inventory.obedience + inventory.courage;
+            const max = 300; // Arbitrary max for progress bar
+            const pct = Math.min((total / max) * 100, 100);
+            
+            document.getElementById('bar-total').style.width = pct + '%';
+            
+            // Rank Logic
+            let rank = "SCOUT";
+            if(total > 50) rank = "SOLDIER";
+            if(total > 150) rank = "COMMANDER";
+            if(total > 250) rank = "GIANT SLAYER";
+            
+            document.getElementById('rank-text').innerText = "RANK: " + rank;
+        }
+    </script>
+</body>
+</html>

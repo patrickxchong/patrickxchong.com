@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>Sleep Science Stories</title>
+		<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://unpkg.com/lucide@latest"></script>
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+			body {
+				font-family: 'Inter', sans-serif;
+				background-color: #000000;
+				color: white;
+				margin: 0;
+				padding: 0;
+				overflow: hidden; /* Prevent scrolling */
+				touch-action: none; /* Handle touch in JS */
+			}
+
+			/* Story Animations */
+			.slide-enter {
+				transform: scale(0.95);
+				opacity: 0;
+			}
+			.slide-enter-active {
+				transform: scale(1);
+				opacity: 1;
+				transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1),
+					opacity 0.3s ease;
+			}
+
+			/* Prevent text selection for better tapping experience */
+			.no-select {
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root"></div>
+
+		<script type="text/babel">
+			const { useState, useEffect, useCallback } = React
+
+			// --- Data: 20 Tips ---
+			const sleepTips = [
+				{
+					id: 1,
+					category: 'Environment',
+					icon: 'thermometer',
+					title: 'The 65°F Rule',
+					content: 'Keep your bedroom cool, ideally between 60-67°F (15-19°C).',
+					science: 'Core body temp must drop to initiate sleep.',
+					source: 'National Sleep Foundation',
+					color: 'from-indigo-900 to-slate-900',
+				},
+				{
+					id: 2,
+					category: 'Light',
+					icon: 'sun',
+					title: 'Morning Sunlight',
+					content: 'Get bright sunlight within 30-60 minutes of waking up.',
+					science: 'Sets your circadian clock for sleep 16 hours later.',
+					source: 'CDC & Huberman Lab',
+					color: 'from-blue-900 to-slate-900',
+				},
+				{
+					id: 3,
+					category: 'Diet',
+					icon: 'coffee',
+					title: 'Caffeine Curfew',
+					content: 'Stop drinking caffeine 8-10 hours before bedtime.',
+					science: 'Caffeine blocks sleep chemicals for hours.',
+					source: 'Mayo Clinic',
+					color: 'from-slate-800 to-stone-900',
+				},
+				{
+					id: 4,
+					category: 'Rhythm',
+					icon: 'calendar',
+					title: 'Consistency',
+					content: 'Wake up at the same time every day, even weekends.',
+					science: "Prevents 'Social Jetlag' and grogginess.",
+					source: 'Chronobiology Int.',
+					color: 'from-purple-900 to-slate-900',
+				},
+				{
+					id: 5,
+					category: 'Diet',
+					icon: 'wine',
+					title: 'Alcohol Trap',
+					content: 'Avoid alcohol within 3-4 hours of sleep.',
+					science: 'Alcohol fragments REM sleep causing wakefulness.',
+					source: 'Sleep Foundation',
+					color: 'from-rose-900 to-slate-900',
+				},
+				{
+					id: 6,
+					category: 'Habit',
+					icon: 'bed',
+					title: '20-Minute Rule',
+					content: "Can't sleep? Get out of bed after 20 mins.",
+					science: "Breaks the brain's link between bed and anxiety.",
+					source: 'CBT-I Guidelines',
+					color: 'from-indigo-950 to-slate-950',
+				},
+				{
+					id: 7,
+					category: 'Light',
+					icon: 'smartphone',
+					title: 'Blue Light',
+					content: 'No screens 60-90 minutes before bed.',
+					science: 'Blue light mimics the sun, suppressing melatonin.',
+					source: 'Harvard Health',
+					color: 'from-blue-950 to-black',
+				},
+				{
+					id: 8,
+					category: 'Physiology',
+					icon: 'footprints',
+					title: 'Warm Socks',
+					content: 'Wear socks to bed to fall asleep faster.',
+					science: 'Warm feet cool the core body temp via vasodilation.',
+					source: 'Physiol. Anthro.',
+					color: 'from-orange-900 to-slate-900',
+				},
+				{
+					id: 9,
+					category: 'Routine',
+					icon: 'bath',
+					title: 'Warm Bath',
+					content: 'Shower/bath 1-2 hours before bed.',
+					science: 'Rapid cooling afterwards signals sleep onset.',
+					source: 'Sleep Med Reviews',
+					color: 'from-cyan-900 to-slate-900',
+				},
+				{
+					id: 10,
+					category: 'Mental',
+					icon: 'book-open',
+					title: 'Brain Dump',
+					content: 'Write a to-do list for tomorrow tonight.',
+					science: 'Offloads cognitive load, reducing worry.',
+					source: 'Baylor University',
+					color: 'from-emerald-900 to-slate-900',
+				},
+				{
+					id: 11,
+					category: 'Nap',
+					icon: 'timer',
+					title: 'Nap Smart',
+					content: 'Naps: <20 mins and before 3 PM.',
+					science: 'Avoids sleep inertia and preserving night drive.',
+					source: 'NASA',
+					color: 'from-amber-900 to-slate-900',
+				},
+				{
+					id: 12,
+					category: 'Diet',
+					icon: 'utensils',
+					title: 'Meal Timing',
+					content: 'No big meals 3 hours before bed.',
+					science: 'Digestion heat interferes with deep sleep.',
+					source: 'Gastroenterology',
+					color: 'from-red-900 to-slate-900',
+				},
+				{
+					id: 13,
+					category: 'Environment',
+					icon: 'moon',
+					title: 'Pitch Black',
+					content: 'Blackout curtains or eye mask required.',
+					science: 'Even dim light disrupts melatonin cycles.',
+					source: 'Chronobiology Int.',
+					color: 'from-slate-900 to-black',
+				},
+				{
+					id: 14,
+					category: 'Breathing',
+					icon: 'wind',
+					title: '4-7-8 Breath',
+					content: 'Inhale 4s, Hold 7s, Exhale 8s.',
+					science: 'Manually triggers parasympathetic relaxation.',
+					source: 'Dr. Andrew Weil',
+					color: 'from-teal-900 to-slate-900',
+				},
+				{
+					id: 15,
+					category: 'Sound',
+					icon: 'waves',
+					title: 'Pink Noise',
+					content: 'Use a fan or white noise machine.',
+					science: 'Masks sudden sounds that trigger wake ups.',
+					source: 'Human Neuroscience',
+					color: 'from-fuchsia-900 to-slate-900',
+				},
+				{
+					id: 16,
+					category: 'Exercise',
+					icon: 'activity',
+					title: 'Workout Time',
+					content: 'No HIIT within 2 hours of bed.',
+					science: 'High cortisol and temp prevent sleep onset.',
+					source: 'Johns Hopkins',
+					color: 'from-lime-900 to-slate-900',
+				},
+				{
+					id: 17,
+					category: 'Bedding',
+					icon: 'pillow',
+					title: 'Pillow Check',
+					content: 'Replace pillows every 2 years.',
+					science: 'Loss of support causes micro-arousals.',
+					source: 'Sleep Foundation',
+					color: 'from-sky-900 to-slate-900',
+				},
+				{
+					id: 18,
+					category: 'Habit',
+					icon: 'bed-double',
+					title: 'The Sanctuary',
+					content: 'Bed is for sleep and sex only.',
+					science: 'Strengthens psychological sleep association.',
+					source: 'Harvard Med',
+					color: 'from-pink-900 to-slate-900',
+				},
+				{
+					id: 19,
+					category: 'Mental',
+					icon: 'eye-off',
+					title: 'Shuffle',
+					content: 'Visualize random objects rapidly.',
+					science: 'Mimics sleep onset thoughts to trick brain.',
+					source: 'Simon Fraser Univ',
+					color: 'from-violet-900 to-slate-900',
+				},
+				{
+					id: 20,
+					category: 'Supplement',
+					icon: 'glass-water',
+					title: 'Magnesium',
+					content: 'Try Magnesium Glycinate.',
+					science: 'Aids GABA regulation for nervous system calm.',
+					source: 'Nutrients Journal',
+					color: 'from-slate-800 to-slate-950',
+				},
+			]
+
+			const Icon = ({ name, size = 24, className = '' }) => {
+				return (
+					<i
+						data-lucide={name}
+						className={className}
+						style={{ width: size, height: size }}
+					></i>
+				)
+			}
+
+			const App = () => {
+				const [index, setIndex] = useState(0)
+
+				useEffect(() => {
+					lucide.createIcons()
+				}, [index])
+
+				const handleNext = useCallback(() => {
+					setIndex((i) => {
+						// Loop back to start if at end
+						if (i === sleepTips.length - 1) return 0
+						return i + 1
+					})
+				}, [])
+
+				const handlePrev = useCallback(() => {
+					setIndex((i) => {
+						// Loop to end if at start
+						if (i === 0) return sleepTips.length - 1
+						return i - 1
+					})
+				}, [])
+
+				// Keyboard support
+				useEffect(() => {
+					const handleKeyDown = (e) => {
+						if (e.key === 'ArrowRight' || e.key === ' ') handleNext()
+						if (e.key === 'ArrowLeft') handlePrev()
+					}
+					window.addEventListener('keydown', handleKeyDown)
+					return () => window.removeEventListener('keydown', handleKeyDown)
+				}, [handleNext, handlePrev])
+
+				const currentTip = sleepTips[index]
+
+				return (
+					<div className="relative w-full h-[100dvh] bg-black overflow-hidden no-select cursor-pointer">
+						{/* Background with dynamic gradient */}
+						<div
+							className={`absolute inset-0 bg-gradient-to-br ${currentTip.color} transition-colors duration-700 ease-in-out`}
+						></div>
+
+						{/* Content Layer */}
+						<div
+							key={index}
+							className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center slide-enter-active pointer-events-none"
+						>
+							{/* Large Icon Background Watermark */}
+							<div className="absolute opacity-10 transform scale-[5]">
+								<Icon name={currentTip.icon} size={100} />
+							</div>
+
+							{/* Main Content */}
+							<div className="relative z-10 max-w-md mx-auto flex flex-col items-center gap-8">
+								<div className="p-6 rounded-full bg-white/10 backdrop-blur-md shadow-2xl border border-white/10">
+									<Icon
+										name={currentTip.icon}
+										size={64}
+										className="text-white"
+									/>
+								</div>
+
+								<div>
+									<h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight drop-shadow-lg">
+										{currentTip.title}
+									</h1>
+									<p className="text-xl md:text-2xl font-medium leading-relaxed drop-shadow-md text-indigo-100">
+										{currentTip.content}
+									</p>
+								</div>
+
+								{/* Science Box */}
+								<div className="bg-black/40 backdrop-blur-md rounded-xl p-5 border-l-4 border-indigo-400 text-left w-full mt-4">
+									<p className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
+										Why it works
+									</p>
+									<p className="text-sm text-slate-200 leading-relaxed">
+										{currentTip.science}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						{/* UI Overlay (Progress, Header, Footer) */}
+						<div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-4 pb-8 md:p-6 z-20">
+							{/* Top: Progress Bars */}
+							<div className="flex gap-1 w-full mb-4">
+								{sleepTips.map((tip, i) => (
+									<div
+										key={tip.id}
+										className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+											i < index
+												? 'bg-white'
+												: i === index
+												? 'bg-white'
+												: 'bg-white/30'
+										}`}
+									></div>
+								))}
+							</div>
+
+							{/* Top: Header Info */}
+							<div className="flex items-center gap-3 px-1">
+								{/* Profile Picture Icon */}
+								<div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white ring-2 ring-white/20">
+									<Icon name="moon" size={16} className="fill-current" />
+								</div>
+
+								<div>
+									<p className="text-sm font-semibold text-white shadow-black drop-shadow-md">
+										Sleep Science
+									</p>
+									<p className="text-xs text-white/80 font-medium">
+										{currentTip.category}
+									</p>
+								</div>
+								<div className="ml-auto text-white/60 text-xs font-mono bg-black/20 px-2 py-1 rounded-md backdrop-blur-sm">
+									{index + 1}/{sleepTips.length}
+								</div>
+							</div>
+
+							{/* Spacer */}
+							<div className="flex-1"></div>
+
+							{/* Bottom: Footer/Source */}
+							<div className="w-full text-center">
+								<div className="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-black/20 backdrop-blur-sm text-xs font-medium text-white/70 border border-white/5">
+									<Icon name="book-open" size={12} />
+									<span>Source: {currentTip.source}</span>
+								</div>
+								<div className="mt-4 text-white/30 text-[10px] uppercase tracking-widest animate-pulse">
+									Tap right to Next • Tap left to Back
+								</div>
+							</div>
+						</div>
+
+						{/* Click/Touch Zones (Invisible) */}
+						{/* We use separate divs with stopPropagation to ensure the click is handled cleanly */}
+						<div
+							className="absolute inset-y-0 left-0 w-[30%] z-30 cursor-w-resize active:bg-white/5 transition-colors"
+							onClick={(e) => {
+								e.stopPropagation()
+								handlePrev()
+							}}
+						></div>
+						<div
+							className="absolute inset-y-0 right-0 w-[70%] z-30 cursor-e-resize active:bg-white/5 transition-colors"
+							onClick={(e) => {
+								e.stopPropagation()
+								handleNext()
+							}}
+						></div>
+					</div>
+				)
+			}
+
+			const root = ReactDOM.createRoot(document.getElementById('root'))
+			root.render(<App />)
+		</script>
+	</body>
+</html>

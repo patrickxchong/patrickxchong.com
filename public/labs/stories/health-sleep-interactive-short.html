@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mastering Sleep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #0f172a; /* Slate 900 */
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f8fafc;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #1e293b, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #818cf8; /* Indigo 400 */
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); /* Darker glass */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Float Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes drift {
+            0% { transform: translateX(0px); }
+            50% { transform: translateX(10px); }
+            100% { transform: translateX(0px); }
+        }
+        .animate-drift { animation: drift 8s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* Night Mode Text Utilities */
+        .text-night-main { color: #e2e8f0; }
+        .text-night-muted { color: #94a3b8; }
+        
+        /* Stars Background generator */
+        .stars {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: white;
+            box-shadow: 10px 10px white, 20px 50px white, 100px 80px white, 200px 10px white, 150px 200px white;
+            opacity: 0.5;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-indigo-600 text-white border border-indigo-500 px-4 py-2 rounded-full text-xs font-bold shadow-lg shadow-indigo-900/50 active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>🌙</span> Sleep Score
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-[#0f172a] text-white" data-index="0">
+            <!-- Decorative Stars -->
+            <div class="stars animate-pulse"></div>
+            
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative z-10">
+                <div class="relative mb-10">
+                    <div class="absolute inset-0 bg-indigo-500 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">💤</div>
+                    <div class="text-4xl absolute -top-4 -right-2 animate-drift text-yellow-100">✨</div>
+                    <div class="text-2xl absolute bottom-0 -left-4 animate-drift delay-700 text-indigo-300">🌑</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-white">Mastering<br>Sleep</h1>
+                <p class="text-indigo-300 text-lg mb-8 tracking-wide">The Science of Recharge</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="goToSlide(1, event)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-indigo-300 font-bold uppercase">System Status</p>
+                    </div>
+                    <p class="text-sm font-semibold text-white leading-relaxed">
+                        We spend <span class="text-indigo-300">33% of our lives</span> asleep, yet most of us are chronically tired. Why?
+                    </p>
+                    <div class="mt-3 text-xs text-indigo-400 font-bold flex items-center gap-1 border-t border-indigo-800/50 pt-2">
+                        ENTER THE VOID <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THE MECHANISM -->
+        <div class="slide bg-slate-50" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Why do we sleep?</h2>
+                <p class="text-slate-500 text-sm">It's a war between two forces.</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <!-- Concept 1 -->
+                <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">⏰</span>
+                        <div>
+                            <h3 class="text-indigo-900 font-bold text-base">Process C: The Clock</h3>
+                            <p class="text-sm text-indigo-800 mt-1 leading-relaxed">
+                                Your <strong>Circadian Rhythm</strong>. It wants you awake when the sun is up and asleep when it's dark. It relies entirely on LIGHT signals entering your eyes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="bg-slate-200 p-5 rounded-2xl border border-slate-300">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🔋</span>
+                        <div>
+                            <h3 class="text-slate-900 font-bold text-base">Process S: The Pressure</h3>
+                            <p class="text-sm text-slate-700 mt-1 leading-relaxed">
+                                <strong>Adenosine</strong> builds up in your brain every minute you are awake. It's like a "Sleep Hunger."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Crash -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500">
+                    <h3 class="font-bold text-slate-800 text-sm mb-1">The Coffee Trap ☕</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Caffeine doesn't remove Adenosine; it just <strong>blocks the receptor</strong>. When the caffeine wears off, all that built-up sleepiness hits you at once (The Afternoon Crash).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: THE 10-3-2-1 RULE -->
+        <div class="slide bg-[#1e1b4b] text-white" data-index="2">
+            <div class="px-6 pt-8">
+                <h2 class="text-3xl font-bold text-indigo-100 mb-2">The Formula</h2>
+                <p class="text-indigo-300 text-sm">The 10-3-2-1-0 Method for perfect rest.</p>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-center px-4 gap-3 overflow-y-auto custom-scroll pb-24">
+                
+                <!-- 10 Hours -->
+                <div class="flex items-center gap-4 p-3 bg-indigo-900/40 rounded-xl border border-indigo-800/50">
+                    <div class="font-bold text-2xl text-indigo-300 w-8">10</div>
+                    <div class="flex-1">
+                        <strong class="text-sm block">Hours before bed</strong>
+                        <span class="text-xs text-indigo-200">No more Caffeine. (It has a 5-7 hour half-life!)</span>
+                    </div>
+                </div>
+
+                <!-- 3 Hours -->
+                <div class="flex items-center gap-4 p-3 bg-indigo-900/40 rounded-xl border border-indigo-800/50">
+                    <div class="font-bold text-2xl text-indigo-300 w-8">3</div>
+                    <div class="flex-1">
+                        <strong class="text-sm block">Hours before bed</strong>
+                        <span class="text-xs text-indigo-200">No more Food/Alcohol. Digestion keeps core temp high.</span>
+                    </div>
+                </div>
+
+                <!-- 2 Hours -->
+                <div class="flex items-center gap-4 p-3 bg-indigo-900/40 rounded-xl border border-indigo-800/50">
+                    <div class="font-bold text-2xl text-indigo-300 w-8">2</div>
+                    <div class="flex-1">
+                        <strong class="text-sm block">Hours before bed</strong>
+                        <span class="text-xs text-indigo-200">No more Work. Cortisol needs to drop now.</span>
+                    </div>
+                </div>
+
+                <!-- 1 Hour -->
+                <div class="flex items-center gap-4 p-3 bg-indigo-900/40 rounded-xl border border-indigo-800/50">
+                    <div class="font-bold text-2xl text-indigo-300 w-8">1</div>
+                    <div class="flex-1">
+                        <strong class="text-sm block">Hour before bed</strong>
+                        <span class="text-xs text-indigo-200">No Screens (Blue Light). It destroys Melatonin.</span>
+                    </div>
+                </div>
+
+                <!-- 0 -->
+                <div class="flex items-center gap-4 p-3 bg-indigo-500/20 rounded-xl border border-indigo-400/50">
+                    <div class="font-bold text-2xl text-white w-8">0</div>
+                    <div class="flex-1">
+                        <strong class="text-sm block">The Snooze Button</strong>
+                        <span class="text-xs text-white">Never use it. It fragments REM sleep.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 4: LIGHT & DARK -->
+        <div class="slide bg-white" data-index="3">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Light Mastery</h2>
+                </div>
+                <p class="text-slate-500 text-sm">Light is a drug. Dosage matters.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <!-- Morning Protocol -->
+                <div class="bg-yellow-50 p-4 rounded-2xl shadow-sm border border-yellow-200">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-yellow-900">☀️ Morning: Blast It</h3>
+                    </div>
+                    <p class="text-xs text-yellow-800 leading-relaxed mb-2">
+                        View sunlight outdoors within <strong>30-60 mins</strong> of waking. This sets your neural timer for sleep 16 hours later.
+                    </p>
+                    <div class="text-[10px] bg-white/50 inline-block px-2 py-1 rounded text-yellow-900 font-bold">
+                        Through window = 50x less effective.
+                    </div>
+                </div>
+
+                <!-- Evening Protocol -->
+                <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-sm border border-indigo-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-indigo-100">🌑 Evening: The Cave</h3>
+                    </div>
+                    <p class="text-xs text-indigo-200 leading-relaxed mb-3">
+                        Artificial light after sunset suppresses Melatonin. 
+                    </p>
+                    <ul class="text-xs space-y-2 text-indigo-300">
+                        <li class="flex gap-2"><span>💡</span><span>Dim overhead lights. Use floor lamps.</span></li>
+                        <li class="flex gap-2"><span>📱</span><span>Phone: Grayscale mode + Night Shift.</span></li>
+                        <li class="flex gap-2"><span>🕯️</span><span>Candlelight contains no blue spectrum.</span></li>
+                    </ul>
+                </div>
+
+                 <!-- Interactive Overlay Zone -->
+                 <div onclick="toggleHint('lux-hint', event)" class="interactive-zone bg-slate-100 p-3 rounded-xl flex items-center justify-between active:scale-95 transition-transform border border-slate-200">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">🤓</span>
+                        <div class="text-xs font-bold text-slate-700">The "Lux" Paradox</div>
+                    </div>
+                    <span class="text-slate-400 text-xs">Tap ?</span>
+                </div>
+
+                <div id="lux-hint" class="interactive-zone hidden bg-slate-800 text-white p-4 rounded-xl text-xs shadow-xl animate-slide-up">
+                    <div class="flex justify-between items-start mb-2">
+                        <strong class="text-indigo-300">Sensitivity Changes</strong>
+                        <button onclick="toggleHint('lux-hint', event)" class="text-slate-400 font-bold px-2">✕</button>
+                    </div>
+                    <p>Your eyes are 1000x more sensitive to light at night than during the day. Even a small LED standby light can disrupt sleep architecture.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 5: TEMPERATURE -->
+        <div class="slide bg-slate-900 text-white" data-index="4">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-white mb-2">Thermal Trigger</h2>
+                <p class="text-slate-400 text-sm">To sleep, you must cool down.</p>
+            </div>
+
+            <div class="flex-1 px-4 flex flex-col items-center">
+                
+                <div class="relative w-full h-48 bg-slate-800 rounded-3xl flex items-center justify-center mb-6 border border-slate-700">
+                    <div class="text-center">
+                        <div class="text-6xl font-bold text-indigo-400 mb-2">18.3°C</div>
+                        <div class="text-xs text-slate-400 uppercase tracking-widest">Ideal Bedroom Temp</div>
+                        <div class="text-[10px] text-slate-500 mt-1">(65° Fahrenheit)</div>
+                    </div>
+                    
+                    <!-- Decorative visuals -->
+                    <div class="absolute top-4 right-4 text-2xl animate-pulse">❄️</div>
+                </div>
+
+                <div class="space-y-3 w-full">
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-indigo-300 text-sm">Why Cold?</h4>
+                        <p class="text-xs text-slate-300 mt-1">Your core body temperature needs to drop by ~1°C to initiate sleep. If it's too hot, your brain stays alert.</p>
+                    </div>
+
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-indigo-300 text-sm">The Warm Bath Hack</h4>
+                        <p class="text-xs text-slate-300 mt-1">Taking a hot shower/bath <strong>before</strong> bed actually cools you down. Blood rushes to skin surface, releasing core heat.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: SUMMARY -->
+        <div class="slide bg-[#0f172a] text-white flex flex-col justify-center items-center text-center p-8" data-index="5">
+            <h2 class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-white">Sweet Dreams</h2>
+            
+            <div class="space-y-3 w-full max-w-xs mb-10">
+                <div class="bg-slate-800/80 p-3 rounded-xl flex items-center gap-4 text-left border border-slate-700">
+                    <div class="text-2xl">☀️</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Morning Light</strong>
+                        View sun within 60 mins of waking.
+                    </div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl flex items-center gap-4 text-left border border-slate-700">
+                    <div class="text-2xl">☕</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Caffeine Curfew</strong>
+                        Stop 10 hours before bed.
+                    </div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl flex items-center gap-4 text-left border border-slate-700">
+                    <div class="text-2xl">📱</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Digital Sunset</strong>
+                        No screens 1 hour before sleep.
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg shadow-indigo-500/30 hover:scale-105 transition-transform pointer-events-auto border border-indigo-400">
+                Replay Story ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY (SLEEP SCORE) -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <!-- Stop Propagation on inner card so clicking it doesn't close it -->
+        <div class="bg-slate-900 border-t border-slate-700 rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Sleep Hygiene Score</h3>
+                    <p class="text-xs text-slate-400">Tap habits you did today</p>
+                </div>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Score Display -->
+            <div class="bg-slate-800 p-4 rounded-2xl mb-4 text-center border border-slate-700 relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="text-4xl font-bold text-indigo-400 mb-1"><span id="total-score">0</span>/100</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-widest" id="score-label">Insomniac</div>
+                </div>
+                <!-- Progress Bar Background -->
+                <div class="absolute bottom-0 left-0 h-1 bg-indigo-900 w-full">
+                    <div id="score-bar" class="h-full bg-indigo-500 transition-all duration-500 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Habit List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetCalc()" class="mt-4 w-full py-3 text-red-400 text-sm font-bold border border-red-900/50 rounded-xl hover:bg-red-900/20 transition-colors">Reset Score</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        const habitsDb = [
+            { name: "Viewed Morning Sunlight", points: 20, icon: "☀️" },
+            { name: "No Caffeine after 2PM", points: 15, icon: "☕" },
+            { name: "Exercised (30m+)", points: 15, icon: "🏃" },
+            { name: "No Food 3hr before bed", points: 10, icon: "🥗" },
+            { name: "Bedroom is Pitch Black", points: 10, icon: "🌑" },
+            { name: "Bedroom is Cool (18°C)", points: 10, icon: "❄️" },
+            { name: "No Screens 1hr before bed", points: 10, icon: "📱" },
+            { name: "Consistent Wake Time", points: 10, icon: "⏰" }
+        ];
+        
+        // Track selected indices
+        let selectedHabits = new Set();
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleHint(id, e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- CALCULATOR ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            list.innerHTML = ''; // Clear existing
+            
+            habitsDb.forEach((item, index) => {
+                const row = document.createElement('div');
+                // Check if selected
+                const isSelected = selectedHabits.has(index);
+                const bgClass = isSelected ? 'bg-indigo-900 border-indigo-500' : 'bg-slate-800 border-slate-700';
+                const textClass = isSelected ? 'text-white' : 'text-slate-400';
+                
+                row.className = `flex justify-between items-center p-3 border rounded-xl shadow-sm cursor-pointer active:scale-95 transition-all mb-2 ${bgClass}`;
+                row.id = `habit-${index}`;
+                
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div class="text-sm font-bold ${textClass} transition-colors">${item.name}</div>
+                    </div>
+                    <div class="text-[10px] font-bold ${isSelected ? 'text-indigo-300' : 'text-slate-600'} pointer-events-none">+${item.points}</div>
+                `;
+                
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleHabit(index);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function toggleHabit(index) {
+            if (selectedHabits.has(index)) {
+                selectedHabits.delete(index);
+            } else {
+                selectedHabits.add(index);
+            }
+            // Re-render list to update styles (lazy way, but works for small lists)
+            initCalculator(); 
+            renderCalc();
+        }
+
+        function resetCalc() {
+            selectedHabits.clear();
+            initCalculator();
+            renderCalc();
+        }
+
+        function renderCalc() {
+            let totalScore = 0;
+            selectedHabits.forEach(idx => {
+                totalScore += habitsDb[idx].points;
+            });
+            
+            // Cap at 100
+            if(totalScore > 100) totalScore = 100;
+
+            const scoreEl = document.getElementById('total-score');
+            const barEl = document.getElementById('score-bar');
+            const labelEl = document.getElementById('score-label');
+
+            scoreEl.innerText = totalScore;
+            barEl.style.width = totalScore + '%';
+
+            if(totalScore < 30) labelEl.innerText = "Zombie Mode 🧟";
+            else if(totalScore < 60) labelEl.innerText = "Average Sleeper 😐";
+            else if(totalScore < 90) labelEl.innerText = "Well Rested 😌";
+            else labelEl.innerText = "Sleep Master 🧙‍♂️";
+        }
+    </script>
+</body>
+</html>

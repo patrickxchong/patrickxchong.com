@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bone Health Story (Fixed)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fdfbf7;
+            overflow: hidden;
+            /* Improved touch response */
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            pointer-events: none; /* Let clicks pass through header area */
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.35);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        /* Use this class ONLY for small buttons/elements that should NOT trigger nav */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nutrient-bar-bg {
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .nutrient-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container with Global Click Listener -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <!-- Solid Opaque Button, Interactive -->
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-white text-slate-900 border border-slate-200 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>🧮</span> Daily Check
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-gradient-to-b from-slate-900 to-slate-800 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-yellow-500 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">🦴</div>
+                    <div class="text-4xl absolute -top-2 -right-4 animate-bounce delay-700">☀️</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-4">Bone<br>Health</h1>
+                <p class="text-slate-400 text-lg mb-8 tracking-wide">The Malaysian Paradox</p>
+                
+                <!-- This card navigates to next slide specifically, overriding global nav -->
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="goToSlide(1, event)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-slate-400 font-bold uppercase">Current Status</p>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 leading-relaxed">
+                        Despite living in the tropics, <span class="text-red-600">50% of Malaysians</span> have insufficient Vitamin D levels.
+                    </p>
+                    <div class="mt-3 text-xs text-slate-500 font-bold flex items-center gap-1 border-t border-slate-100 pt-2">
+                        TAP TO ANALYZE <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THE PARADOX (CONTEXT) -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Why are we deficient?</h2>
+                <p class="text-slate-500 text-sm">Living on the equator isn't enough.</p>
+            </div>
+
+            <!-- Removed 'interactive-zone' from wrapper so background clicks NAVIGATE -->
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <!-- Insight Card 1 -->
+                <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🌥️</span>
+                        <div>
+                            <h3 class="text-yellow-900 font-bold text-base">The Shadow Rule</h3>
+                            <p class="text-sm text-yellow-800 mt-1 leading-relaxed">
+                                You need UV index > 3. In Malaysia, this is <strong>10am - 3pm</strong>. Morning jogging at 8am? Zero Vitamin D production.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insight Card 2 -->
+                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">👗</span>
+                        <div>
+                            <h3 class="text-blue-900 font-bold text-base">Clothing & Melanin</h3>
+                            <p class="text-sm text-blue-800 mt-1 leading-relaxed">
+                                Long sleeves and hijab block 99% of UVB. Furthermore, darker skin requires <strong>3x to 5x longer exposure</strong> than lighter skin to generate the same amount of Vitamin D.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Insight Card 3 -->
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🏢</span>
+                        <div>
+                            <h3 class="text-slate-900 font-bold text-base">The Indoor Lifestyle</h3>
+                            <p class="text-sm text-slate-700 mt-1 leading-relaxed">
+                                Glass windows block 100% of UVB rays. Sitting by a sunny window provides heat, but <strong>zero</strong> Vitamin D.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: BIOLOGY & SYNERGY -->
+        <div class="slide bg-[#fdfbf7]" data-index="2">
+            <div class="px-6 pt-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Bio-Team</h2>
+                <p class="text-slate-500 text-sm">Calcium builds. Vitamin D unlocks.</p>
+            </div>
+
+            <!-- Removed interactive-zone from main wrapper -->
+            <div class="flex-1 flex flex-col justify-center px-6 gap-2">
+                
+                <!-- Diagram Container -->
+                <div class="relative h-80 w-full mt-4">
+                    
+                    <!-- Calcium Node -->
+                    <div class="absolute top-0 left-0 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 w-36 z-20">
+                        <div class="text-3xl mb-1">🦴</div>
+                        <div class="font-bold text-slate-700 text-sm">Calcium</div>
+                        <div class="text-[10px] text-slate-400">The Bricks</div>
+                    </div>
+
+                    <!-- Vit D Node -->
+                    <div class="absolute top-0 right-0 bg-yellow-100 p-4 rounded-2xl shadow-sm border border-yellow-200 w-36 z-20">
+                        <div class="text-3xl mb-1">☀️</div>
+                        <div class="font-bold text-yellow-800 text-sm">Vit D</div>
+                        <div class="text-[10px] text-yellow-600">The Key</div>
+                    </div>
+
+                    <!-- K2 Node -->
+                    <div class="absolute bottom-20 right-0 bg-green-50 p-4 rounded-2xl shadow-sm border border-green-200 w-36 z-20">
+                        <div class="text-3xl mb-1">🥬</div>
+                        <div class="font-bold text-green-800 text-sm">Vit K2</div>
+                        <div class="text-[10px] text-green-600">The Guide</div>
+                        <div class="text-[9px] leading-tight text-slate-500 mt-1">Directs Ca to bones, not arteries.</div>
+                    </div>
+
+                    <!-- Magnesium Node (Keep Interactive Zone on this specific element) -->
+                    <div onclick="toggleHint('mag-hint', event)" class="interactive-zone absolute bottom-20 left-0 bg-blue-50 p-4 rounded-2xl shadow-md border border-blue-200 w-36 z-30 text-left active:scale-95 transition-transform">
+                        <div class="text-3xl mb-1">⚡</div>
+                        <div class="font-bold text-blue-900 text-sm">Magnesium</div>
+                        <div class="text-[10px] text-blue-600 font-bold uppercase mt-1">Tap to reveal</div>
+                    </div>
+
+                    <!-- Hint Overlay for Magnesium -->
+                    <div id="mag-hint" class="interactive-zone hidden absolute bottom-0 left-0 right-0 bg-slate-800 text-white p-4 rounded-xl text-xs z-40 shadow-xl animate-slide-up border border-slate-700">
+                        <div class="flex justify-between items-start mb-1">
+                            <strong class="text-yellow-400">Magnesium is the "Activator"</strong>
+                            <button onclick="toggleHint('mag-hint', event)" class="text-slate-400 font-bold px-2">✕</button>
+                        </div>
+                        <p>Vitamin D stays inactive in the body without Magnesium to switch it on. Eat nuts, seeds, and leafy greens!</p>
+                    </div>
+
+                    <!-- Connector Lines (SVG) -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-30">
+                        <path d="M70 70 L 180 150 L 300 70" fill="none" stroke="black" stroke-width="2" stroke-dasharray="5,5"/>
+                        <path d="M70 200 L 180 150 L 300 200" fill="none" stroke="black" stroke-width="2" stroke-dasharray="5,5"/>
+                        <circle cx="180" cy="150" r="40" fill="#e5e7eb" />
+                        <text x="180" y="155" text-anchor="middle" font-size="10" fill="#6b7280">BONE</text>
+                    </svg>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm text-sm text-slate-600 mt-4">
+                    <strong>Warning:</strong> Without D & K2, Calcium supplements can calcify arteries instead of strengthening bones.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: CALCIUM SOURCES -->
+        <div class="slide bg-blue-50" data-index="3">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Calcium Sources</h2>
+                    <span class="text-[10px] font-bold bg-white text-blue-600 px-2 py-1 rounded shadow-sm">Target: 1000mg</span>
+                </div>
+                <p class="text-slate-500 text-sm">It's not just about milk.</p>
+            </div>
+
+            <!-- Removed interactive-zone from wrapper -->
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                
+                <!-- Ikan Bilis -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-blue-50">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">🐟</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Ikan Bilis (1/2 cup)</span>
+                            <span class="font-bold text-blue-600 text-xs">500mg (50%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-blue-500" style="width: 50%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Heads & bones are mandatory! Fried counts.</p>
+                    </div>
+                </div>
+
+                <!-- Milk -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-blue-50">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">🥛</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">High-Cal Milk (1 cup)</span>
+                            <span class="font-bold text-blue-600 text-xs">380mg (38%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-blue-500" style="width: 38%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Look for fortified brands (e.g., Marigold HL, Anlene).</p>
+                    </div>
+                </div>
+
+                <!-- Tofu -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-blue-50">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">🧊</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Tau Kwa (1 pc)</span>
+                            <span class="font-bold text-blue-600 text-xs">300mg (30%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-blue-500" style="width: 30%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Must use Calcium Sulfate (Gypsum) as coagulant.</p>
+                    </div>
+                </div>
+
+                <!-- Tempeh -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-blue-50">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">🥔</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Tempeh (1 cup)</span>
+                            <span class="font-bold text-blue-600 text-xs">184mg (18%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-blue-500" style="width: 18%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">High bioavailability due to fermentation.</p>
+                    </div>
+                </div>
+
+                <!-- Choy Sum / Kai Lan -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-blue-50">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">🥬</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Kai Lan (1 cup)</span>
+                            <span class="font-bold text-blue-600 text-xs">195mg (20%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-blue-500" style="width: 20%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Low oxalate. Better absorption than Spinach.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: VITAMIN D SOURCES -->
+        <div class="slide bg-yellow-50" data-index="4">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Vitamin D</h2>
+                    <span class="text-[10px] font-bold bg-white text-yellow-600 px-2 py-1 rounded shadow-sm">Target: 600 IU</span>
+                </div>
+                <p class="text-slate-500 text-sm">Food sources are very scarce!</p>
+            </div>
+
+            <!-- Removed interactive-zone from wrapper -->
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                
+                <!-- Sun -->
+                <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-2xl shadow-md flex items-center gap-4 border border-yellow-500">
+                    <div class="text-3xl bg-white/20 p-3 rounded-xl">☀️</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-white text-sm">Midday Sun</span>
+                            <span class="font-bold text-white text-xs">10,000+ IU</span>
+                        </div>
+                        <div class="nutrient-bar-bg bg-black/20"><div class="nutrient-bar-fill bg-white" style="width: 100%"></div></div>
+                        <p class="text-[10px] text-white/90 mt-1 font-semibold">10 AM - 3 PM. 15-20 mins. 40% skin exposed.</p>
+                    </div>
+                </div>
+
+                <!-- Salmon -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-yellow-50">
+                    <div class="text-3xl bg-yellow-50 p-3 rounded-xl">🍣</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Salmon (3oz)</span>
+                            <span class="font-bold text-yellow-600 text-xs">450 IU (75%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-yellow-500" style="width: 75%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Fatty fish (Salmon, Mackerel/Tenggiri) is best.</p>
+                    </div>
+                </div>
+
+                <!-- Mushrooms -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-yellow-50">
+                    <div class="text-3xl bg-yellow-50 p-3 rounded-xl">🍄</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">UV Mushrooms (1 cup)</span>
+                            <span class="font-bold text-yellow-600 text-xs">300 IU (50%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-yellow-500" style="width: 50%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Only if labeled "UV Exposed". Regular mushrooms have ~0.</p>
+                    </div>
+                </div>
+
+                <!-- Fortified Milk -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-yellow-50">
+                    <div class="text-3xl bg-yellow-50 p-3 rounded-xl">🥛</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Fortified Milk</span>
+                            <span class="font-bold text-yellow-600 text-xs">100 IU (15%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-yellow-500" style="width: 15%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Check labels. Standard fresh milk has 0 IU.</p>
+                    </div>
+                </div>
+
+                <!-- Egg Yolk -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-yellow-50">
+                    <div class="text-3xl bg-yellow-50 p-3 rounded-xl">🍳</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-700 text-sm">Egg Yolk (1 Large)</span>
+                            <span class="font-bold text-yellow-600 text-xs">40 IU (6%)</span>
+                        </div>
+                        <div class="nutrient-bar-bg"><div class="nutrient-bar-fill bg-yellow-500" style="width: 6%"></div></div>
+                        <p class="text-[10px] text-slate-400 mt-1">Don't throw away the yolk!</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 6: THE THIEVES -->
+        <div class="slide bg-slate-100" data-index="5">
+             <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Thieves</h2>
+                <p class="text-slate-500 text-sm">What steals calcium from your bones?</p>
+            </div>
+
+            <!-- Removed interactive-zone from wrapper -->
+            <div class="flex-1 px-6 grid grid-cols-1 gap-4 pb-20 overflow-y-auto custom-scroll">
+                
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-slate-800">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-800">Sodium (Salt)</h3>
+                        <span class="text-2xl">🧂</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        For every 2300mg of Sodium (1 tsp salt) you excrete, you lose ~40mg of Calcium in urine.
+                        <br><span class="text-red-500 font-bold">Culprits:</span> Soy sauce, instant noodles, soups.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-amber-800">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-800">Caffeine</h3>
+                        <span class="text-2xl">☕</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        Caffeine leaches calcium from bones.
+                        <br><span class="font-bold text-slate-700">Fix:</span> Add 2 tablespoons of milk to your coffee to offset the loss.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-700">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-800">Oxalates</h3>
+                        <span class="text-2xl">🍃</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        Compounds in some plants bind to calcium, preventing absorption.
+                        <br><span class="font-bold text-slate-700">Culprits:</span> Spinach & Rhubarb (High). 
+                        <br><span class="font-bold text-green-600">Better:</span> Bok Choy, Kale, Broccoli (Low).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: LIFE STAGES -->
+        <div class="slide bg-white" data-index="6">
+            <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">How much do I need?</h2>
+                <p class="text-slate-500 text-sm">Targets change as you age.</p>
+            </div>
+
+            <!-- Removed interactive-zone from wrapper -->
+            <div class="flex-1 px-6 space-y-4">
+                <!-- Kids -->
+                <div class="flex items-center gap-4 p-4 border rounded-2xl border-stone-100 shadow-sm">
+                    <div class="bg-stone-100 p-3 rounded-full text-2xl">🧸</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Kids (4-8)</h4>
+                        <div class="flex gap-4 mt-1 text-xs text-slate-500">
+                            <span>Ca: <strong class="text-blue-600">1000mg</strong></span>
+                            <span>D: <strong class="text-yellow-600">600 IU</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teens -->
+                <div class="flex items-center gap-4 p-4 border rounded-2xl border-stone-100 shadow-sm bg-stone-50">
+                    <div class="bg-white p-3 rounded-full text-2xl">🏃</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Teens (9-18)</h4>
+                        <div class="flex gap-4 mt-1 text-xs text-slate-500">
+                            <span>Ca: <strong class="text-blue-600">1300mg</strong></span>
+                            <span>D: <strong class="text-yellow-600">600 IU</strong></span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">Peak bone mass building years!</p>
+                    </div>
+                </div>
+
+                <!-- Adults -->
+                <div class="flex items-center gap-4 p-4 border rounded-2xl border-stone-100 shadow-sm">
+                    <div class="bg-stone-100 p-3 rounded-full text-2xl">💼</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Adults (19-50)</h4>
+                        <div class="flex gap-4 mt-1 text-xs text-slate-500">
+                            <span>Ca: <strong class="text-blue-600">1000mg</strong></span>
+                            <span>D: <strong class="text-yellow-600">600 IU</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seniors -->
+                <div class="flex items-center gap-4 p-4 border-2 border-red-100 rounded-2xl shadow-sm bg-red-50">
+                    <div class="bg-white p-3 rounded-full text-2xl">👵</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Women 50+ / Men 70+</h4>
+                        <div class="flex gap-4 mt-1 text-xs text-slate-500">
+                            <span>Ca: <strong class="text-blue-600">1200mg</strong></span>
+                            <span>D: <strong class="text-yellow-600">800 IU</strong></span>
+                        </div>
+                        <p class="text-[10px] text-red-400 mt-1">Absorption efficiency drops.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: END -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="7">
+            <h2 class="text-3xl font-bold mb-4">Summary</h2>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12">
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">🍽️</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Eat Heads & Bones</strong>
+                        Ikan Bilis only counts if you eat the whole fish.
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">☀️</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Sun Smart</strong>
+                        15 mins at lunch (10am-3pm). Not morning.
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">☕</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Watch the Thieves</strong>
+                        Limit salt and add milk to coffee.
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-yellow-500 text-yellow-900 rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+                Replay Story ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <!-- Stop Propagation on inner card so clicking it doesn't close it -->
+        <div class="bg-white rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Daily Plate Check</h3>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Progress Bars -->
+            <div class="bg-stone-50 p-4 rounded-2xl mb-4 space-y-3 shadow-inner">
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                        <span>Calcium Goal</span>
+                        <span><span id="calc-ca">0</span>/1000 mg</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-3"><div id="bar-ca" class="bg-blue-500 h-3 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                        <span>Vit D Goal</span>
+                        <span><span id="calc-d">0</span>/600 IU</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-3"><div id="bar-d" class="bg-yellow-500 h-3 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+            </div>
+
+            <!-- Food List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetCalc()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">Reset Plate</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        const foodDb = [
+            { name: "Ikan Bilis (Whole, 1/2c)", ca: 500, d: 0, icon: "🐟" },
+            { name: "High-Cal Milk (1c)", ca: 380, d: 100, icon: "🥛" },
+            { name: "Firm Tofu (1pc)", ca: 300, d: 0, icon: "🧊" },
+            { name: "Tempeh (1c)", ca: 184, d: 0, icon: "🥔" },
+            { name: "Kai Lan (1c)", ca: 195, d: 0, icon: "🥬" },
+            { name: "Cheese (2oz)", ca: 400, d: 20, icon: "🧀" },
+            { name: "Salmon (3oz)", ca: 10, d: 450, icon: "🍣" },
+            { name: "Mackerel (3oz)", ca: 10, d: 350, icon: "🐟" },
+            { name: "UV Mushrooms (1c)", ca: 10, d: 300, icon: "🍄" },
+            { name: "Midday Sun (15m)", ca: 0, d: 10000, icon: "☀️" },
+            { name: "Egg Yolk (1)", ca: 22, d: 40, icon: "🍳" }
+        ];
+        let calcState = { ca: 0, d: 0 };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            // 1. Check if user clicked an interactive element or button
+            // This prevents navigating when clicking the calc button or specific interactive cards
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            // 2. Logic for Left/Right Navigation based on screen position
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            // Stop propagation to prevent global listener from overriding this specific nav
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleHint(id, e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- CALCULATOR ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            foodDb.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-transform mb-2';
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                    </div>
+                    <div class="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded pointer-events-none">+ Add</div>
+                `;
+                // Add click listener to the specific row
+                row.onclick = (e) => {
+                    e.stopPropagation(); // Stop bubbling to global handler
+                    addToCalc(item);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function addToCalc(item) {
+            calcState.ca += item.ca;
+            calcState.d += item.d;
+            renderCalc();
+        }
+
+        function resetCalc() {
+            calcState = { ca: 0, d: 0 };
+            renderCalc();
+        }
+
+        function renderCalc() {
+            const maxCa = 1000;
+            const maxD = 600;
+            
+            const pctCa = Math.min((calcState.ca / maxCa)*100, 100);
+            const pctD = Math.min((calcState.d / maxD)*100, 100);
+            
+            document.getElementById('calc-ca').innerText = calcState.ca;
+            document.getElementById('calc-d').innerText = calcState.d;
+            
+            const barCa = document.getElementById('bar-ca');
+            const barD = document.getElementById('bar-d');
+            
+            barCa.style.width = pctCa + '%';
+            barD.style.width = pctD + '%';
+
+            // Color change on completion
+            if(pctCa >= 100) barCa.classList.replace('bg-blue-500', 'bg-green-500');
+            else barCa.classList.replace('bg-green-500', 'bg-blue-500');
+
+            if(pctD >= 100) barD.classList.replace('bg-yellow-500', 'bg-green-500');
+            else barD.classList.replace('bg-green-500', 'bg-yellow-500');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>1 John: Fellowship & Assurance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #0f172a;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fdfbf7;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #1e293b, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fbbf24; /* Amber-400 */
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .verse-card {
+            background-color: #fffbeb;
+            border-left: 4px solid #fbbf24;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-family: "Georgia", serif;
+            font-style: italic;
+            color: #451a03;
+        }
+
+        .reflection-pill {
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes pulse-soft {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        .animate-pulse-soft { animation: pulse-soft 3s infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track"></div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleCheckup(event)" class="interactive-zone bg-slate-900/90 backdrop-blur text-amber-400 border border-slate-700 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50">
+                    <span>⚡</span> Daily Walk Check
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-slate-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <!-- Background ambient light -->
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-64 h-64 bg-amber-500 blur-[100px] opacity-20 rounded-full"></div>
+                
+                <div class="relative z-10 mb-6">
+                    <div class="text-6xl animate-float">🕯️</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-2 tracking-tight">1 John</h1>
+                <p class="text-amber-400 text-lg mb-8 font-serif italic">Fellowship & Assurance</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform border-l-4 border-amber-500 bg-slate-800/80 border-t-0 border-r-0 border-b-0" onclick="goToSlide(1, event)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-slate-400 font-bold uppercase">The Core Question</p>
+                    </div>
+                    <p class="text-sm font-medium text-slate-200 leading-relaxed">
+                        How can you <span class="text-amber-400 font-bold">know</span> that you have eternal life?
+                    </p>
+                    <div class="mt-3 text-xs text-slate-500 font-bold flex items-center gap-1 border-t border-slate-700 pt-2 justify-end">
+                        START STUDY <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: CONTEXT -->
+        <div class="slide bg-slate-50" data-index="1">
+            <div class="px-6 pt-4 pb-2">
+                <span class="reflection-pill bg-slate-200 text-slate-600">Background</span>
+                <h2 class="text-3xl font-bold text-slate-800 mb-1">The Fight for Truth</h2>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="text-sm text-slate-600 leading-relaxed">
+                    John wrote this letter late in the first century to combat a dangerous heresy (early Gnosticism) that claimed spirit was good but matter (the body) was evil.
+                </div>
+
+                <!-- Concept Card 1 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl">👻</span>
+                        <div>
+                            <h3 class="text-slate-900 font-bold text-sm">The Lie</h3>
+                            <p class="text-xs text-slate-600 mt-1">
+                                "Jesus didn't have a real body. Sin doesn't matter because it's only physical."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Card 2 -->
+                <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl">🩸</span>
+                        <div>
+                            <h3 class="text-amber-900 font-bold text-sm">John's Response</h3>
+                            <p class="text-xs text-amber-800 mt-1">
+                                "We heard, we saw, we <strong>touched</strong> Him." (1:1). The Incarnation is real. How we live in the body matters.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 border-t pt-4">
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">Reflection</p>
+                    <p class="text-sm text-slate-700 italic">Do you treat your faith as merely a mental belief, or a tangible reality that affects your physical life?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: GOD IS LIGHT (1:5-10) -->
+        <div class="slide bg-white" data-index="2">
+            <div class="px-6 pt-4">
+                <span class="reflection-pill bg-amber-100 text-amber-800">1 John 1:5-10</span>
+                <h2 class="text-3xl font-bold text-slate-800">Walking in Light</h2>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 flex flex-col gap-4">
+                <div class="verse-card">
+                    "God is light, and in him is no darkness at all. If we say we have fellowship with him while we walk in darkness, we lie..."
+                </div>
+
+                <div class="relative h-48 w-full bg-slate-900 rounded-xl overflow-hidden p-4 flex flex-col justify-center items-center text-center shadow-lg interactive-zone active:scale-95 transition-transform" onclick="toggleHint('hint-light', event)">
+                    <div class="text-4xl mb-2">🔦</div>
+                    <div class="text-white font-bold">The Exposure Test</div>
+                    <div class="text-slate-400 text-xs mt-1">Tap to reveal meaning</div>
+                    
+                    <!-- Overlay -->
+                    <div id="hint-light" class="absolute inset-0 bg-amber-500 text-white p-6 flex flex-col justify-center items-center hidden animate-slide-up">
+                        <p class="font-bold text-lg mb-2">Confession</p>
+                        <p class="text-sm leading-tight">Walking in the light doesn't mean you are sinless. It means you are <strong>honest</strong> about your sin (1:9).</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl text-sm text-slate-600">
+                    <strong>Key Insight:</strong> Use 1 John 1:9 like breathing. Exhale sin (confession), inhale grace (forgiveness).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: THE ADVOCATE (2:1-6) -->
+        <div class="slide bg-blue-50" data-index="3">
+            <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-blue-100 text-blue-800">1 John 2:1-6</span>
+                <h2 class="text-3xl font-bold text-slate-800">The Advocate</h2>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-20">
+                <p class="text-slate-600 text-sm mb-4">What happens when we fail to walk in the light?</p>
+                
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-100 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-slate-800">The Courtroom</h3>
+                        <span class="text-2xl">⚖️</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 text-xs font-bold text-red-500">Accuser</div>
+                            <div class="text-xs text-slate-500">Satan highlights your guilt.</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 text-xs font-bold text-blue-600">Advocate</div>
+                            <div class="text-xs text-slate-500">Jesus Christ the Righteous.</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 text-xs font-bold text-amber-600">Plea</div>
+                            <div class="text-xs text-slate-500">"Propitiation" (He paid the fine).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verse-card bg-white border-l-blue-500 text-slate-700">
+                    "By this we may know that we are in him: whoever says he abides in him ought to walk in the same way in which he walked."
+                </div>
+
+                <div class="bg-blue-600 text-white p-4 rounded-xl text-sm interactive-zone" onclick="this.classList.toggle('bg-blue-700')">
+                    <strong>Reflection Question:</strong><br>
+                    Is your comfort in your performance, or in your Advocate? (Tap to ponder)
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: LOVE VS HATE (2:7-11) -->
+        <div class="slide bg-slate-900 text-white" data-index="4">
+             <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-slate-700 text-slate-300">1 John 2:7-11</span>
+                <h2 class="text-3xl font-bold text-white">The Social Test</h2>
+            </div>
+            
+            <div class="flex-1 flex flex-col justify-center px-6 pb-12">
+                <div class="relative w-full aspect-square max-w-[300px] mx-auto">
+                    <!-- Venn Diagramish -->
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-slate-700 rounded-full flex items-center justify-center opacity-80 mix-blend-screen">
+                        <span class="font-bold text-xs">Claim to<br>Know God</span>
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-32 h-32 bg-red-900 rounded-full flex items-center justify-center opacity-80 mix-blend-screen">
+                        <span class="font-bold text-xs text-center">Hate Your<br>Brother</span>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-slate-900 p-2 rounded text-[10px] font-bold z-10 shadow-xl border-2 border-red-500 transform rotate-12">
+                        IMPOSSIBLE
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center space-y-4">
+                    <h3 class="text-xl font-bold text-red-400">"He remains in darkness"</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        You cannot love the Father and hate His family. Bitterness blinds us (v.11).
+                    </p>
+                    <button class="w-full py-3 border border-slate-600 rounded-lg text-sm text-slate-400 active:bg-slate-800 transition-colors interactive-zone">
+                        Is there anyone you refuse to forgive?
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: THE WORLD (2:15-17) -->
+        <div class="slide bg-stone-100" data-index="5">
+             <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-stone-200 text-stone-600">1 John 2:15-17</span>
+                <h2 class="text-3xl font-bold text-slate-800">Do Not Love the World</h2>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 pb-24 overflow-y-auto custom-scroll">
+                <p class="text-sm text-slate-600 mb-4">The "World" isn't nature; it's the system opposed to God. It has three traps:</p>
+
+                <div class="space-y-3">
+                    <!-- Trap 1 -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-400">
+                        <div class="flex justify-between">
+                            <strong class="text-slate-800">Lust of the Flesh</strong>
+                            <span>🍖</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Cravings for physical pleasure outside God's bounds.</p>
+                    </div>
+                    
+                    <!-- Trap 2 -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-400">
+                        <div class="flex justify-between">
+                            <strong class="text-slate-800">Lust of the Eyes</strong>
+                            <span>👀</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Greed, materialism, and coveting what we see.</p>
+                    </div>
+
+                    <!-- Trap 3 -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-400">
+                        <div class="flex justify-between">
+                            <strong class="text-slate-800">Pride of Life</strong>
+                            <span>👑</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Arrogance about status, wealth, or achievements.</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-stone-200 rounded-lg text-center">
+                    <p class="font-serif italic text-stone-700 text-sm">"The world is passing away along with its desires, but whoever does the will of God abides forever."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: CHILDREN OF GOD (3:1-3) -->
+        <div class="slide bg-indigo-50" data-index="6">
+            <div class="px-6 pt-8 flex flex-col items-center text-center h-full justify-center">
+                <div class="text-6xl mb-4 animate-float">👑</div>
+                <h2 class="text-3xl font-bold text-indigo-900 mb-2">Behold!</h2>
+                
+                <div class="verse-card bg-white shadow-xl max-w-xs text-left">
+                    "See what kind of love the Father has given to us, that we should be called children of God; and so we are."
+                </div>
+
+                <div class="mt-6 space-y-2 w-full max-w-xs">
+                    <p class="text-indigo-800 font-bold text-sm text-left">The Purifying Hope:</p>
+                    <div class="bg-white/60 p-3 rounded-lg text-xs text-indigo-700 text-left">
+                        If you really believe you are royalty (God's child) and will see Him soon, you won't play in the mud (sin).
+                        <br><br>
+                        <strong>Identity drives behavior.</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: LOVE IN ACTION (3:16-18) -->
+        <div class="slide bg-red-50" data-index="7">
+             <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-red-100 text-red-800">1 John 3:16-18</span>
+                <h2 class="text-3xl font-bold text-slate-800">Love is a Verb</h2>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 pb-20 custom-scroll">
+                <div class="bg-white p-5 rounded-2xl shadow-md mb-6">
+                    <div class="text-3xl mb-2">✝️ = ❤️</div>
+                    <p class="text-sm font-bold text-slate-800">"By this we know love, that he laid down his life for us..."</p>
+                </div>
+
+                <h3 class="text-xs font-bold uppercase text-slate-400 mb-2">The Cain Test (v.12)</h3>
+                <div class="flex gap-2 mb-6">
+                    <div class="flex-1 bg-slate-200 p-3 rounded-lg text-xs text-center">
+                        <strong>Cain</strong><br>Envied & Murdered
+                    </div>
+                    <div class="flex-1 bg-red-200 p-3 rounded-lg text-xs text-center text-red-900">
+                        <strong>Christ</strong><br>Sacrificed & Saved
+                    </div>
+                </div>
+
+                <div class="verse-card bg-red-100 border-l-red-500 text-red-900">
+                    "Let us not love in word or talk but in deed and in truth."
+                </div>
+
+                <div class="interactive-zone p-4 border border-dashed border-slate-300 rounded-xl text-center active:bg-slate-100 transition-colors" onclick="alert('Action Step: Send an encouraging text, give a gift, or help someone with a task today.')">
+                    <span class="text-2xl block mb-1">🎁</span>
+                    <span class="text-xs font-bold text-slate-500">Tap for Today's Challenge</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: TEST THE SPIRITS (4:1-6) -->
+        <div class="slide bg-slate-800 text-white" data-index="8">
+             <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-slate-600 text-slate-300">1 John 4:1-6</span>
+                <h2 class="text-3xl font-bold">Truth Detector</h2>
+            </div>
+
+            <div class="flex-1 px-6 mt-6">
+                <p class="text-slate-300 text-sm mb-6">Not every spiritual sounding thing is from God. We must test them.</p>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-xl">✓</div>
+                        <div>
+                            <h4 class="font-bold text-white">Confesses Jesus</h4>
+                            <p class="text-xs text-slate-400">Acknowledges Jesus Christ has come in the flesh.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-xl">✓</div>
+                        <div>
+                            <h4 class="font-bold text-white">Listens to Apostles</h4>
+                            <p class="text-xs text-slate-400">Submits to Biblical authority (v.6).</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-4 bg-slate-700/50 rounded-xl border border-slate-600">
+                        <p class="font-serif italic text-center">"Little children, you are from God and have overcome them, for he who is in you is greater than he who is in the world." (4:4)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: NO FEAR (4:7-19) -->
+        <div class="slide bg-pink-50" data-index="9">
+             <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-pink-100 text-pink-800">1 John 4:18</span>
+                <h2 class="text-3xl font-bold text-slate-800">Fear vs. Love</h2>
+            </div>
+
+            <div class="flex-1 px-6 flex flex-col justify-center items-center">
+                
+                <div class="relative w-full max-w-xs h-64 mb-8 interactive-zone" onclick="toggleHeart(event)">
+                    <!-- Animated Heart -->
+                    <div id="heart-bg" class="absolute inset-0 bg-red-500 rounded-full blur-3xl opacity-20 transition-all duration-1000"></div>
+                    <div class="absolute inset-0 flex items-center justify-center flex-col text-center">
+                        <div class="text-8xl transition-transform duration-500 hover:scale-110">❤️</div>
+                        <p class="mt-4 font-bold text-slate-700">Perfect Love</p>
+                        <p class="text-xs text-slate-500">Casts out fear</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-lg text-center w-full">
+                    <h3 class="font-bold text-slate-800 mb-2">Why do we fear?</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        Fear has to do with punishment. If we fear judgment, we haven't fully grasped His love.
+                    </p>
+                    <div class="border-t pt-3 text-xs text-pink-600 font-bold">
+                        "We love because he first loved us."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: ASSURANCE (5:11-13) -->
+        <div class="slide bg-emerald-50" data-index="10">
+             <div class="px-6 pt-4">
+                 <span class="reflection-pill bg-emerald-100 text-emerald-800">1 John 5:11-13</span>
+                <h2 class="text-3xl font-bold text-slate-800">You May Know</h2>
+            </div>
+
+            <div class="flex-1 px-6 mt-6 space-y-6">
+                <div class="text-sm text-slate-600">
+                    The Gospel is not a "hope so" guess. It is a "know so" fact based on the Son.
+                </div>
+
+                <!-- Equation -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-emerald-100 flex flex-col gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👤</span>
+                        <div class="text-sm">He who has the <strong>Son</strong>...</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">⬇️</span>
+                        <div class="text-sm font-bold text-emerald-600">Has Life.</div>
+                    </div>
+                    <div class="h-px bg-slate-200 my-1"></div>
+                     <div class="flex items-center gap-3 opacity-50">
+                        <span class="text-2xl">🚫</span>
+                        <div class="text-sm">He who does not have the Son...</div>
+                    </div>
+                    <div class="flex items-center gap-3 opacity-50">
+                        <span class="text-2xl">⬇️</span>
+                        <div class="text-sm font-bold text-slate-500">Does not have life.</div>
+                    </div>
+                </div>
+
+                <div class="verse-card bg-emerald-100 border-l-emerald-500 text-emerald-900">
+                    "I write these things to you who believe... that you may know that you have eternal life."
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: SUMMARY -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="11">
+            <div class="w-16 h-1 bg-amber-500 mb-6 rounded-full"></div>
+            <h2 class="text-3xl font-bold mb-4">Final Thought</h2>
+            
+            <p class="text-slate-300 text-sm leading-relaxed mb-8 max-w-xs">
+                True Christianity shows itself in three ways:<br><br>
+                1. <strong>Theological:</strong> Believing Jesus is God in flesh.<br>
+                2. <strong>Moral:</strong> Obeying God's commands.<br>
+                3. <strong>Social:</strong> Loving God's people.
+            </p>
+
+            <div class="space-y-3 w-full max-w-xs">
+                <button onclick="toggleCheckup(event)" class="w-full py-4 bg-amber-500 text-amber-950 rounded-xl font-bold shadow-lg hover:scale-105 transition-transform interactive-zone">
+                    Do the Daily Check 📝
+                </button>
+                
+                <button onclick="goToSlide(0, event)" class="w-full py-4 bg-slate-800 text-slate-400 rounded-xl font-bold hover:bg-slate-700 transition-colors interactive-zone">
+                    Start Over ↺
+                </button>
+            </div>
+            
+            <p class="mt-8 text-[10px] text-slate-600">"Little children, keep yourselves from idols."</p>
+        </div>
+
+    </div>
+
+    <!-- DAILY WALK CHECK OVERLAY -->
+    <div id="checkup-overlay" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCheckup(event)">
+        <div class="bg-white rounded-t-3xl p-6 h-[90%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Daily Walk Check</h3>
+                    <p class="text-xs text-slate-500">Based on the tests of 1 John</p>
+                </div>
+                <button onclick="toggleCheckup(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Meters -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-slate-50 p-3 rounded-xl text-center border border-slate-100">
+                    <div class="text-xs font-bold text-slate-400 uppercase">Fellowship</div>
+                    <div class="text-2xl font-bold text-amber-500 mt-1"><span id="score-fellowship">0</span>%</div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl text-center border border-slate-100">
+                    <div class="text-xs font-bold text-slate-400 uppercase">Assurance</div>
+                    <div class="text-2xl font-bold text-emerald-500 mt-1"><span id="score-assurance">0</span>%</div>
+                </div>
+            </div>
+
+            <!-- Checklist -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="checklist-container">
+                <!-- JS Populated -->
+            </div>
+            
+            <button onclick="resetCheckup()" class="mt-4 w-full py-3 text-slate-400 text-sm font-bold border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">Reset Day</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA & STATE ---
+        const totalSlides = 12;
+        let currentSlide = 0;
+        
+        const checklistItems = [
+            { id: 1, text: "Confessed a sin to God", ref: "1 Jn 1:9", type: "fellowship", points: 20 },
+            { id: 2, text: "Walked in obedience", ref: "1 Jn 2:3", type: "fellowship", points: 20 },
+            { id: 3, text: "Denied a worldly desire", ref: "1 Jn 2:15", type: "fellowship", points: 20 },
+            { id: 4, text: "Confessed Jesus as Son", ref: "1 Jn 4:15", type: "assurance", points: 25 },
+            { id: 5, text: "Helped a brother in need", ref: "1 Jn 3:17", type: "assurance", points: 25 },
+            { id: 6, text: "Forgave someone", ref: "1 Jn 2:11", type: "assurance", points: 25 },
+            { id: 7, text: "Relied on God's love", ref: "1 Jn 4:16", type: "assurance", points: 25 }
+        ];
+
+        let checkedItems = new Set();
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initChecklist();
+            
+            // Global Click Handler for Slide Nav
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Keyboard Nav
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- NAVIGATION ---
+        function handleGlobalClick(e) {
+            // Prevent nav if clicking interactive elements
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) return;
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) prevSlide();
+            else nextSlide();
+        }
+
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            const slides = document.querySelectorAll('.slide');
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleHint(id, e) {
+            if(e) e.stopPropagation();
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        function toggleHeart(e) {
+            if(e) e.stopPropagation();
+            const bg = document.getElementById('heart-bg');
+            bg.classList.toggle('opacity-20');
+            bg.classList.toggle('opacity-80');
+            bg.classList.toggle('scale-150');
+        }
+
+        // --- CHECKLIST LOGIC ---
+        function toggleCheckup(e) {
+            if(e) e.stopPropagation();
+            const el = document.getElementById('checkup-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '';
+            
+            checklistItems.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'flex items-center gap-3 p-3 rounded-xl border border-slate-100 cursor-pointer transition-all hover:bg-slate-50';
+                el.onclick = (e) => toggleItem(item.id, el);
+                
+                el.innerHTML = `
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center text-white transition-colors" id="check-${item.id}">
+                        ✓
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-700">${item.text}</div>
+                        <div class="text-[10px] text-slate-400 font-serif">${item.ref}</div>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function toggleItem(id, cardEl) {
+            const checkEl = document.getElementById(`check-${id}`);
+            
+            if(checkedItems.has(id)) {
+                checkedItems.delete(id);
+                checkEl.classList.remove('bg-green-500', 'border-green-500');
+                checkEl.classList.add('border-slate-300');
+                cardEl.classList.remove('bg-green-50', 'border-green-200');
+            } else {
+                checkedItems.add(id);
+                checkEl.classList.remove('border-slate-300');
+                checkEl.classList.add('bg-green-500', 'border-green-500');
+                cardEl.classList.add('bg-green-50', 'border-green-200');
+            }
+            calculateScore();
+        }
+
+        function calculateScore() {
+            let fellowship = 0;
+            let assurance = 0;
+            let maxFellowship = 0;
+            let maxAssurance = 0;
+
+            checklistItems.forEach(item => {
+                if(item.type === 'fellowship') maxFellowship += item.points;
+                if(item.type === 'assurance') maxAssurance += item.points;
+                
+                if(checkedItems.has(item.id)) {
+                    if(item.type === 'fellowship') fellowship += item.points;
+                    if(item.type === 'assurance') assurance += item.points;
+                }
+            });
+
+            const fScore = Math.round((fellowship/maxFellowship)*100);
+            const aScore = Math.round((assurance/maxAssurance)*100);
+
+            document.getElementById('score-fellowship').innerText = fScore;
+            document.getElementById('score-assurance').innerText = aScore;
+        }
+
+        function resetCheckup() {
+            checkedItems.clear();
+            initChecklist();
+            calculateScore();
+        }
+    </script>
+</body>
+</html>

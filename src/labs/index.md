@@ -50,7 +50,27 @@ Small personal projects to make life easier :)
 
 - **Bangkok Trip** 
 
-  - ([ChatGPT](/labs/bangkok/chatgpt.html))
-  - ([Gemini](/labs/bangkok/gemini.html))
-  - ([Claude](/labs/bangkok/claude.html))
-  - ([Deepseek](/labs/bangkok/deepseek.html))
+  - [ChatGPT](/labs/bangkok/chatgpt.html)
+  - [Gemini](/labs/bangkok/gemini.html)
+  - [Claude](/labs/bangkok/claude.html)
+  - [Deepseek](/labs/bangkok/deepseek.html)
+
+- **AI Generated InstaStories** 
+
+  - Health
+    - [Vitamin D & Calcium](/labs/stories/health-vit-d-calcium.html) -  Template used for other stories
+    - [Sleep Flashcards](/labs/stories/health-sleep-flashcards.html) - Old version of template
+    - [Sleep Interactive (Long)](/labs/stories/health-sleep-interactive-long.html)
+    - [Sleep Interactive (Short)](/labs/stories/health-sleep-interactive-short.html)
+
+  - Itinerary
+    - [Seoul](/labs/stories/itinerary-seoul.html)
+    - [Singapore](/labs/stories/itinerary-singapore.html)
+
+  - Bible Study
+    - [Joshua](/labs/stories/biblestudy-joshua.html)
+    - [Isaiah](/labs/stories/biblestudy-isaiah.html)
+    - [Luke](/labs/stories/biblestudy-luke.html)
+    - [Acts](/labs/stories/biblestudy-acts.html)
+    - [1 John](/labs/stories/biblestudy-1john.html)
+    - [1 John v2](/labs/stories/biblestudy-1john-v2.html)

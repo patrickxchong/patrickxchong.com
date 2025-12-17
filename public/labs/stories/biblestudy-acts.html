@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Acts of the Apostles Study</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #1c1917; /* stone-900 */
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #292524; /* stone-800 */
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f5f5f4; /* stone-100 */
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #292524, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(28, 25, 23, 0.8), transparent);
+            pointer-events: none; 
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fde047; /* yellow-300 */
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; background-color: #d6d3d1; }
+        .progress-fill.active { width: 100%; background-color: #fde047; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(231, 229, 228, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        .verse-box {
+            font-family: "Georgia", serif;
+            font-style: italic;
+            border-left: 4px solid #b45309; /* amber-700 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track"></div>
+            <div class="flex justify-between items-center mt-4 px-3">
+                <span class="text-white/80 text-xs font-bold tracking-widest uppercase" id="chapter-indicator">INTRO</span>
+                
+                <!-- Reflection Button -->
+                <button onclick="toggleReflection(event)" class="interactive-zone bg-amber-600 text-white border border-amber-500 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50">
+                    <span>🤔</span> Reflect
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-stone-900 text-amber-50" data-index="0" data-chapter="Acts 1:8">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <!-- Background Decoration -->
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
+                
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-amber-500 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">🔥</div>
+                    <div class="text-4xl absolute -top-2 -right-4 animate-bounce delay-700">🕊️</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-2 tracking-tight text-amber-500">ACTS</h1>
+                <p class="text-stone-400 text-lg mb-8 tracking-widest uppercase font-serif">of the Apostles</p>
+                
+                <div class="glass-card bg-stone-800/80 px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform border-stone-700" onclick="nextSlide()">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-stone-400 font-bold uppercase">The Mission</p>
+                    </div>
+                    <p class="text-sm font-serif italic text-stone-200 leading-relaxed">
+                        "But you will receive power when the Holy Spirit has come upon you..."
+                    </p>
+                    <div class="mt-3 text-xs text-amber-500 font-bold flex items-center gap-1 border-t border-stone-700 pt-2">
+                        BEGIN JOURNEY <span class="text-lg">→</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-stone-600 mt-8">Tap right to advance. Tap left to go back.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: ACTS 1-2 -->
+        <div class="slide bg-stone-50" data-index="1" data-chapter="Acts 1-2">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">The Spark</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">Pentecost & The Early Church</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="verse-box bg-white p-4 rounded-xl shadow-sm text-stone-600 text-sm">
+                    "And suddenly there came from heaven a sound like a mighty rushing wind..." <span class="text-xs font-bold text-stone-400 block mt-1">- Acts 2:2</span>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">🔥</span>
+                        <div>
+                            <h3 class="text-stone-900 font-bold text-base">The Holy Spirit Descends</h3>
+                            <p class="text-sm text-stone-600 mt-1 leading-relaxed">
+                                Jesus ascended, telling them to wait. 120 believers gathered. The Spirit arrived not as a quiet whisper, but as fire and wind, enabling them to speak in tongues understood by the international crowd in Jerusalem.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">🗣️</span>
+                        <div>
+                            <h3 class="text-amber-900 font-bold text-base">Peter's Sermon</h3>
+                            <p class="text-sm text-amber-800 mt-1 leading-relaxed">
+                                Peter, once fearful, now stands bold. He preaches Christ crucified and risen. 
+                                <br><strong class="block mt-2">Result: 3,000 souls added in one day.</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: ACTS 3-5 -->
+        <div class="slide bg-stone-100" data-index="2" data-chapter="Acts 3-5">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Boldness</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">Miracles & Persecution</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <!-- Interactive Element -->
+                <div class="relative h-40 w-full bg-stone-200 rounded-xl overflow-hidden flex items-center justify-center interactive-zone" onclick="toggleHint('gate-hint', event)">
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">🏛️</div>
+                        <div class="font-bold text-stone-600">The Beautiful Gate</div>
+                        <div class="text-[10px] text-stone-500 uppercase mt-1">Tap to see the miracle</div>
+                    </div>
+                    <!-- Overlay -->
+                    <div id="gate-hint" class="hidden absolute inset-0 bg-amber-600 text-white p-4 flex flex-col justify-center items-center text-center animate-slide-up">
+                        <strong class="text-lg">"Silver and gold I have none..."</strong>
+                        <p class="text-xs mt-2">Peter heals a lame beggar. The man doesn't just walk; he leaps! This miracle sparks the first wave of persecution.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
+                    <h3 class="text-stone-900 font-bold text-base mb-2">The Church's Prayer</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">
+                        Threatened by the Sanhedrin to stop speaking, the church didn't pray for safety. They prayed for <strong>boldness</strong>.
+                    </p>
+                    <div class="mt-3 bg-stone-50 p-2 rounded text-xs italic text-stone-500">
+                        "And when they had prayed, the place in which they were gathered together was shaken..." (4:31)
+                    </div>
+                </div>
+                
+                <div class="bg-red-50 p-4 rounded-xl border-l-4 border-red-400">
+                    <strong class="text-red-900 text-sm">Contrast: Ananias & Sapphira</strong>
+                    <p class="text-xs text-red-800 mt-1">Amidst unity, hypocrisy is judged instantly. Fear of the Lord falls on the church.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: ACTS 6-7 -->
+        <div class="slide bg-stone-50" data-index="3" data-chapter="Acts 6-7">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">The First Martyr</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">Stephen's Witness</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex gap-4 items-center">
+                    <div class="text-3xl bg-stone-100 p-2 rounded-full">🍞</div>
+                    <div>
+                        <h3 class="font-bold text-stone-800 text-sm">Internal Growth Pains</h3>
+                        <p class="text-xs text-stone-600 mt-1">
+                            Greek widows were being neglected. Seven deacons (including Stephen) were chosen to serve tables so apostles could focus on prayer.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-stone-800 text-stone-100 p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🪨</div>
+                    <h3 class="font-bold text-amber-500 text-lg mb-2">Stephen's Defense</h3>
+                    <p class="text-sm leading-relaxed mb-3">
+                        Stephen gives a history lesson proving Israel always resisted the Holy Spirit. He sees the heavens open and Jesus standing at God's right hand.
+                    </p>
+                    <div class="border-t border-stone-600 pt-3 flex gap-3 items-center">
+                        <span class="text-2xl">🧥</span>
+                        <div class="text-xs text-stone-400">
+                            The witnesses laid their coats at the feet of a young man named <strong>Saul</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: ACTS 8-9 -->
+        <div class="slide bg-amber-50" data-index="4" data-chapter="Acts 8-9">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Scattered</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">Samaria & Damascus</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm text-stone-600 italic">Persecution didn't stop the church; it spread it like seed.</p>
+
+                <!-- Philip Card -->
+                <div class="bg-white p-4 rounded-xl border-l-4 border-blue-500 shadow-sm">
+                    <h3 class="font-bold text-stone-800 flex items-center gap-2">
+                        <span class="text-xl">💧</span> Philip's Evangelism
+                    </h3>
+                    <ul class="text-xs text-stone-600 mt-2 space-y-2 list-disc pl-4">
+                        <li>Breaks cultural barriers in <strong>Samaria</strong>.</li>
+                        <li>Follows the Spirit to a desert road.</li>
+                        <li>Baptizes the <strong>Ethiopian Eunuch</strong>, taking the Gospel to Africa.</li>
+                    </ul>
+                </div>
+
+                <!-- Saul Card -->
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm relative">
+                    <div class="absolute -right-2 -top-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded shadow transform rotate-12">PIVOT POINT</div>
+                    <h3 class="font-bold text-stone-800 text-lg mb-1">Saul to Paul</h3>
+                    <p class="text-sm text-stone-600 mb-2">
+                        Breathing threats, Saul is blinded by light on the road to Damascus.
+                    </p>
+                    <div class="bg-stone-100 p-3 rounded-lg text-xs font-mono text-stone-700">
+                        "Saul, Saul, why are you persecuting me?"
+                    </div>
+                    <p class="text-xs text-stone-500 mt-2">
+                        God chooses the greatest enemy to be the greatest missionary.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: ACTS 10-12 -->
+        <div class="slide bg-stone-50" data-index="5" data-chapter="Acts 10-12">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">To The Gentiles</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">Peter & Cornelius</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="relative h-48 w-full bg-blue-50 rounded-2xl p-4 flex flex-col items-center justify-center text-center border border-blue-100">
+                    <div class="text-4xl mb-2">🐖🦎🦅</div>
+                    <h3 class="font-bold text-blue-900">The Sheet Vision</h3>
+                    <p class="text-xs text-blue-800 mt-1 max-w-[200px]">
+                        God tells Peter: "What God has made clean, do not call common."
+                    </p>
+                    <div class="mt-2 text-[10px] bg-white px-2 py-1 rounded text-blue-500 font-bold uppercase">
+                        Barrier Broken
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-stone-800 text-sm">Gentile Pentecost</h3>
+                    <p class="text-xs text-stone-600 mt-1">
+                        Peter preaches at Cornelius' house. The Spirit falls on Gentiles <i>before</i> baptism. The Jewish believers are astounded.
+                    </p>
+                </div>
+
+                <div class="bg-stone-800 text-white p-4 rounded-xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-sm">Antioch</h3>
+                        <p class="text-[10px] text-stone-400">Where they were first called "Christians".</p>
+                    </div>
+                    <span class="text-2xl">🌍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: ACTS 13-15 -->
+        <div class="slide bg-amber-50" data-index="6" data-chapter="Acts 13-15">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Mission Sent</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">1st Journey & Jerusalem Council</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="flex items-center gap-2">
+                    <div class="h-1 flex-1 bg-stone-300 rounded"></div>
+                    <span class="text-xs font-bold text-stone-400">46-49 AD</span>
+                    <div class="h-1 flex-1 bg-stone-300 rounded"></div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-500">
+                    <h3 class="font-bold text-stone-800">1st Journey</h3>
+                    <p class="text-xs text-stone-500 mb-2">Paul & Barnabas</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-stone-100 rounded text-[10px] font-bold">Cyprus</span>
+                        <span class="px-2 py-1 bg-stone-100 rounded text-[10px] font-bold">Pisidian Antioch</span>
+                        <span class="px-2 py-1 bg-stone-100 rounded text-[10px] font-bold">Lystra (Stoned)</span>
+                    </div>
+                    <p class="text-xs text-stone-600 mt-2">Pattern established: Synagogue first, then Gentiles.</p>
+                </div>
+
+                <div class="bg-amber-100 p-5 rounded-2xl shadow-sm border border-amber-200">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-amber-900">The Conflict</h3>
+                        <span class="text-xl">⚖️</span>
+                    </div>
+                    <p class="text-xs text-amber-800 mt-2 font-bold">
+                        "Unless you are circumcised... you cannot be saved."
+                    </p>
+                    <hr class="border-amber-200 my-2">
+                    <p class="text-xs text-amber-900">
+                        <strong>The Verdict (Acts 15):</strong> We are saved by grace alone. Do not burden the Gentile believers with the Law.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: ACTS 16-18 -->
+        <div class="slide bg-stone-50" data-index="7" data-chapter="Acts 16-18">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">To Europe</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">2nd Journey</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="verse-box bg-white p-3 rounded-lg text-xs text-stone-600 mb-2">
+                    The Spirit forbade them to go to Asia... leading them to the <strong>Macedonian Call</strong>.
+                </div>
+
+                <!-- Timeline Cards -->
+                <div class="space-y-3 relative">
+                    <div class="absolute left-4 top-4 bottom-4 w-0.5 bg-stone-200"></div>
+                    
+                    <!-- Philippi -->
+                    <div class="ml-8 relative">
+                        <div class="absolute -left-10 top-1 w-4 h-4 rounded-full bg-stone-400 border-2 border-white"></div>
+                        <h4 class="font-bold text-sm text-stone-800">Philippi</h4>
+                        <p class="text-[11px] text-stone-600">Lydia converted. Paul & Silas in prison. Earthquake at midnight. Jailer saved.</p>
+                    </div>
+
+                    <!-- Athens -->
+                    <div class="ml-8 relative">
+                        <div class="absolute -left-10 top-1 w-4 h-4 rounded-full bg-stone-400 border-2 border-white"></div>
+                        <h4 class="font-bold text-sm text-stone-800">Athens (Mars Hill)</h4>
+                        <p class="text-[11px] text-stone-600">Paul engages philosophy. The "Unknown God".</p>
+                    </div>
+
+                    <!-- Corinth -->
+                    <div class="ml-8 relative">
+                        <div class="absolute -left-10 top-1 w-4 h-4 rounded-full bg-stone-400 border-2 border-white"></div>
+                        <h4 class="font-bold text-sm text-stone-800">Corinth</h4>
+                        <p class="text-[11px] text-stone-600">Stays 1.5 years. Tentmaking with Aquila & Priscilla.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: ACTS 19-20 -->
+        <div class="slide bg-amber-50" data-index="8" data-chapter="Acts 19-20">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Ephesus</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">3rd Journey</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-stone-800">Power Encounter</h3>
+                        <span class="text-xl">🧙‍♂️</span>
+                    </div>
+                    <p class="text-xs text-stone-600 mt-2">
+                        Ephesus was a center of magic. Believers confessed their practices and burned their magic books (Value: 50,000 drachmas).
+                    </p>
+                </div>
+
+                <div class="bg-stone-800 text-white p-5 rounded-2xl shadow-md">
+                    <h3 class="font-bold text-amber-500 mb-1">Great is Artemis!</h3>
+                    <p class="text-xs leading-relaxed opacity-80">
+                        The gospel hurt the idol-making business. Demetrius starts a riot in the theater. The town clerk eventually quiets the mob.
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border-l-4 border-stone-400 shadow-sm">
+                    <h3 class="font-bold text-stone-800 text-sm">Farewell to Elders</h3>
+                    <p class="text-xs text-stone-600 mt-1 italic">
+                        "I did not shrink from declaring to you the whole counsel of God." (Acts 20:27)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: ACTS 21-26 -->
+        <div class="slide bg-stone-100" data-index="9" data-chapter="Acts 21-26">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">On Trial</h2>
+                <p class="text-amber-700 text-xs font-bold uppercase tracking-wide">Jerusalem to Caesarea</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm text-stone-600">Despite warnings, Paul goes to Jerusalem and is arrested in the Temple.</p>
+
+                <div class="grid grid-cols-1 gap-3">
+                    <!-- Trial 1 -->
+                    <div class="bg-white p-3 rounded-lg shadow-sm flex items-center gap-3">
+                        <div class="bg-stone-100 w-8 h-8 rounded-full flex items-center justify-center font-bold text-stone-500">1</div>
+                        <div>
+                            <strong class="text-sm block">The Mob/Sanhedrin</strong>
+                            <span class="text-[10px] text-stone-500">Paul divides the Pharisees & Sadducees.</span>
+                        </div>
+                    </div>
+                    <!-- Trial 2 -->
+                    <div class="bg-white p-3 rounded-lg shadow-sm flex items-center gap-3">
+                        <div class="bg-stone-100 w-8 h-8 rounded-full flex items-center justify-center font-bold text-stone-500">2</div>
+                        <div>
+                            <strong class="text-sm block">Felix (Governor)</strong>
+                            <span class="text-[10px] text-stone-500">Kept Paul in prison 2 years, hoping for a bribe.</span>
+                        </div>
+                    </div>
+                    <!-- Trial 3 -->
+                    <div class="bg-white p-3 rounded-lg shadow-sm flex items-center gap-3">
+                        <div class="bg-stone-100 w-8 h-8 rounded-full flex items-center justify-center font-bold text-stone-500">3</div>
+                        <div>
+                            <strong class="text-sm block">Festus & Agrippa</strong>
+                            <span class="text-[10px] text-stone-500">"You almost persuade me to be a Christian." Paul appeals to Caesar.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: ACTS 27-28 -->
+        <div class="slide bg-blue-50" data-index="10" data-chapter="Acts 27-28">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-blue-900 mb-1">The Storm</h2>
+                <p class="text-blue-600 text-xs font-bold uppercase tracking-wide">Shipwreck & Rome</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="relative bg-white p-5 rounded-2xl shadow-sm overflow-hidden border border-blue-100">
+                    <div class="absolute right-0 top-0 text-6xl opacity-10">⚓</div>
+                    <h3 class="font-bold text-blue-900 text-lg mb-2">Euroclydon</h3>
+                    <p class="text-sm text-stone-600 mb-3">
+                        A violent storm rages for 14 days. All hope is lost. Paul stands up:
+                    </p>
+                    <div class="bg-blue-50 p-3 rounded-lg text-xs italic text-blue-800">
+                        "Do not be afraid, Paul; you must stand before Caesar."
+                    </div>
+                    <p class="text-xs text-stone-500 mt-3">
+                        Shipwrecked on Malta. Snake bite. Healing. God's protection is absolute.
+                    </p>
+                </div>
+
+                <div class="bg-stone-900 text-amber-50 p-5 rounded-2xl shadow-lg">
+                    <h3 class="font-bold text-lg mb-1">Rome at Last</h3>
+                    <p class="text-sm text-stone-300 leading-relaxed mb-4">
+                        Paul arrives in Rome under house arrest.
+                    </p>
+                    <div class="border-t border-stone-700 pt-3">
+                        <strong class="text-xs uppercase tracking-widest text-amber-500">The Final Verse</strong>
+                        <p class="text-sm italic mt-1">
+                            "Proclaiming the kingdom of God and teaching about the Lord Jesus Christ with all boldness and without hindrance."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: CONCLUSION -->
+        <div class="slide bg-stone-100 flex flex-col justify-center items-center text-center p-8" data-index="11" data-chapter="Conclusion">
+            <div class="mb-6">
+                <span class="text-6xl">📖</span>
+            </div>
+            <h2 class="text-3xl font-bold mb-2 text-stone-800">To Be Continued...</h2>
+            <p class="text-stone-500 text-sm mb-8 leading-relaxed max-w-xs">
+                Acts has no formal conclusion because the work of the Holy Spirit continues through the Church—through <strong>you</strong>.
+            </p>
+            
+            <div class="space-y-3 w-full max-w-xs mb-10">
+                <div class="bg-white p-4 rounded-xl flex items-center gap-4 text-left shadow-sm">
+                    <div class="text-xl">🔥</div>
+                    <div class="text-xs text-stone-600">
+                        <strong>Power</strong>
+                        We have the same Spirit today.
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl flex items-center gap-4 text-left shadow-sm">
+                    <div class="text-xl">🗣️</div>
+                    <div class="text-xs text-stone-600">
+                        <strong>Witness</strong>
+                        We are called to our own "Jerusalem" and ends of the earth.
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0)" class="interactive-zone px-8 py-3 bg-amber-600 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+                Restart Study ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- REFLECTION OVERLAY -->
+    <div id="reflection-overlay" class="absolute inset-0 bg-stone-900/80 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleReflection(event)">
+        <div class="bg-stone-50 rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+                    <span>🤔</span> Reflection
+                </h3>
+                <button onclick="toggleReflection(event)" class="text-stone-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl shadow-inner border border-stone-200 mb-4">
+                <span class="text-[10px] font-bold uppercase text-amber-600 tracking-wider mb-1 block" id="reflect-topic">Topic</span>
+                <p class="text-stone-800 text-lg font-serif italic" id="reflect-verse">Verse placeholder</p>
+            </div>
+
+            <!-- Questions List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-4 pr-1" id="reflect-questions">
+                <!-- Populated by JS -->
+            </div>
+            
+            <p class="text-center text-[10px] text-stone-400 mt-4">Take a moment to pray and think.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // --- DATABASE ---
+        const reflectionDb = [
+            { // 0: Cover
+                topic: "The Promise",
+                verse: "Acts 1:8",
+                questions: [
+                    "What does it mean to be a 'witness' in your daily life?",
+                    "Are you relying on your own strength or the Spirit's power?"
+                ]
+            },
+            { // 1: Acts 1-2
+                topic: "The Holy Spirit",
+                verse: "Acts 2:42",
+                questions: [
+                    "The early church devoted themselves to teaching, fellowship, and prayer. Which of these is strongest in your life? Weakest?",
+                    "How would you respond if God interrupted your routine like He did at Pentecost?"
+                ]
+            },
+            { // 2: Acts 3-5
+                topic: "Boldness",
+                verse: "Acts 4:29",
+                questions: [
+                    "Do you pray for safety/comfort, or for boldness?",
+                    "Is there a fear of man holding you back from sharing your faith?"
+                ]
+            },
+            { // 3: Acts 6-7
+                topic: "Service & Sacrifice",
+                verse: "Acts 6:3",
+                questions: [
+                    "Stephen served tables before he preached to the Sanhedrin. Are you willing to do 'small' tasks for God?",
+                    "How do you handle conflict within the church?"
+                ]
+            },
+            { // 4: Acts 8-9
+                topic: "Unexpected Grace",
+                verse: "Acts 9:15",
+                questions: [
+                    "Is there anyone you think is 'too far gone' for God to save?",
+                    "Like Philip, are you willing to leave a successful ministry/place if the Spirit leads you to a desert road?"
+                ]
+            },
+            { // 5: Acts 10-12
+                topic: "No Partiality",
+                verse: "Acts 10:34",
+                questions: [
+                    "What cultural barriers or prejudices might be hindering your love for others?",
+                    "When Peter was in prison, the church prayed earnestly. How fervent is your prayer life for persecuted believers?"
+                ]
+            },
+            { // 6: Acts 13-15
+                topic: "Grace Alone",
+                verse: "Acts 15:11",
+                questions: [
+                    "Are you adding any 'requirements' to the Gospel (traditions, rules) that scripture doesn't add?",
+                    "How do you resolve disagreements with other believers?"
+                ]
+            },
+            { // 7: Acts 16-18
+                topic: "Guidance",
+                verse: "Acts 16:9",
+                questions: [
+                    "Have you ever experienced a 'closed door' from God? How did you react?",
+                    "Paul praised God in a prison cell. What is your attitude in suffering?"
+                ]
+            },
+            { // 8: Acts 19-20
+                topic: "Idols",
+                verse: "Acts 19:19",
+                questions: [
+                    "The Ephesians burned their expensive magic books. What 'expensive' thing might you need to give up to follow Jesus fully?",
+                    "Paul declared the 'whole counsel of God'. Do you shy away from the hard parts of the Bible?"
+                ]
+            },
+            { // 9: Acts 21-26
+                topic: "Defense of Faith",
+                verse: "Acts 26:28",
+                questions: [
+                    "Paul used his trials as platforms for the Gospel. How can you use your current difficulties to point to Jesus?",
+                    "Do you strive to have a 'clear conscience toward God and man' (Acts 24:16)?"
+                ]
+            },
+            { // 10: Acts 27-28
+                topic: "Trust in Storms",
+                verse: "Acts 27:25",
+                questions: [
+                    "When 'neither sun nor stars' appear in your life (Acts 27:20), where do you drop your anchor?",
+                    "How can you encourage others when you are in the same storm as them?"
+                ]
+            },
+            { // 11: Conclusion
+                topic: "The Unfinished Book",
+                verse: "Acts 28:31",
+                questions: [
+                    "The book ends abruptly because the story continues with us. What is the next chapter in *your* walk with God?",
+                    "Who is one person you can share this story with this week?"
+                ]
+            }
+        ];
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            // Check if user clicked an interactive element or button
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            // Logic for Left/Right Navigation
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+            
+            // Update Chapter Title in Header
+            const slide = slides[idx];
+            const chapter = slide.getAttribute('data-chapter') || "Acts";
+            document.getElementById('chapter-indicator').innerText = chapter;
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        function goToSlide(idx) { showSlide(idx); }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleHint(id, e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- REFLECTION LOGIC ---
+        function toggleReflection(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('reflection-overlay');
+            
+            if (el.classList.contains('hidden')) {
+                // LOAD CONTENT BEFORE SHOWING
+                loadReflectionContent();
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function loadReflectionContent() {
+            const data = reflectionDb[currentSlide];
+            if(!data) return;
+
+            document.getElementById('reflect-topic').innerText = data.topic;
+            document.getElementById('reflect-verse').innerText = `"${data.verse}"`;
+            
+            const list = document.getElementById('reflect-questions');
+            list.innerHTML = '';
+            
+            data.questions.forEach((q, i) => {
+                const item = document.createElement('div');
+                item.className = 'bg-stone-50 p-4 rounded-xl border border-stone-100 text-stone-700 text-sm leading-relaxed';
+                item.innerHTML = `<strong class="text-amber-600 mr-2">Q${i+1}:</strong> ${q}`;
+                list.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

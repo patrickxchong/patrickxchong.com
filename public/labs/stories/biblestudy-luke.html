@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gospel of Luke Study</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #1a1a1a;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Georgia", "Times New Roman", serif; /* Serif for biblical feel */
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fdfbf7;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .scripture-text {
+            font-style: italic;
+            border-left: 3px solid #b45309; /* Amber-700 */
+            padding-left: 12px;
+            color: #4b5563;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* Typography overrides for Sans sections */
+        .font-sans-safe {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track"></div>
+            <div class="flex justify-end items-center mt-4 px-2">
+                <button onclick="toggleTracker(event)" class="interactive-zone bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50 font-sans-safe">
+                    <span>📖</span> Chapter Tracker
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-stone-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-amber-600 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">📜</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-2 tracking-tight">The Gospel<br>of Luke</h1>
+                <p class="text-amber-400 text-lg mb-8 italic font-serif">"That you may have certainty..."</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="nextSlide()">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-stone-500 font-bold uppercase font-sans-safe">Study Guide</p>
+                    </div>
+                    <p class="text-sm font-serif text-stone-800 leading-relaxed">
+                        A detailed journey through the life of Christ as the Savior of the Nations.
+                    </p>
+                    <div class="mt-3 text-xs text-stone-500 font-bold flex items-center gap-1 border-t border-stone-200 pt-2 font-sans-safe">
+                        BEGIN JOURNEY <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: INTRODUCTION -->
+        <div class="slide bg-stone-100" data-index="1">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">The Physician</h2>
+                <p class="text-stone-500 text-sm font-sans-safe uppercase tracking-wider">Introduction</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-stone-800">
+                    <h3 class="font-bold text-stone-900 text-lg">Who was Luke?</h3>
+                    <p class="text-stone-700 mt-2 leading-relaxed text-sm">
+                        Luke was a physician and a companion of the Apostle Paul. He is the only Gentile writer in the New Testament. His gospel is known for its detailed historical nature and focus on humanity.
+                    </p>
+                </div>
+                
+                <div class="bg-amber-50 p-5 rounded-xl border border-amber-100">
+                    <h3 class="font-bold text-amber-900 text-lg">The Purpose</h3>
+                    <p class="scripture-text mt-2 text-sm">
+                        "Inasmuch as many have undertaken to compile a narrative... it seemed good to me also... to write an orderly account for you, most excellent Theophilus." (Luke 1:1-3)
+                    </p>
+                </div>
+
+                <!-- Reflection Card -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        Why does "certainty" about the facts of Jesus' life matter to your faith today? Are there areas where you lack certainty?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: NATIVITY (Ch 1-2) -->
+        <div class="slide bg-[#fdfbf7]" data-index="2">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Songs of Joy</h2>
+                <p class="text-stone-500 text-sm font-sans-safe uppercase tracking-wider">Luke 1-2</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <!-- Visual Element -->
+                <div class="flex justify-center py-2 text-5xl">👶</div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-stone-100">
+                    <h3 class="font-bold text-stone-900">Parallel Births</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        Luke uniquely parallels the births of John the Baptist and Jesus. Note how the humble (shepherds, Mary) receive the news first, setting a theme for the whole book: <span class="font-bold">The Great Reversal</span>.
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 p-5 rounded-xl border border-blue-100">
+                    <h3 class="font-bold text-blue-900">Mary's Magnificat</h3>
+                    <p class="scripture-text mt-2 text-sm">
+                        "He has brought down the mighty from their thrones and exalted those of humble estate." (Luke 1:52)
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        Mary responded to the impossible news with "Let it be to me according to your word." What "impossible" situation do you need to surrender to God's word today?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: PREPARATION (Ch 3-4) -->
+        <div class="slide bg-stone-50" data-index="3">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Tested & True</h2>
+                <p class="text-stone-500 text-sm font-sans-safe uppercase tracking-wider">Luke 3-4</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                        <div class="text-2xl mb-1">🕊️</div>
+                        <h4 class="font-bold text-sm">Baptism</h4>
+                        <p class="text-xs text-stone-500 mt-1">Identified by the Father.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                        <div class="text-2xl mb-1">🏜️</div>
+                        <h4 class="font-bold text-sm">Wilderness</h4>
+                        <p class="text-xs text-stone-500 mt-1">Tested by the Enemy.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-stone-100">
+                    <h3 class="font-bold text-stone-900">The Genealogy</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        Unlike Matthew (who traces back to Abraham for Jews), Luke traces Jesus back to <span class="font-bold">Adam</span>. This emphasizes that Jesus is the Savior for <em>all humanity</em>, not just Israel.
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        Jesus defeated temptation by quoting Scripture. When you are tempted (to pride, despair, or sin), what specific Scripture is your weapon?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: MINISTRY BEGINS (Ch 5-6) -->
+        <div class="slide bg-blue-50" data-index="4">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-blue-900 mb-1">Fishers of Men</h2>
+                <p class="text-blue-500 text-sm font-sans-safe uppercase tracking-wider">Luke 5-6</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="flex justify-center py-2 text-5xl">🕸️</div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-blue-100">
+                    <h3 class="font-bold text-blue-900">Calling the Ordinary</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        Jesus chooses fishermen, tax collectors (Levi), and zealots. He shocks the Pharisees by saying: "Those who are well have no need of a physician, but those who are sick."
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h3 class="font-bold text-stone-900">Sermon on the Plain</h3>
+                    <p class="scripture-text mt-2 text-sm">
+                        "Blessed are you who are poor, for yours is the kingdom of God... But woe to you who are rich, for you have received your consolation." (Luke 6:20, 24)
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        Do you see yourself as "sick" and in need of a physician, or "well" and self-sufficient? How does your answer affect your prayer life?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: PARABLES (Ch 8-10) -->
+        <div class="slide bg-amber-50" data-index="5">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-amber-900 mb-1">Who is my Neighbor?</h2>
+                <p class="text-amber-600 text-sm font-sans-safe uppercase tracking-wider">Luke 8-10</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-3xl">❤️‍🩹</span>
+                        <h3 class="font-bold text-stone-900">The Good Samaritan</h3>
+                    </div>
+                    <p class="text-stone-600 text-sm">
+                        Unique to Luke. Jesus shatters racial and religious barriers. The hero is the hated Samaritan, not the religious elite.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-3xl">🍽️</span>
+                        <h3 class="font-bold text-stone-900">Mary & Martha</h3>
+                    </div>
+                    <p class="text-stone-600 text-sm">
+                        "Martha, you are anxious and troubled about many things, but one thing is necessary. Mary has chosen the good portion." (Luke 10:41)
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        Are you more like Martha (serving but distracted) or Mary (sitting and listening)? What is one way you can "sit at His feet" this week?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: LOST & FOUND (Ch 15) -->
+        <div class="slide bg-green-50" data-index="6">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-green-900 mb-1">Lost & Found</h2>
+                <p class="text-green-600 text-sm font-sans-safe uppercase tracking-wider">Luke 15</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <p class="text-stone-600 text-sm italic text-center mb-2">The Heart of the Gospel in three stories.</p>
+                
+                <div class="space-y-2">
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                        <span class="text-2xl">🐑</span>
+                        <div class="text-sm"><span class="font-bold">The Lost Sheep:</span> One matters more than 99.</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                        <span class="text-2xl">🪙</span>
+                        <div class="text-sm"><span class="font-bold">The Lost Coin:</span> God diligently searches.</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm border-l-4 border-green-500">
+                        <span class="text-2xl">🫂</span>
+                        <div class="text-sm"><span class="font-bold">The Lost Son:</span> The Father runs to welcome the repentant.</div>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl mt-4">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        In the Prodigal Son story, there is also the Older Brother who stayed home but was bitter. Do you struggle with resentment toward God's grace for others?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: KINGDOM VALUES (Ch 16-19) -->
+        <div class="slide bg-stone-100" data-index="7">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-stone-800 mb-1">Upside Down</h2>
+                <p class="text-stone-500 text-sm font-sans-safe uppercase tracking-wider">Luke 16-19</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-amber-600">
+                    <h3 class="font-bold text-stone-900">Rich Man & Lazarus</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        A stark warning. The rich man had everything in life but nothing in eternity. Lazarus had nothing in life but comfort in eternity.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-stone-600">
+                    <h3 class="font-bold text-stone-900">Zacchaeus</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        A short, hated tax collector climbs a tree. Jesus invites Himself over.
+                    </p>
+                    <p class="scripture-text mt-2 text-sm font-bold text-stone-800">
+                        "For the Son of Man came to seek and to save the lost." (Luke 19:10)
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        Zacchaeus responded to Jesus by giving away half his goods. How does your use of money reflect your encounter with Jesus?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: PASSION WEEK (Ch 20-23) -->
+        <div class="slide bg-red-50" data-index="8">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-red-900 mb-1">The Passion</h2>
+                <p class="text-red-600 text-sm font-sans-safe uppercase tracking-wider">Luke 20-23</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="flex justify-center py-2 text-5xl">✝️</div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-red-100">
+                    <h3 class="font-bold text-stone-900">The Last Supper</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        "This cup that is poured out for you is the new covenant in my blood."
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-red-100">
+                    <h3 class="font-bold text-stone-900">The Crucifixion</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        Luke captures the compassion of Jesus even on the cross. He prays "Father, forgive them," and saves the thief next to Him: "Today you will be with me in paradise."
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        If Jesus could forgive those nailing Him to the cross, who is it that you are struggling to forgive today?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: RESURRECTION (Ch 24) -->
+        <div class="slide bg-amber-50" data-index="9">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-3xl font-bold text-amber-900 mb-1">He is Risen!</h2>
+                <p class="text-amber-600 text-sm font-sans-safe uppercase tracking-wider">Luke 24</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="flex justify-center py-2 text-5xl">🌅</div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-amber-100">
+                    <h3 class="font-bold text-stone-900">The Empty Tomb</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        "Why do you seek the living among the dead? He is not here, but has risen."
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-amber-500">
+                    <h3 class="font-bold text-stone-900">The Road to Emmaus</h3>
+                    <p class="text-stone-600 mt-2 text-sm">
+                        A beautiful story unique to Luke. Jesus walks with two disciples, explaining how <em>all</em> the Scriptures point to Him. Their eyes are opened when He breaks bread.
+                    </p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-stone-800 text-stone-200 p-5 rounded-xl">
+                    <div class="flex items-center gap-2 mb-2 text-amber-400">
+                        <span>🤔</span>
+                        <span class="text-xs font-bold uppercase font-sans-safe">Reflection</span>
+                    </div>
+                    <p class="italic text-sm">
+                        "Did not our hearts burn within us while he talked to us on the road?" Does reading the Bible make your heart burn with love for Jesus? If not, ask Him to open your eyes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: SUMMARY -->
+        <div class="slide bg-stone-900 text-white" data-index="10">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Study Complete</h2>
+                
+                <div class="space-y-4 w-full max-w-xs mb-8">
+                    <div class="bg-stone-800 p-4 rounded-xl flex items-center gap-4 text-left border border-stone-700">
+                        <div class="text-2xl">👤</div>
+                        <div class="text-xs text-stone-300">
+                            <strong class="block text-white text-sm mb-1">Son of Man</strong>
+                            Luke emphasizes Jesus' humanity and compassion for the outcast.
+                        </div>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-xl flex items-center gap-4 text-left border border-stone-700">
+                        <div class="text-2xl">🌍</div>
+                        <div class="text-xs text-stone-300">
+                            <strong class="block text-white text-sm mb-1">For All Nations</strong>
+                            From Adam to the Ends of the Earth.
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-stone-400 text-sm mb-8 px-4">
+                    Continue to Acts (also written by Luke) to see how this story continues!
+                </p>
+
+                <button onclick="goToSlide(0)" class="interactive-zone px-8 py-3 bg-amber-600 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto font-sans-safe">
+                    Start Over ↺
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TRACKER OVERLAY -->
+    <div id="tracker-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleTracker(event)">
+        <div class="bg-[#fdfbf7] rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-stone-800 font-serif">Chapter Tracker</h3>
+                <button onclick="toggleTracker(event)" class="text-stone-400 p-2 text-2xl font-bold active:scale-90 transition-transform font-sans-safe">×</button>
+            </div>
+            
+            <!-- Progress Stats -->
+            <div class="bg-white p-4 rounded-xl mb-4 shadow-sm border border-stone-100 flex items-center justify-between">
+                <div>
+                    <div class="text-xs font-bold text-stone-500 uppercase font-sans-safe">Progress</div>
+                    <div class="text-2xl font-bold text-amber-600 font-serif"><span id="read-count">0</span>/24</div>
+                </div>
+                <div class="h-12 w-12 rounded-full border-4 border-stone-100 flex items-center justify-center relative">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-stone-200" />
+                        <circle id="circle-progress" cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-amber-500 transition-all duration-500" stroke-dasharray="125.6" stroke-dashoffset="125.6" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Chapter Grid -->
+            <div class="flex-1 overflow-y-auto custom-scroll pr-1">
+                <div class="grid grid-cols-4 gap-3" id="chapter-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            
+            <button onclick="resetTracker()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors font-sans-safe">Reset Progress</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initTracker();
+            
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        function goToSlide(idx) { showSlide(idx); }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- TRACKER LOGIC ---
+        let chaptersRead = new Set();
+
+        function toggleTracker(e) {
+            if(e) { e.preventDefault(); e.stopPropagation(); }
+            const el = document.getElementById('tracker-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initTracker() {
+            const grid = document.getElementById('chapter-grid');
+            grid.innerHTML = '';
+            for(let i=1; i<=24; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'aspect-square rounded-xl flex items-center justify-center font-bold text-lg cursor-pointer transition-all border-2 border-transparent';
+                btn.id = `ch-${i}`;
+                btn.innerText = i;
+                
+                // Style logic handled in render
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleChapter(i);
+                };
+                grid.appendChild(btn);
+            }
+            renderTracker();
+        }
+
+        function toggleChapter(num) {
+            if(chaptersRead.has(num)) chaptersRead.delete(num);
+            else chaptersRead.add(num);
+            renderTracker();
+        }
+
+        function resetTracker() {
+            chaptersRead.clear();
+            renderTracker();
+        }
+
+        function renderTracker() {
+            const count = chaptersRead.size;
+            document.getElementById('read-count').innerText = count;
+            
+            // Circle Progress (circumference ~ 125.6)
+            const circle = document.getElementById('circle-progress');
+            const circumference = 125.6;
+            const offset = circumference - (count / 24) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            for(let i=1; i<=24; i++) {
+                const btn = document.getElementById(`ch-${i}`);
+                if(chaptersRead.has(i)) {
+                    btn.className = 'aspect-square rounded-xl flex items-center justify-center font-bold text-lg cursor-pointer transition-all bg-amber-500 text-white shadow-md transform scale-105';
+                } else {
+                    btn.className = 'aspect-square rounded-xl flex items-center justify-center font-bold text-lg cursor-pointer transition-all bg-white text-stone-400 border-2 border-stone-100 hover:border-amber-200';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

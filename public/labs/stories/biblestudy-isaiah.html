@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Book of Isaiah Study</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #1a1a1a;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Georgia, serif; /* Serif for biblical feel */
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fcfbf7; /* Parchment off-white */
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; 
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #2d2d2d, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #d8b4fe; /* Light purple */
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; background-color: #a855f7; } /* Purple 500 */
+        .progress-fill.active { width: 100%; background-color: #fff; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-serif {
+            font-family: "Georgia", serif;
+            font-style: italic;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <!-- Tracker Button -->
+                <button onclick="toggleTracker(event)" class="interactive-zone bg-purple-900 text-purple-100 border border-purple-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50">
+                    <span>📜</span> Prophecies <span id="prophecy-count" class="bg-purple-600 px-1.5 rounded-full text-[10px]">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide active bg-gradient-to-b from-purple-900 to-indigo-950 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-purple-500 blur-3xl opacity-30 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">🦅</div>
+                    <div class="text-4xl absolute -top-2 -right-4 animate-bounce delay-700">🔥</div>
+                </div>
+                
+                <h1 class="text-5xl font-serif font-bold mb-2">Isaiah</h1>
+                <p class="text-purple-300 text-lg mb-8 tracking-wide uppercase text-xs font-bold">The Fifth Gospel</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform text-slate-800" onclick="goToSlide(1, event)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-purple-600 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-purple-900 font-bold uppercase">Overview</p>
+                    </div>
+                    <p class="text-sm font-semibold leading-relaxed">
+                        A journey through Judgment (1-39) and Comfort (40-66). Explore the most quoted prophet in the New Testament.
+                    </p>
+                    <div class="mt-3 text-xs text-purple-800 font-bold flex items-center gap-1 border-t border-purple-100 pt-2">
+                        BEGIN STUDY <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: CONTEXT -->
+        <div class="slide bg-stone-50" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-serif font-bold text-stone-800 mb-1">The Context</h2>
+                <p class="text-stone-500 text-sm">740 BC - 681 BC</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">👑</span>
+                        <div>
+                            <h3 class="text-stone-900 font-bold text-base">Four Kings</h3>
+                            <p class="text-sm text-stone-600 mt-1 leading-relaxed">
+                                Isaiah served during the reigns of Uzziah, Jotham, Ahaz, and Hezekiah. He saw the nation drift from God amidst the rise of the Assyrian Empire.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-5 rounded-2xl border border-red-100 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">⚔️</span>
+                        <div>
+                            <h3 class="text-red-900 font-bold text-base">The Crisis</h3>
+                            <p class="text-sm text-red-800 mt-1 leading-relaxed">
+                                Israel (North) and Judah (South) were divided. Assyria was conquering everything. The Kings faced a choice: Trust alliances or trust Yahweh?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="mt-8 border-t border-stone-200 pt-4">
+                    <p class="text-xs font-bold text-purple-600 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"When our world feels unstable politically or socially, where do we first look for security?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: THE CALL -->
+        <div class="slide bg-[#fdfbf7]" data-index="2">
+            <div class="px-6 pt-8">
+                <h2 class="text-3xl font-serif font-bold text-stone-800 mb-1">The Call</h2>
+                <p class="text-stone-500 text-sm">Chapter 6: The Throne Room</p>
+            </div>
+
+            <div class="flex-1 flex flex-col px-6 gap-2">
+                <div class="relative h-64 w-full mt-4 bg-stone-900 rounded-2xl overflow-hidden p-6 text-white shadow-lg">
+                    <div class="absolute top-0 right-0 p-4 opacity-20 text-6xl">🔥</div>
+                    <p class="font-serif italic text-lg leading-relaxed z-10 relative">
+                        "Holy, holy, holy is the LORD of hosts; the whole earth is full of his glory!"
+                    </p>
+                    <p class="text-xs text-stone-400 mt-4 z-10 relative">Isaiah 6:3</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm text-sm text-stone-600 mt-4">
+                    <strong class="text-stone-800">The Coal:</strong> Isaiah realizes his uncleanness ("Woe is me!"). A seraph touches his lips with a burning coal, symbolizing purification not by work, but by grace.
+                </div>
+
+                 <!-- Reflection -->
+                 <div class="mt-auto mb-20 border-t border-stone-200 pt-4">
+                    <p class="text-xs font-bold text-purple-600 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"Isaiah could only say 'Send me' AFTER he was cleansed. What burdens do you need to give to God before serving?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: THE SIGN -->
+        <div class="slide bg-purple-50" data-index="3">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-serif font-bold text-purple-900">Immanuel</h2>
+                <p class="text-purple-600 text-sm">Chapter 7: The Promise in Crisis</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-purple-100">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold bg-purple-100 text-purple-800 px-2 py-1 rounded">The Context</span>
+                    </div>
+                    <p class="text-stone-700 text-sm leading-relaxed">
+                        King Ahaz is terrified of invading armies. God tells him to ask for a sign. Ahaz refuses (feigning piety, but actually unbelief).
+                    </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-700 to-purple-900 text-white p-5 rounded-2xl shadow-lg">
+                    <div class="text-3xl mb-3">👶</div>
+                    <p class="font-serif text-lg leading-relaxed">
+                        "Behold, the virgin shall conceive and bear a son, and shall call his name Immanuel."
+                    </p>
+                    <p class="text-xs text-purple-300 mt-2 text-right">— Isaiah 7:14</p>
+                </div>
+                
+                <div class="bg-white p-4 rounded-xl border-l-4 border-purple-500 shadow-sm text-sm text-stone-600">
+                    <strong>Meaning:</strong> <em>Immanuel</em> means "God with us." In the immediate context, a child would be born as a sign that the enemies would vanish. Ultimately, it points to Christ.
+                </div>
+
+                 <!-- Reflection -->
+                 <div class="mt-4 border-t border-purple-200 pt-4">
+                    <p class="text-xs font-bold text-purple-600 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"God is with us in the messy middle of history. How does 'God with us' change your view of your current problem?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: THE NAMES -->
+        <div class="slide bg-indigo-50" data-index="4">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-serif font-bold text-indigo-900">The Child</h2>
+                <p class="text-indigo-600 text-sm">Chapter 9: The Government</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm text-stone-600 mb-4">
+                    "For to us a child is born, to us a son is given..." (Is 9:6). Note the four royal titles:
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-100">
+                        <div class="text-2xl mb-1">🧠</div>
+                        <h4 class="font-bold text-indigo-900 text-sm">Wonderful Counselor</h4>
+                        <p class="text-[10px] text-stone-500">Perfect Wisdom</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-100">
+                        <div class="text-2xl mb-1">💪</div>
+                        <h4 class="font-bold text-indigo-900 text-sm">Mighty God</h4>
+                        <p class="text-[10px] text-stone-500">Divine Power</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-100">
+                        <div class="text-2xl mb-1">♾️</div>
+                        <h4 class="font-bold text-indigo-900 text-sm">Everlasting Father</h4>
+                        <p class="text-[10px] text-stone-500">Eternal Care</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-100">
+                        <div class="text-2xl mb-1">🕊️</div>
+                        <h4 class="font-bold text-indigo-900 text-sm">Prince of Peace</h4>
+                        <p class="text-[10px] text-stone-500">Wholeness (Shalom)</p>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="mt-8 border-t border-indigo-200 pt-4">
+                    <p class="text-xs font-bold text-indigo-600 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"Which of these four aspects of God do you need most right now? Wisdom, Power, Fatherly care, or Peace?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: THE SHIFT -->
+        <div class="slide bg-stone-100" data-index="5">
+             <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">The Shift</h2>
+                <p class="text-stone-500 text-sm">Chapter 40: Comfort</p>
+            </div>
+
+            <div class="flex-1 px-6 pb-20 overflow-y-auto custom-scroll">
+                <div class="mb-6">
+                    <div class="flex gap-1 mb-2">
+                        <div class="h-1 flex-1 bg-red-400 rounded"></div>
+                        <div class="h-1 flex-1 bg-stone-300 rounded"></div>
+                    </div>
+                    <p class="text-xs text-stone-500">Chapters 1-39: <span class="text-red-500 font-bold">Judgment</span></p>
+                </div>
+                <div class="mb-6">
+                    <div class="flex gap-1 mb-2">
+                        <div class="h-1 flex-1 bg-stone-300 rounded"></div>
+                        <div class="h-1 flex-1 bg-green-500 rounded"></div>
+                    </div>
+                    <p class="text-xs text-stone-500">Chapters 40-66: <span class="text-green-600 font-bold">Comfort & Hope</span></p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-stone-800 mb-4">
+                    <p class="font-serif italic text-stone-700">"Comfort, comfort my people, says your God. Speak tenderly to Jerusalem..."</p>
+                    <p class="text-xs text-stone-400 mt-2 text-right">Isaiah 40:1-2</p>
+                </div>
+
+                <p class="text-sm text-stone-600 mb-4">
+                    After predicting the Babylonian exile, God speaks into the future captivity, promising a "Voice in the wilderness" (John the Baptist) to prepare the way for the Lord.
+                </p>
+
+                <!-- Reflection -->
+                <div class="mt-4 border-t border-stone-200 pt-4">
+                    <p class="text-xs font-bold text-stone-500 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"God speaks 'tenderly' to His people after discipline. Do you view God as harsh, or as a loving Father who restores?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: SERVANT SONGS -->
+        <div class="slide bg-red-50" data-index="6">
+            <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-serif font-bold text-red-900 mb-1">The Servant</h2>
+                <p class="text-red-600 text-sm">Chapter 53: The Atonement</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm text-stone-700">
+                    The "Servant Songs" depict a Messiah who conquers not by sword, but by suffering.
+                </p>
+
+                <div class="bg-white p-5 rounded-2xl border border-red-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-6xl opacity-10">🐑</div>
+                    <p class="font-serif text-red-900 text-lg leading-relaxed">
+                        "But he was pierced for our transgressions; he was crushed for our iniquities... and by his wounds we are healed."
+                    </p>
+                    <p class="text-xs text-red-400 mt-2 text-right">Isaiah 53:5</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 text-xs text-stone-600">
+                    <div class="flex items-center gap-2">
+                        <span class="text-red-500">●</span> No beauty or majesty (Humanity)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-red-500">●</span> Man of sorrows (Empathy)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-red-500">●</span> Like a lamb to slaughter (Submission)
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="mt-4 border-t border-red-200 pt-4">
+                    <p class="text-xs font-bold text-red-600 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"This was written 700 years before Christ. How does this detail impact your faith in the Bible's reliability?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: INVITATION -->
+        <div class="slide bg-blue-50" data-index="7">
+            <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-serif font-bold text-blue-900 mb-1">The Offer</h2>
+                <p class="text-blue-600 text-sm">Chapter 55: Free Grace</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4">
+                <div class="bg-blue-600 text-white p-6 rounded-2xl shadow-lg text-center">
+                    <div class="text-4xl mb-2">💧</div>
+                    <p class="font-serif text-xl font-bold">"Come, everyone who thirsts, come to the waters!"</p>
+                    <p class="text-blue-200 text-sm mt-2">He who has no money, come, buy and eat.</p>
+                </div>
+
+                <p class="text-sm text-stone-700 leading-relaxed px-2">
+                    Isaiah 55 presents the gospel clearly: Salvation is a gift. It cannot be bought; it must be received by those who admit they are "thirsty" and "broke."
+                </p>
+
+                <!-- Reflection -->
+                <div class="mt-8 border-t border-blue-200 pt-4">
+                    <p class="text-xs font-bold text-blue-600 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"Are you trying to 'buy' God's favor with good works, or are you coming freely to drink?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: GLORY -->
+        <div class="slide bg-yellow-50" data-index="8">
+            <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-serif font-bold text-yellow-900 mb-1">The Glory</h2>
+                <p class="text-yellow-700 text-sm">Chapter 60: Arise, Shine</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4">
+                <div class="bg-white p-5 rounded-2xl border border-yellow-200 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🌅</span>
+                        <div>
+                            <p class="font-serif text-stone-800 text-lg">
+                                "Arise, shine, for your light has come, and the glory of the LORD has risen upon you."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm text-stone-700 leading-relaxed">
+                    This points to the future restoration of Zion, but also the church. Nations will come to the light. It is a reversal of the darkness in the earlier chapters.
+                </p>
+
+                 <!-- Reflection -->
+                 <div class="mt-8 border-t border-yellow-200 pt-4">
+                    <p class="text-xs font-bold text-yellow-700 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-600 text-sm italic font-serif">"In a dark world, we are called to reflect God's light. Who needs to see God's light through you this week?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: NEW HEAVENS -->
+        <div class="slide bg-stone-900 text-white" data-index="9">
+            <div class="px-6 pt-8 pb-6">
+                <h2 class="text-3xl font-serif font-bold text-stone-100 mb-1">New Heavens</h2>
+                <p class="text-stone-400 text-sm">Chapter 65-66: The End</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-6">
+                <div class="p-4 border-l-2 border-purple-500">
+                    <p class="font-serif text-lg leading-relaxed text-stone-200">
+                        "For behold, I create new heavens and a new earth, and the former things shall not be remembered or come into mind."
+                    </p>
+                    <p class="text-xs text-stone-500 mt-2">Isaiah 65:17</p>
+                </div>
+
+                <p class="text-sm text-stone-400">
+                    The book ends not just with Israel returning to the land, but with a cosmic recreation where the "wolf and the lamb shall graze together."
+                </p>
+                
+                <div class="bg-stone-800 p-4 rounded-xl">
+                    <h3 class="text-purple-400 font-bold text-sm mb-1">Final Thought</h3>
+                    <p class="text-xs text-stone-300">Isaiah takes us from a corrupt Jerusalem (Ch 1) to a New Jerusalem (Ch 66). It is the story of the Bible in miniature.</p>
+                </div>
+
+                <!-- Reflection -->
+                <div class="mt-4 border-t border-stone-700 pt-4">
+                    <p class="text-xs font-bold text-purple-400 uppercase mb-2">Reflection</p>
+                    <p class="text-stone-400 text-sm italic font-serif">"How does the promise of a restored world affect your hope today?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: SUMMARY -->
+        <div class="slide bg-purple-950 text-white flex flex-col justify-center items-center text-center p-8" data-index="10">
+            <h2 class="text-3xl font-serif font-bold mb-4">Study Complete</h2>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12">
+                <div class="bg-purple-900/50 p-4 rounded-xl flex items-center gap-4 text-left border border-purple-800">
+                    <div class="text-2xl">👑</div>
+                    <div class="text-xs text-purple-200">
+                        <strong class="block text-white text-sm">God is Holy</strong>
+                        The "Holy One of Israel" is Isaiah's favorite title for God (used 25x).
+                    </div>
+                </div>
+                <div class="bg-purple-900/50 p-4 rounded-xl flex items-center gap-4 text-left border border-purple-800">
+                    <div class="text-2xl">✝️</div>
+                    <div class="text-xs text-purple-200">
+                        <strong class="block text-white text-sm">Salvation is by Grace</strong>
+                        From the coal on the lips to the invitation to drink freely.
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-purple-500 text-white rounded-full font-bold shadow-lg hover:bg-purple-400 transition-colors pointer-events-auto">
+                Restart Study ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- PROPHECY TRACKER OVERLAY -->
+    <div id="tracker-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleTracker(event)">
+        <!-- Stop Propagation on inner card -->
+        <div class="bg-[#fcfbf7] rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-serif font-bold text-stone-800">Messianic Prophecies</h3>
+                <button onclick="toggleTracker(event)" class="text-stone-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <p class="text-xs text-stone-500 mb-4">Tap to mark prophecies as "Fulfilled" in your heart.</p>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-stone-200 rounded-full h-2 mb-6">
+                <div id="tracker-bar" class="bg-purple-600 h-2 rounded-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <!-- List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="tracker-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetTracker()" class="mt-4 w-full py-3 text-stone-400 text-sm font-bold border border-stone-200 rounded-xl hover:bg-stone-50 transition-colors">Reset Tracker</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Database of Prophecies in Isaiah
+        const prophecyDb = [
+            { ref: "7:14", text: "Born of a Virgin (Immanuel)", checked: false },
+            { ref: "9:1-2", text: "Ministry in Galilee", checked: false },
+            { ref: "9:6", text: "Heir to David's Throne", checked: false },
+            { ref: "11:1", text: "Branch from Jesse", checked: false },
+            { ref: "35:5", text: "Miracles (Blind see, Lame walk)", checked: false },
+            { ref: "40:3", text: "Preceded by a forerunner", checked: false },
+            { ref: "50:6", text: "Spat upon and struck", checked: false },
+            { ref: "53:3", text: "Rejected by his own people", checked: false },
+            { ref: "53:5", text: "Wounded for our transgressions", checked: false },
+            { ref: "53:7", text: "Silent before accusers", checked: false },
+            { ref: "53:9", text: "Buried in a rich man's tomb", checked: false },
+            { ref: "61:1", text: "Anointed to preach Good News", checked: false }
+        ];
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initTracker();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- TRACKER LOGIC ---
+        function toggleTracker(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('tracker-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initTracker() {
+            renderTrackerList();
+            updateTrackerUI();
+        }
+
+        function renderTrackerList() {
+            const list = document.getElementById('tracker-list');
+            list.innerHTML = '';
+            prophecyDb.forEach((item, index) => {
+                const row = document.createElement('div');
+                // Styling based on checked state
+                const bgClass = item.checked ? 'bg-purple-50 border-purple-200' : 'bg-white border-stone-200';
+                const opacityClass = item.checked ? 'opacity-60' : 'opacity-100';
+                
+                row.className = `flex justify-between items-center p-3 rounded-xl shadow-sm cursor-pointer border mb-2 transition-all ${bgClass} ${opacityClass}`;
+                
+                row.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-bold bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded border border-stone-200">Is ${item.ref}</span>
+                            ${item.checked ? '<span class="text-green-600 text-xs font-bold">✓ Fulfilled</span>' : ''}
+                        </div>
+                        <div class="text-sm font-semibold text-stone-800 font-serif leading-tight">${item.text}</div>
+                    </div>
+                    <div class="ml-3">
+                        <div class="w-6 h-6 rounded-full border-2 ${item.checked ? 'bg-purple-600 border-purple-600' : 'border-stone-300'} flex items-center justify-center">
+                            ${item.checked ? '<span class="text-white text-xs">✓</span>' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleItem(index);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function toggleItem(index) {
+            prophecyDb[index].checked = !prophecyDb[index].checked;
+            renderTrackerList(); // Re-render list
+            updateTrackerUI();   // Update counts/bar
+        }
+
+        function updateTrackerUI() {
+            const count = prophecyDb.filter(i => i.checked).length;
+            const total = prophecyDb.length;
+            const pct = (count / total) * 100;
+
+            document.getElementById('prophecy-count').innerText = `${count}/${total}`;
+            document.getElementById('tracker-bar').style.width = `${pct}%`;
+        }
+
+        function resetTracker() {
+            prophecyDb.forEach(p => p.checked = false);
+            renderTrackerList();
+            updateTrackerUI();
+        }
+    </script>
+</body>
+</html>

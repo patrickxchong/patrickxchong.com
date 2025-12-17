@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Seoul 3-Day Sprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #111;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fff;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.35);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tag {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* Custom Backgrounds for Seoul Vibe */
+        .bg-pattern-traditional {
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-between items-center mt-3 px-2">
+                <div class="flex gap-1">
+                    <!-- Dynamic badges could go here -->
+                </div>
+                <button onclick="toggleQuestLog(event)" class="interactive-zone bg-white/90 backdrop-blur text-slate-900 border border-slate-200 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50">
+                    <span>📜</span> Quest Log
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 0: COVER -->
+        <div class="slide active bg-slate-900 text-white" data-index="0">
+            <!-- Background Image Placeholder -->
+            <div class="absolute inset-0 z-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1538485399081-7191377e8241?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center"></div>
+            
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative z-10">
+                <div class="text-6xl animate-float mb-4">🇰🇷</div>
+                <h1 class="text-6xl font-black mb-2 tracking-tighter">SEOUL</h1>
+                <p class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500 mb-8">The 72-Hour Sprint</p>
+                
+                <div class="glass-card px-6 py-5 rounded-2xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="nextSlide()">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Ready to Start?</p>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 leading-relaxed">
+                        3 Days. <br>History, Cyberpunk Vibes, and endless Kimchi.
+                    </p>
+                    <div class="mt-3 text-xs text-slate-500 font-bold flex items-center gap-1 border-t border-slate-200 pt-2">
+                        TAP TO BEGIN <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: ESSENTIALS -->
+        <div class="slide bg-slate-50" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-black text-slate-900 mb-2">Survival Kit</h2>
+                <p class="text-slate-500 text-sm">Download these BEFORE you fly.</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-3 overflow-y-auto custom-scroll pb-20">
+                <!-- App 1 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="text-3xl bg-green-50 p-3 rounded-xl">🗺️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Naver Map</h3>
+                        <p class="text-xs text-slate-500 mt-1">Google Maps doesn't work well here! Use Naver for walking directions.</p>
+                    </div>
+                </div>
+                <!-- App 2 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="text-3xl bg-yellow-50 p-3 rounded-xl">🚕</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Kakao T</h3>
+                        <p class="text-xs text-slate-500 mt-1">The "Uber" of Korea. You can select "Pay to Driver" without a Korean card.</p>
+                    </div>
+                </div>
+                 <!-- App 3 -->
+                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">🦜</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Papago</h3>
+                        <p class="text-xs text-slate-500 mt-1">Better than Google Translate. Use the image scanner for menus!</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-slate-800 rounded-2xl text-white">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">💳</span>
+                        <span class="font-bold">The T-Money Card</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Buy this at any convenience store (CU, GS25) at the airport. It works for subway, bus, and even paying for taxis. Load ₩30,000 to start.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: DAY 1 MORNING -->
+        <div class="slide bg-[#fdfbf7]" data-index="2">
+            <div class="absolute top-0 right-0 p-6 opacity-10 font-black text-9xl pointer-events-none">1</div>
+            <div class="px-6 pt-8">
+                <div class="tag bg-red-100 text-red-600 w-max mb-2">Day 1: History</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Royal Morning</h2>
+                <p class="text-slate-500 text-sm">Gyeongbokgung Palace & The Guard</p>
+            </div>
+
+            <div class="flex-1 flex flex-col px-6 gap-4 mt-4 overflow-y-auto custom-scroll pb-24">
+                <!-- Main Visual -->
+                <div class="relative h-48 rounded-2xl overflow-hidden shadow-lg interactive-zone" onclick="toggleHint('guard-hint', event)">
+                    <div class="absolute inset-0 bg-red-900 flex items-center justify-center text-white font-serif italic">
+                        <span class="text-6xl">💂</span>
+                    </div>
+                    <div class="absolute bottom-3 left-4 right-4">
+                        <span class="bg-black/50 backdrop-blur text-white text-xs font-bold px-2 py-1 rounded">10:00 AM & 2:00 PM</span>
+                        <div class="text-white font-bold text-lg drop-shadow-md">Guard Changing Ceremony</div>
+                    </div>
+                    <!-- Tap Hint -->
+                    <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded-full text-[10px] text-white font-bold animate-pulse">Tap for Pro Tip</div>
+                </div>
+
+                <!-- Hidden Hint -->
+                <div id="guard-hint" class="hidden bg-slate-800 text-slate-200 p-4 rounded-xl text-xs border border-slate-700 interactive-zone" onclick="toggleHint('guard-hint', event)">
+                    <strong class="text-yellow-400 block mb-1">Pro Tip:</strong>
+                    Don't stand in the center. Stand near the "Sumunjang" (the guy with the drum) at the Gwanghwamun gate for the best angle. <br><br>
+                    <em class="text-slate-400">P.S. Closed on Tuesdays!</em>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-xl border border-stone-200 shadow-sm">
+                        <div class="text-2xl mb-1">👘</div>
+                        <div class="font-bold text-sm text-slate-800">Hanbok Hack</div>
+                        <div class="text-[10px] text-slate-500 leading-tight mt-1">Rent a Hanbok nearby = FREE Palace Entry.</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-stone-200 shadow-sm">
+                        <div class="text-2xl mb-1">🐔</div>
+                        <div class="font-bold text-sm text-slate-800">Tosokchon</div>
+                        <div class="text-[10px] text-slate-500 leading-tight mt-1">Famous Ginseng Chicken Soup for lunch nearby.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: DAY 1 AFTERNOON -->
+        <div class="slide bg-[#fdfbf7]" data-index="3">
+            <div class="px-6 pt-8">
+                <div class="tag bg-red-100 text-red-600 w-max mb-2">Day 1: Culture</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Hanok & Tea</h2>
+                <p class="text-slate-500 text-sm">Bukchon Village -> Insadong</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-24 space-y-4">
+                
+                <!-- Bukchon -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-stone-600">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-slate-800">Bukchon Hanok Village</h3>
+                        <span class="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded">2:00 PM</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        A real neighborhood with 600-year-old traditional houses.
+                    </p>
+                    <div class="mt-3 bg-stone-50 p-2 rounded text-[10px] text-stone-500">
+                        <strong>⚠️ Quiet Please:</strong> People actually live here. Whisper!
+                    </div>
+                </div>
+
+                <!-- Cafe Onion -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-stone-600">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-slate-800">Cafe Onion Anguk</h3>
+                        <span class="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded">3:30 PM</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        The viral Hanok cafe. Famous for the "Pandoro" (sugar mountain bread).
+                    </p>
+                </div>
+
+                <!-- Insadong -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-stone-600">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-slate-800">Insadong Street</h3>
+                        <span class="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded">5:00 PM</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Buy souvenirs here. Check out <strong>Ssamzigil</strong>, a spiraling open-air mall filled with crafts.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: DAY 1 EVENING -->
+        <div class="slide bg-orange-50" data-index="4">
+            <div class="px-6 pt-8">
+                <div class="tag bg-orange-200 text-orange-800 w-max mb-2">Day 1: Feast</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Gwangjang Market</h2>
+                <p class="text-slate-500 text-sm">Netflix Famous Street Food.</p>
+            </div>
+
+            <div class="flex-1 px-4 mt-2 overflow-y-auto custom-scroll pb-24 space-y-3">
+                <div class="text-center mb-4">
+                    <span class="text-6xl animate-bounce inline-block">🥟</span>
+                </div>
+
+                <!-- Food Item 1 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-orange-50 p-2 rounded-lg">🥞</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-800">Bindaetteok</h4>
+                        <p class="text-[10px] text-slate-500">Crispy Mungbean Pancake. Deep fried in oil. Deliciously greasy.</p>
+                    </div>
+                </div>
+
+                <!-- Food Item 2 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-red-50 p-2 rounded-lg">🥩</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-800">Yukhoe (Raw Beef)</h4>
+                        <p class="text-[10px] text-slate-500">Michelin guide spot "Buchon Yukhoe" is here. Don't be scared, it's safe!</p>
+                    </div>
+                </div>
+
+                <!-- Food Item 3 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-yellow-50 p-2 rounded-lg">🍙</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-800">Mayak Gimbap</h4>
+                        <p class="text-[10px] text-slate-500">"Narcotic" Rice Rolls. Served with mustard sauce. Highly addictive.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-orange-200 p-3 rounded-xl text-orange-900 text-xs text-center font-bold mt-4">
+                    Bring Cash! Most stalls prefer cash over card.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: DAY 2 MORNING -->
+        <div class="slide bg-slate-50" data-index="5">
+             <div class="absolute top-0 right-0 p-6 opacity-10 font-black text-9xl pointer-events-none">2</div>
+            <div class="px-6 pt-8">
+                <div class="tag bg-blue-100 text-blue-600 w-max mb-2">Day 2: Modern</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Gangnam Style</h2>
+                <p class="text-slate-500 text-sm">Future City & Libraries</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-24">
+                <!-- Starfield -->
+                <div class="relative h-64 rounded-3xl bg-slate-200 overflow-hidden mb-4 shadow-md interactive-zone">
+                     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1535129649537-83d1c16ce6dc?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center"></div>
+                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+                         <h3 class="text-white text-xl font-bold">Starfield Library</h3>
+                         <p class="text-slate-300 text-xs">Located inside COEX Mall. The 13-meter bookshelves are iconic.</p>
+                     </div>
+                </div>
+
+                <!-- Statue -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 mb-4">
+                    <div class="text-3xl bg-blue-50 p-3 rounded-xl">👐</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Gangnam Style Statue</h3>
+                        <p class="text-xs text-slate-500 mt-1">Right outside COEX East Gate. Yes, the giant golden hands.</p>
+                    </div>
+                </div>
+
+                <!-- Bongeunsa -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="text-3xl bg-stone-100 p-3 rounded-xl">🧘</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Bongeunsa Temple</h3>
+                        <p class="text-xs text-slate-500 mt-1">A peaceful 1200-year-old Buddhist temple right across the street from the futuristic mall.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: DAY 2 AFTERNOON -->
+        <div class="slide bg-blue-50" data-index="6">
+            <div class="px-6 pt-8">
+                <div class="tag bg-blue-200 text-blue-800 w-max mb-2">Day 2: Trending</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Seongsu-dong</h2>
+                <p class="text-slate-500 text-sm">The "Brooklyn of Seoul".</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-24 space-y-4">
+                <p class="text-sm text-slate-600">Old shoe factories turned into hipster cafes. The hottest area in 2025.</p>
+
+                <!-- Dior Seongsu -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-slate-800">Dior Seongsu</h3>
+                        <span class="text-xs bg-black text-white px-2 py-1 rounded">Photo Spot</span>
+                    </div>
+                    <p class="text-xs text-slate-500">You probably need a reservation to enter, but the glass architecture is stunning from the outside.</p>
+                </div>
+
+                <!-- Nudake -->
+                <div class="bg-black text-white p-4 rounded-2xl shadow-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold">NUDAKE</h3>
+                        <span class="text-2xl">🥐</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Artistic desserts. Try the "Peak" cake (black croissant tart with matcha cream).</p>
+                </div>
+
+                <!-- Seoul Forest -->
+                <div class="bg-green-100 p-4 rounded-2xl shadow-sm border border-green-200 text-green-900">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold">Seoul Forest Park</h3>
+                        <span class="text-2xl">🌳</span>
+                    </div>
+                    <p class="text-xs opacity-80">Walk off the calories here. It's huge and beautiful in autumn/spring.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: DAY 2 EVENING -->
+        <div class="slide bg-slate-900 text-white" data-index="7">
+            <div class="px-6 pt-8">
+                <div class="tag bg-purple-500 text-white w-max mb-2">Day 2: Night</div>
+                <h2 class="text-3xl font-black mb-1">Rainbow Bridge</h2>
+                <p class="text-slate-400 text-sm">Banpo Hangang Park</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-24 flex flex-col gap-4">
+                
+                <div class="relative h-60 w-full bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
+                     <!-- CSS Rainbow Fountain Animation representation -->
+                    <div class="absolute bottom-0 left-0 right-0 h-1/2 flex justify-center gap-1 opacity-50">
+                        <div class="w-1 h-full bg-red-500 animate-pulse" style="animation-delay: 0s"></div>
+                        <div class="w-1 h-full bg-orange-500 animate-pulse" style="animation-delay: 0.1s"></div>
+                        <div class="w-1 h-full bg-yellow-500 animate-pulse" style="animation-delay: 0.2s"></div>
+                        <div class="w-1 h-full bg-green-500 animate-pulse" style="animation-delay: 0.3s"></div>
+                        <div class="w-1 h-full bg-blue-500 animate-pulse" style="animation-delay: 0.4s"></div>
+                        <div class="w-1 h-full bg-purple-500 animate-pulse" style="animation-delay: 0.5s"></div>
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold">19:30 | 20:00 | 20:30</h3>
+                            <p class="text-xs text-slate-400">Showtimes (Apr-Oct)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-2xl">🍗</span>
+                        <h3 class="font-bold">Chimaek by the River</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        "Chimaek" = Chicken + Maekju (Beer). 
+                        You can order delivery straight to the park "Pickup Zones".
+                    </p>
+                    <div class="bg-slate-900 p-2 rounded text-center text-[10px] text-slate-400">
+                        Convenience stores here also sell instant ramen machines!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: DAY 3 MORNING -->
+        <div class="slide bg-[#fdfbf7]" data-index="8">
+            <div class="absolute top-0 right-0 p-6 opacity-10 font-black text-9xl pointer-events-none">3</div>
+            <div class="px-6 pt-8">
+                <div class="tag bg-green-100 text-green-600 w-max mb-2">Day 3: Views</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Namsan Tower</h2>
+                <p class="text-slate-500 text-sm">The Icon of Seoul</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-24 space-y-4">
+                
+                <div class="flex justify-center my-4">
+                    <div class="text-9xl animate-float">🗼</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-500">
+                    <h3 class="font-bold text-slate-800">Getting Up</h3>
+                    <ul class="mt-2 space-y-2 text-xs text-slate-600">
+                        <li><strong>1. Cable Car:</strong> Classic, but can have long lines.</li>
+                        <li><strong>2. Bus 01:</strong> Cheaper and scenic ride.</li>
+                        <li><strong>3. Walk:</strong> 30-40 mins stairs. Good workout.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-pink-500">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-slate-800">Love Locks</h3>
+                        <span class="text-xl">🔒</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">
+                        Bring your own lock if you want to save money. The shop at the top is expensive!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: DAY 3 AFTERNOON -->
+        <div class="slide bg-pink-50" data-index="9">
+            <div class="px-6 pt-8">
+                <div class="tag bg-pink-200 text-pink-800 w-max mb-2">Day 3: Youth</div>
+                <h2 class="text-3xl font-black text-slate-900 mb-1">Hongdae</h2>
+                <p class="text-slate-500 text-sm">Shopping, Busking, Energy.</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 overflow-y-auto custom-scroll pb-24 space-y-3">
+                <!-- Shopping -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-pink-50 p-2 rounded-xl">🛍️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Shopping</h3>
+                        <p class="text-[10px] text-slate-500">Fashion Street & AK Plaza. Affordable trendy clothes.</p>
+                    </div>
+                </div>
+
+                <!-- Yeonnam-dong -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-green-50 p-2 rounded-xl">🌳</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Yeonnam-dong</h3>
+                        <p class="text-[10px] text-slate-500">Walk along the "Gyeongui Line Forest Park" (railroad park). Tons of cute cafes.</p>
+                    </div>
+                </div>
+
+                <!-- Karaoke -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-purple-50 p-2 rounded-xl">🎤</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Coin Noraebang</h3>
+                        <p class="text-[10px] text-slate-500">Sing your heart out in a tiny booth for ₩500 (2 songs).</p>
+                    </div>
+                </div>
+
+                <!-- Photobooth -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-blue-50 p-2 rounded-xl">📸</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Photo Booths</h3>
+                        <p class="text-[10px] text-slate-500">Life4Cuts (인생네컷). Grab a prop and take 4 shots.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: FOOD BUCKET LIST -->
+        <div class="slide bg-yellow-50" data-index="10">
+            <div class="px-6 pt-8">
+                 <h2 class="text-3xl font-black text-slate-900 mb-1">Eat Everything</h2>
+                 <p class="text-slate-500 text-sm">Did you miss anything?</p>
+            </div>
+
+            <div class="flex-1 px-4 mt-4 overflow-y-auto custom-scroll pb-24 grid grid-cols-2 gap-3">
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🥓</div>
+                    <div class="font-bold text-sm text-slate-800">Samgyeopsal</div>
+                    <div class="text-[10px] text-slate-500">Grilled Pork Belly</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🥘</div>
+                    <div class="font-bold text-sm text-slate-800">Tteokbokki</div>
+                    <div class="text-[10px] text-slate-500">Spicy Rice Cakes</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🍲</div>
+                    <div class="font-bold text-sm text-slate-800">Kimchi Jjigae</div>
+                    <div class="text-[10px] text-slate-500">Spicy Stew</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🍧</div>
+                    <div class="font-bold text-sm text-slate-800">Bingsu</div>
+                    <div class="text-[10px] text-slate-500">Shaved Ice</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🍜</div>
+                    <div class="font-bold text-sm text-slate-800">Ramyeon</div>
+                    <div class="text-[10px] text-slate-500">Conv. Store Style</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🌭</div>
+                    <div class="font-bold text-sm text-slate-800">Corndog</div>
+                    <div class="text-[10px] text-slate-500">With Sugar!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: SUMMARY -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="11">
+            <h2 class="text-3xl font-bold mb-4">Trip Complete!</h2>
+            <p class="text-slate-400 mb-8 text-sm">You survived 72 hours in Seoul.</p>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12">
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">💡</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Tax Refund</strong>
+                        Don't forget to scan your receipts at the airport kiosks!
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">👋</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Annyeong!</strong>
+                        (Goodbye / Hello)
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-blue-600 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+                Replay Itinerary ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- QUEST LOG OVERLAY (Replaced Calculator) -->
+    <div id="quest-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleQuestLog(event)">
+        <div class="bg-stone-50 rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Quest Log</h3>
+                    <p class="text-xs text-slate-500">Level up your travel XP!</p>
+                </div>
+                <button onclick="toggleQuestLog(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Progress Bars -->
+            <div class="bg-white p-4 rounded-2xl mb-4 space-y-3 shadow-sm border border-stone-200">
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                        <span>Explorer Score</span>
+                        <span><span id="score-xp">0</span> XP</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3"><div id="bar-xp" class="bg-blue-500 h-3 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+            </div>
+
+            <!-- Quest List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="quest-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetQuests()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">Reset Quests</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Quest Database
+        const questDb = [
+            { name: "Wear a Hanbok", xp: 50, icon: "👘", completed: false },
+            { name: "Eat Kimchi", xp: 10, icon: "🥬", completed: false },
+            { name: "Ride the Subway", xp: 20, icon: "🚇", completed: false },
+            { name: "See Namsan Tower", xp: 30, icon: "🗼", completed: false },
+            { name: "Eat Street Food", xp: 20, icon: "🍢", completed: false },
+            { name: "Visit a Palace", xp: 50, icon: "🏯", completed: false },
+            { name: "Buy Skincare", xp: 30, icon: "🧖‍♀️", completed: false },
+            { name: "Say 'Kamsahamnida'", xp: 10, icon: "🗣️", completed: false },
+            { name: "Cross Han River", xp: 20, icon: "🌉", completed: false },
+            { name: "Visit a Cafe", xp: 20, icon: "☕", completed: false },
+            { name: "Use Chopsticks", xp: 10, icon: "🥢", completed: false },
+            { name: "Take a Photobooth Pic", xp: 30, icon: "📸", completed: false },
+        ];
+        
+        let totalXp = 0;
+        const maxXp = questDb.reduce((acc, item) => acc + item.xp, 0);
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initQuestLog();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            // 1. Check if user clicked an interactive element or button
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            // 2. Logic for Left/Right Navigation
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleHint(id, e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('animate-slide-up');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- QUEST LOG LOGIC ---
+        function toggleQuestLog(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('quest-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initQuestLog() {
+            renderQuestList();
+        }
+
+        function renderQuestList() {
+            const list = document.getElementById('quest-list');
+            list.innerHTML = ''; // Clear current
+            
+            questDb.forEach((item, index) => {
+                const row = document.createElement('div');
+                // Styling based on completed state
+                const bgClass = item.completed ? 'bg-green-50 border-green-200' : 'bg-white border-stone-100';
+                const opacityClass = item.completed ? 'opacity-70' : 'opacity-100';
+                const btnText = item.completed ? 'Done!' : 'Complete';
+                const btnClass = item.completed ? 'bg-green-500 text-white' : 'bg-stone-100 text-stone-600';
+
+                row.className = `flex justify-between items-center p-3 border rounded-xl shadow-sm cursor-pointer active:scale-95 transition-all mb-2 ${bgClass} ${opacityClass}`;
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                    </div>
+                    <div class="text-[10px] font-bold px-3 py-1 rounded pointer-events-none ${btnClass}">${btnText}</div>
+                `;
+                
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleQuest(index);
+                };
+                list.appendChild(row);
+            });
+            updateQuestStats();
+        }
+
+        function toggleQuest(index) {
+            questDb[index].completed = !questDb[index].completed;
+            renderQuestList();
+        }
+
+        function updateQuestStats() {
+            totalXp = questDb.reduce((acc, item) => item.completed ? acc + item.xp : acc, 0);
+            
+            const pct = Math.min((totalXp / maxXp) * 100, 100);
+            
+            document.getElementById('score-xp').innerText = totalXp;
+            
+            const bar = document.getElementById('bar-xp');
+            bar.style.width = pct + '%';
+            
+            if(pct >= 100) bar.classList.replace('bg-blue-500', 'bg-green-500');
+            else bar.classList.replace('bg-green-500', 'bg-blue-500');
+        }
+
+        function resetQuests() {
+            questDb.forEach(i => i.completed = false);
+            renderQuestList();
+        }
+    </script>
+</body>
+</html>
