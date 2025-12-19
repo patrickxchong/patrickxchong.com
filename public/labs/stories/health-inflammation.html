@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fighting Inflammation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f8fafc;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nutrient-bar-bg {
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .nutrient-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* Specific Themes */
+        .theme-bad { color: #991b1b; background-color: #fef2f2; border-color: #fecaca; }
+        .theme-good { color: #166534; background-color: #f0fdf4; border-color: #bbf7d0; }
+        .theme-info { color: #1e40af; background-color: #eff6ff; border-color: #bfdbfe; }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-white/90 backdrop-blur text-slate-900 border border-slate-200 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>🛡️</span> Daily Shield
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-gradient-to-br from-red-900 via-slate-900 to-black text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <!-- Background FX -->
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute top-20 left-10 w-32 h-32 bg-red-600 rounded-full blur-[80px] opacity-40 animate-pulse-slow"></div>
+                    <div class="absolute bottom-20 right-10 w-40 h-40 bg-blue-600 rounded-full blur-[80px] opacity-30 animate-pulse-slow" style="animation-delay: 2s;"></div>
+                </div>
+
+                <div class="relative z-10">
+                    <div class="text-7xl mb-4 animate-float">🔥</div>
+                    <h1 class="text-5xl font-black mb-2 tracking-tight leading-tight">Fighting<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">Inflammation</span></h1>
+                    <p class="text-slate-400 text-lg mb-8 tracking-wide font-light">The Silent Killer Within</p>
+                    
+                    <div class="glass-card px-6 py-4 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform mx-auto" onclick="goToSlide(1, event)">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                            <p class="text-xs text-slate-400 font-bold uppercase">The Reality</p>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-800 leading-relaxed">
+                            Chronic inflammation is the root cause of <span class="text-red-600">60% of all deaths</span> worldwide.
+                        </p>
+                        <div class="mt-3 text-xs text-slate-500 font-bold flex items-center justify-between border-t border-slate-100 pt-2">
+                            <span>START GUIDE</span>
+                            <span class="text-lg">→</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: ACUTE VS CHRONIC -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Friend or Foe?</h2>
+                <p class="text-slate-500 text-sm">Not all inflammation is bad.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <!-- Acute -->
+                <div class="bg-green-50 p-5 rounded-2xl border border-green-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🚑</span>
+                        <div>
+                            <h3 class="text-green-900 font-bold text-base">Acute (The Good)</h3>
+                            <p class="text-sm text-green-800 mt-1 leading-relaxed">
+                                You cut your finger. It gets red, hot, and swollen. This is your immune system sending "firefighters" to kill bacteria and heal the wound. <strong>It goes away in days.</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chronic -->
+                <div class="bg-red-50 p-5 rounded-2xl border border-red-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">👺</span>
+                        <div>
+                            <h3 class="text-red-900 font-bold text-base">Chronic (The Bad)</h3>
+                            <p class="text-sm text-red-800 mt-1 leading-relaxed">
+                                The body thinks it's under constant attack. The "firefighters" don't leave. They start damaging healthy tissues, organs, and DNA. <strong>It lasts for years.</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-800 rounded-xl text-white text-sm shadow-lg mt-4">
+                    <strong>Think of it this way:</strong>
+                    <br>Acute is a controlled campfire. Chronic is a forest fire that never goes out.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: SYMPTOMS -->
+        <div class="slide bg-slate-50" data-index="2">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Signs</h2>
+                <p class="text-slate-500 text-sm">It's often invisible until it's too late.</p>
+            </div>
+            <div class="flex-1 px-4 pb-24 grid grid-cols-2 gap-3 overflow-y-auto custom-scroll">
+                <!-- Card 1 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-3xl mb-2">🧠</div>
+                    <h4 class="font-bold text-slate-700 text-sm">Brain Fog</h4>
+                    <p class="text-xs text-slate-500 mt-1">Difficulty concentrating or remembering things.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-3xl mb-2">😴</div>
+                    <h4 class="font-bold text-slate-700 text-sm">Fatigue</h4>
+                    <p class="text-xs text-slate-500 mt-1">Waking up tired even after sleeping 8 hours.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-3xl mb-2">🤕</div>
+                    <h4 class="font-bold text-slate-700 text-sm">Body Aches</h4>
+                    <p class="text-xs text-slate-500 mt-1">Joint pain or muscle stiffness without exercise.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-3xl mb-2">⚖️</div>
+                    <h4 class="font-bold text-slate-700 text-sm">Weight Gain</h4>
+                    <p class="text-xs text-slate-500 mt-1">Especially stubborn visceral belly fat.</p>
+                </div>
+                <!-- Card 5 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm col-span-2 border-l-4 border-red-500">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-slate-800 text-sm">Long Term Risks</h4>
+                        <span class="text-red-500 text-xs font-bold">CRITICAL</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">Heart Disease, Type 2 Diabetes, Alzheimer's, and Cancer are all linked to chronic inflammation.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: CAUSES -->
+        <div class="slide bg-white" data-index="3">
+            <div class="px-6 pt-8 pb-2">
+                <h2 class="text-3xl font-bold text-slate-800">The Arsonists</h2>
+                <p class="text-slate-500 text-sm">Who started the fire?</p>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll pb-24">
+                <div class="relative h-80 w-full flex items-center justify-center">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center border-4 border-red-200 z-10">
+                            <div class="text-center">
+                                <div class="text-3xl">🔥</div>
+                                <div class="text-xs font-bold text-red-800">YOU</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Satellites -->
+                    <div class="absolute top-4 left-4 bg-white p-3 rounded-xl shadow border w-28 text-center animate-float">
+                        <div class="text-2xl">🍬</div>
+                        <div class="text-xs font-bold mt-1">Sugar</div>
+                    </div>
+                    <div class="absolute top-10 right-4 bg-white p-3 rounded-xl shadow border w-28 text-center animate-float" style="animation-delay: 1s;">
+                        <div class="text-2xl">🌭</div>
+                        <div class="text-xs font-bold mt-1">Processed</div>
+                    </div>
+                    <div class="absolute bottom-16 left-4 bg-white p-3 rounded-xl shadow border w-28 text-center animate-float" style="animation-delay: 2s;">
+                        <div class="text-2xl">😰</div>
+                        <div class="text-xs font-bold mt-1">Stress</div>
+                    </div>
+                    <div class="absolute bottom-8 right-6 bg-white p-3 rounded-xl shadow border w-28 text-center animate-float" style="animation-delay: 3s;">
+                        <div class="text-2xl">🧴</div>
+                        <div class="text-xs font-bold mt-1">Toxins</div>
+                    </div>
+                </div>
+                <div class="px-6">
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Modern life is inflammatory. We eat fake food, sit all day, don't sleep enough, and are constantly stressed. Our body interprets this lifestyle as an "injury".
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: SUGAR -->
+        <div class="slide bg-pink-50" data-index="4">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Public Enemy #1</h2>
+                <p class="text-slate-500 text-sm">Sugar & Refined Carbs.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="bg-white p-6 rounded-2xl shadow-sm mb-4">
+                    <h3 class="font-bold text-slate-800 text-lg mb-2">The Spike</h3>
+                    <div class="h-24 flex items-end gap-1 mb-2 border-b border-slate-200 pb-1">
+                        <!-- Chart Bars -->
+                        <div class="flex-1 bg-green-200 rounded-t h-[30%] relative group">
+                            <div class="absolute -top-6 left-0 text-[9px] w-full text-center hidden group-hover:block">Veggies</div>
+                        </div>
+                        <div class="flex-1 bg-green-300 rounded-t h-[40%] relative group">
+                            <div class="absolute -top-6 left-0 text-[9px] w-full text-center hidden group-hover:block">Oats</div>
+                        </div>
+                        <div class="flex-1 bg-red-400 rounded-t h-[80%] relative group">
+                            <div class="absolute -top-6 left-0 text-[9px] w-full text-center hidden group-hover:block">Bread</div>
+                        </div>
+                        <div class="flex-1 bg-red-600 rounded-t h-[95%] relative group">
+                            <div class="absolute -top-6 left-0 text-[9px] w-full text-center hidden group-hover:block">Soda</div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600">
+                        When blood sugar spikes, your body releases <strong>Insulin</strong>. High insulin levels trigger the release of inflammatory cytokines.
+                    </p>
+                </div>
+                
+                <div class="space-y-2">
+                    <h4 class="text-sm font-bold text-slate-800">The "Hidden" Sugars:</h4>
+                    <div class="bg-white px-4 py-2 rounded-lg text-xs text-slate-600 shadow-sm border border-slate-100 flex justify-between">
+                        <span>Yogurt (Flavored)</span> <span class="text-red-500 font-bold">20g+</span>
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg text-xs text-slate-600 shadow-sm border border-slate-100 flex justify-between">
+                        <span>BBQ Sauce</span> <span class="text-red-500 font-bold">15g+</span>
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg text-xs text-slate-600 shadow-sm border border-slate-100 flex justify-between">
+                        <span>Granola Bar</span> <span class="text-red-500 font-bold">12g+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: SEED OILS -->
+        <div class="slide bg-yellow-50" data-index="5">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">The Oil Crisis</h2>
+                <p class="text-slate-500 text-sm">Omega-6 vs Omega-3.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-yellow-100 mb-4">
+                    <h3 class="font-bold text-slate-800 mb-2">The Ratio Rule</h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="flex-1 bg-blue-100 p-2 text-center rounded">
+                            <span class="block text-2xl font-bold text-blue-600">1</span>
+                            <span class="text-[10px] font-bold">Omega 3</span>
+                        </div>
+                        <span class="text-slate-400">:</span>
+                        <div class="flex-1 bg-red-100 p-2 text-center rounded">
+                            <span class="block text-2xl font-bold text-red-600">15</span>
+                            <span class="text-[10px] font-bold">Omega 6</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600">
+                        Ancestrally, we ate 1:1. Today, we eat 1:15 or even 1:20. Omega-6s are pro-inflammatory in excess.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-red-50 p-3 rounded-xl border border-red-100">
+                        <div class="text-xs font-bold text-red-800 mb-1 uppercase">Avoid (High O-6)</div>
+                        <ul class="text-xs text-red-700 space-y-1">
+                            <li>❌ Soybean Oil</li>
+                            <li>❌ Corn Oil</li>
+                            <li>❌ Sunflower Oil</li>
+                            <li>❌ Canola Oil</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-xl border border-green-100">
+                        <div class="text-xs font-bold text-green-800 mb-1 uppercase">Enjoy</div>
+                        <ul class="text-xs text-green-700 space-y-1">
+                            <li>✅ Olive Oil</li>
+                            <li>✅ Avocado Oil</li>
+                            <li>✅ Coconut Oil</li>
+                            <li>✅ Butter/Ghee</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: GUT HEALTH -->
+        <div class="slide bg-indigo-50" data-index="6">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Gut-Brain Axis</h2>
+                <p class="text-slate-500 text-sm">"All disease begins in the gut."</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="bg-white p-6 rounded-2xl shadow-sm mb-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 text-6xl opacity-10">🦠</div>
+                    <h3 class="font-bold text-indigo-900 mb-2">Leaky Gut Syndrome</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        Your gut lining is only one cell thick. When inflamed by gluten, alcohol, or stress, "cracks" appear.
+                    </p>
+                    <div class="bg-indigo-50 p-3 rounded-lg text-xs text-indigo-800">
+                        <strong>The Result:</strong> Toxins & bacteria leak into your bloodstream. Your immune system attacks them, creating body-wide inflammation.
+                    </div>
+                </div>
+
+                <h4 class="font-bold text-slate-800 mb-2 mt-4">Gut Heroes</h4>
+                <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                    <div class="min-w-[100px] bg-white p-3 rounded-xl text-center shadow-sm">
+                        <div class="text-2xl">🥬</div>
+                        <div class="text-xs font-bold mt-1">Kimchi</div>
+                    </div>
+                    <div class="min-w-[100px] bg-white p-3 rounded-xl text-center shadow-sm">
+                        <div class="text-2xl">🥣</div>
+                        <div class="text-xs font-bold mt-1">Sauerkraut</div>
+                    </div>
+                    <div class="min-w-[100px] bg-white p-3 rounded-xl text-center shadow-sm">
+                        <div class="text-2xl">🥛</div>
+                        <div class="text-xs font-bold mt-1">Kefir</div>
+                    </div>
+                    <div class="min-w-[100px] bg-white p-3 rounded-xl text-center shadow-sm">
+                        <div class="text-2xl">🦴</div>
+                        <div class="text-xs font-bold mt-1">Bone Broth</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: ANTI-INFLAMMATORY PROTOCOL -->
+        <div class="slide bg-teal-900 text-white" data-index="7">
+            <div class="flex-1 flex flex-col items-center justify-center px-8 text-center">
+                <div class="text-6xl mb-6">🛡️</div>
+                <h2 class="text-4xl font-bold mb-4">The Solution</h2>
+                <p class="text-teal-100 text-lg mb-8">
+                    We can't change our genes, but we can change what we signal them with.
+                </p>
+                <div class="w-full h-1 bg-teal-700 rounded-full mb-8"></div>
+                <p class="text-sm font-bold uppercase tracking-widest text-teal-300 mb-4">Introducing</p>
+                <h3 class="text-3xl font-black mb-8">The Firefighting Squad</h3>
+                <p class="text-xs text-teal-400 animate-pulse">SWIPE TO MEET THE HEROES →</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: OMEGA 3 -->
+        <div class="slide bg-blue-50" data-index="8">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-slate-800">Fatty Fish</h2>
+                    <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded">Hero #1</span>
+                </div>
+                <p class="text-slate-500 text-sm">The ultimate fire extinguisher.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-100 mb-4">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' fill='none' stroke='%233b82f6' stroke-width='2'><path d='M10 30 Q30 5 50 30 T90 30 M90 30 L80 20 M90 30 L80 40' /></svg>" class="w-full h-24 object-contain opacity-50 mb-2">
+                    <h3 class="font-bold text-slate-800">Why? EPA & DHA</h3>
+                    <p class="text-xs text-slate-600 mt-2">
+                        These specific Omega-3 fatty acids directly inhibit the production of substances that cause inflammation (eicosanoids).
+                    </p>
+                </div>
+                
+                <h4 class="font-bold text-sm text-slate-700 mb-2">Top Sources (SMASH)</h4>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
+                        <span class="text-2xl">🐟</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Salmon</div>
+                            <div class="text-[10px] text-slate-500">Wild caught is best.</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
+                        <span class="text-2xl">🥫</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Sardines/Mackerel</div>
+                            <div class="text-[10px] text-slate-500">Highest Omega-3, lowest mercury.</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
+                        <span class="text-2xl">🌰</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Walnuts & Chia</div>
+                            <div class="text-[10px] text-slate-500">Plant source (ALA). Needs conversion.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: BERRIES -->
+        <div class="slide bg-purple-50" data-index="9">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-slate-800">Berries</h2>
+                    <span class="bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded">Hero #2</span>
+                </div>
+                <p class="text-slate-500 text-sm">Nature's candy.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                        <div class="text-3xl">🫐</div>
+                        <div class="font-bold text-sm mt-1">Blueberry</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                        <div class="text-3xl">🍓</div>
+                        <div class="font-bold text-sm mt-1">Strawberry</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-purple-100">
+                    <h3 class="font-bold text-purple-900 mb-2">The Power of Polyphenols</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Berries are packed with fiber and antioxidants called anthocyanins (what gives them color). They reduce markers of inflammation like CRP (C-reactive protein).
+                    </p>
+                    <div class="mt-3 bg-purple-100 p-2 rounded text-[10px] font-bold text-purple-800 text-center">
+                        Pro Tip: Frozen berries are just as nutritious and cheaper!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: TURMERIC -->
+        <div class="slide bg-orange-50" data-index="10">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-slate-800">Spices</h2>
+                    <span class="bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">Hero #3</span>
+                </div>
+                <p class="text-slate-500 text-sm">Specifically: Turmeric & Ginger.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-orange-100 mb-4 relative">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">🥘</div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">Curcumin</h3>
+                            <p class="text-xs text-slate-600 mt-1">The active compound in turmeric matches the effectiveness of some anti-inflammatory drugs, without side effects.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-5 rounded-2xl shadow-lg text-white interactive-zone" onclick="toggleHint('pepper-hint', event)">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-yellow-400">The Golden Rule</h3>
+                        <span class="text-xs border border-slate-600 px-2 py-1 rounded">Tap to see</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Turmeric is poorly absorbed on its own.</p>
+                    
+                    <div id="pepper-hint" class="hidden mt-3 pt-3 border-t border-slate-600 animate-slide-up">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🧂</span>
+                            <p class="text-xs">
+                                Always pair with <strong>Black Pepper</strong> (Piperine). It increases absorption by <strong class="text-green-400">2000%</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: LEAFY GREENS -->
+        <div class="slide bg-green-50" data-index="11">
+             <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-slate-800">Greens</h2>
+                    <span class="bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded">Hero #4</span>
+                </div>
+                <p class="text-slate-500 text-sm">Spinach, Kale, Broccoli.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-green-100 mb-4">
+                    <h3 class="font-bold text-slate-800 mb-1">Cruciferous Veg</h3>
+                    <p class="text-xs text-slate-600 mb-2">Broccoli, Brussels Sprouts, Cauliflower.</p>
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <strong class="text-green-800 text-sm block">Sulforaphane</strong>
+                        <p class="text-[10px] text-green-700 mt-1">A compound that blocks enzymes that cause joint destruction and inflammation.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                     <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <div class="text-xs font-bold text-slate-500 uppercase">Do</div>
+                        <p class="text-sm font-bold text-slate-800 mt-1">Lightly Steam</p>
+                        <p class="text-[10px] text-slate-400">Preserves nutrients.</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <div class="text-xs font-bold text-slate-500 uppercase">Don't</div>
+                        <p class="text-sm font-bold text-slate-800 mt-1">Deep Fry</p>
+                        <p class="text-[10px] text-slate-400">Creates toxins.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: LIFESTYLE - SLEEP -->
+        <div class="slide bg-indigo-900 text-white" data-index="12">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold mb-2">Sleep</h2>
+                <p class="text-indigo-200 text-sm">The body's janitor.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="flex justify-center my-6">
+                    <div class="text-8xl animate-pulse-slow">🌙</div>
+                </div>
+                <div class="bg-indigo-800/50 p-5 rounded-2xl border border-indigo-700 backdrop-blur-sm">
+                    <h3 class="font-bold text-indigo-100 mb-2">The Glymphatic System</h3>
+                    <p class="text-sm text-indigo-200 leading-relaxed">
+                        While you sleep, your brain cells actually shrink to allow fluid to wash away toxins and inflammatory proteins (like amyloid beta) accumulated during the day.
+                    </p>
+                </div>
+                <div class="mt-6">
+                    <h4 class="font-bold text-sm mb-2">Sleep Hygiene Checklist:</h4>
+                    <ul class="text-sm text-indigo-200 space-y-2">
+                        <li>📵 No screens 1h before bed</li>
+                        <li>❄️ Cool room (around 20°C)</li>
+                        <li>🌑 Pitch black darkness</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: MOVEMENT -->
+        <div class="slide bg-white" data-index="13">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Movement</h2>
+                <p class="text-slate-500 text-sm">Find the Goldilocks Zone.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <!-- Too Little -->
+                <div class="flex items-center gap-4 mb-4 opacity-50">
+                    <div class="text-3xl grayscale">🛋️</div>
+                    <div>
+                        <div class="font-bold text-sm">Sedentary</div>
+                        <div class="text-[10px]">Increases inflammation markers.</div>
+                    </div>
+                </div>
+
+                <!-- Just Right -->
+                <div class="flex items-center gap-4 mb-4 bg-green-50 p-4 rounded-xl border border-green-200 scale-105 shadow-sm">
+                    <div class="text-3xl">🚶</div>
+                    <div>
+                        <div class="font-bold text-sm text-green-800">Moderate Activity</div>
+                        <div class="text-[10px] text-green-700">Walking, Yoga, Light Resistance. Releases anti-inflammatory myokines.</div>
+                    </div>
+                </div>
+
+                <!-- Too Much -->
+                <div class="flex items-center gap-4 opacity-50">
+                    <div class="text-3xl grayscale">🏋️‍♀️</div>
+                    <div>
+                        <div class="font-bold text-sm">Overtraining</div>
+                        <div class="text-[10px]">Chronic intense cardio raises Cortisol.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: STRESS -->
+        <div class="slide bg-red-50" data-index="14">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Stress</h2>
+                <p class="text-slate-500 text-sm">Cortisol is a frenemy.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <p class="text-sm text-slate-600 mb-6">
+                    Cortisol is actually anti-inflammatory in short bursts. But when you are stressed 24/7, your body becomes <strong>resistant</strong> to it, allowing inflammation to run wild.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
+                        <div class="text-3xl mb-2">🌬️</div>
+                        <div class="font-bold text-sm text-slate-800">Box Breathing</div>
+                        <div class="text-[10px] text-slate-500 mt-1">In 4s, Hold 4s, Out 4s.</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
+                        <div class="text-3xl mb-2">🌳</div>
+                        <div class="font-bold text-sm text-slate-800">Nature Walk</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Lowers BP instantly.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: FASTING -->
+        <div class="slide bg-stone-100" data-index="15">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Fasting</h2>
+                <p class="text-slate-500 text-sm">Give your gut a break.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                 <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-stone-800 mb-4">
+                    <h3 class="font-bold text-slate-800 mb-1">Time Restricted Eating</h3>
+                    <p class="text-xs text-slate-600">
+                        Eating within an 8-10 hour window (e.g., 10am to 6pm) gives your body 14-16 hours to focus on repair instead of digestion.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-600">
+                    <h3 class="font-bold text-slate-800 mb-1">Autophagy</h3>
+                    <p class="text-xs text-slate-600">
+                        Literally "Self-Eating". During fasting, cells clean out damaged components and dysfunctional proteins. It's deep cleaning for your body.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 17: VITAMIN D (Callback) -->
+        <div class="slide bg-yellow-50" data-index="16">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Vitamin D</h2>
+                <p class="text-slate-500 text-sm">The Immune Modulator.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="flex justify-center mb-6 relative">
+                    <div class="absolute inset-0 bg-yellow-400 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-8xl relative z-10">☀️</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Vitamin D deficiency is strongly linked to autoimmune diseases and chronic inflammation. It helps the immune system distinguish between "self" and "invader".
+                    </p>
+                    <div class="mt-4 flex gap-4 text-center">
+                        <div class="flex-1 bg-yellow-50 p-2 rounded-lg">
+                            <span class="block font-bold text-yellow-800">Sun</span>
+                            <span class="text-[10px] text-yellow-700">10-15 mins</span>
+                        </div>
+                        <div class="flex-1 bg-yellow-50 p-2 rounded-lg">
+                            <span class="block font-bold text-yellow-800">Supps</span>
+                            <span class="text-[10px] text-yellow-700">D3 + K2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 18: TOXINS -->
+        <div class="slide bg-gray-200" data-index="17">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Enviro-Toxins</h2>
+                <p class="text-slate-500 text-sm">The invisible load.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <div class="space-y-3">
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                        <span class="text-2xl">🥤</span>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Plastics (BPA)</div>
+                            <div class="text-[10px] text-slate-500">Drink from glass or stainless steel. Never heat plastic.</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                        <span class="text-2xl">🌫️</span>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Air Quality</div>
+                            <div class="text-[10px] text-slate-500">Use a HEPA air filter in your bedroom.</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                        <span class="text-2xl">🧼</span>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Household Cleaners</div>
+                            <div class="text-[10px] text-slate-500">Switch to vinegar/natural based cleaners.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 19: ACTION PLAN -->
+        <div class="slide bg-teal-50" data-index="18">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800">Summary</h2>
+                <p class="text-slate-500 text-sm">Your daily protocol.</p>
+            </div>
+            <div class="flex-1 px-6 pb-24 overflow-y-auto custom-scroll">
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-500 text-xl">✅</span>
+                        <span class="text-sm text-slate-700 font-medium">Cut sugar & processed oils.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-500 text-xl">✅</span>
+                        <span class="text-sm text-slate-700 font-medium">Eat Omega-3s & colorful plants.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-500 text-xl">✅</span>
+                        <span class="text-sm text-slate-700 font-medium">Stop eating 3 hours before bed.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-500 text-xl">✅</span>
+                        <span class="text-sm text-slate-700 font-medium">Get 7-8 hours of sleep.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-500 text-xl">✅</span>
+                        <span class="text-sm text-slate-700 font-medium">Move your body daily.</span>
+                    </li>
+                </ul>
+                <div class="mt-6 bg-white p-4 rounded-xl text-center shadow-sm border border-teal-100">
+                    <p class="text-xs text-slate-500 italic">"Consistency is the key. You don't have to be perfect, just be better than yesterday."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 20: END -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="19">
+            <h2 class="text-3xl font-bold mb-4">Ready?</h2>
+            <p class="text-slate-400 mb-8">Start tracking your Anti-Inflammatory score today.</p>
+            
+            <button onclick="toggleCalculator(event)" class="mb-4 w-full max-w-xs px-8 py-4 bg-teal-500 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto flex items-center justify-center gap-2">
+                <span>🛡️</span> Open Daily Shield
+            </button>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-slate-800 text-slate-300 rounded-full font-bold text-sm shadow hover:bg-slate-700 transition-colors pointer-events-auto">
+                Replay Guide ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <!-- Stop Propagation on inner card so clicking it doesn't close it -->
+        <div class="bg-slate-50 rounded-t-3xl p-6 h-[90%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Daily Shield Score</h3>
+                    <p class="text-xs text-slate-500">Aim for 100 points!</p>
+                </div>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Score Display -->
+            <div class="bg-white p-6 rounded-2xl mb-4 shadow-sm text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-teal-50 opacity-50"></div>
+                <div class="relative z-10">
+                    <div class="text-5xl font-black text-slate-800 mb-1 transition-all" id="total-score">0</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Points</div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-100 rounded-full h-2 mt-4 overflow-hidden">
+                        <div id="score-bar" class="bg-teal-500 h-2 rounded-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checklist -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetCalc()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">Reset Day</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Anti-Inflammatory Checklist Data
+        const checklistDb = [
+            { id: 'omega', name: "Ate Fatty Fish / Omega-3", points: 20, icon: "🐟", type: 'good' },
+            { id: 'greens', name: "Leafy Greens (1 cup)", points: 15, icon: "🥬", type: 'good' },
+            { id: 'berries', name: "Berries (1/2 cup)", points: 10, icon: "🫐", type: 'good' },
+            { id: 'spice', name: "Turmeric/Ginger", points: 10, icon: "🥘", type: 'good' },
+            { id: 'sleep', name: "7+ Hours Sleep", points: 20, icon: "😴", type: 'good' },
+            { id: 'move', name: "30 min Movement", points: 15, icon: "🚶", type: 'good' },
+            { id: 'nosugar', name: "No Sugary Drinks", points: 10, icon: "🚫", type: 'good' },
+            
+            { id: 'sugar', name: "Ate High Sugar Dessert", points: -20, icon: "🍩", type: 'bad' },
+            { id: 'fried', name: "Ate Deep Fried Food", points: -20, icon: "🍟", type: 'bad' },
+            { id: 'alcohol', name: "Alcohol (>2 drinks)", points: -15, icon: "🍺", type: 'bad' },
+        ];
+        
+        // Track checked items by ID
+        let checkedItems = new Set();
+        let currentScore = 0;
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleHint(id, e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- CALCULATOR ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            list.innerHTML = ''; // clear
+            
+            checklistDb.forEach(item => {
+                const row = document.createElement('div');
+                
+                // Style based on Good/Bad
+                let pointClass = item.type === 'good' ? 'text-teal-600 bg-teal-50' : 'text-red-600 bg-red-50';
+                let pointPrefix = item.type === 'good' ? '+' : '';
+                
+                row.className = `flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-all mb-2 select-none group`;
+                row.setAttribute('data-id', item.id);
+                
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold ${pointClass} px-2 py-1 rounded transition-colors">${pointPrefix}${item.points}</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-slate-200 flex items-center justify-center check-circle">
+                            <div class="w-3 h-3 bg-teal-500 rounded-full hidden check-fill"></div>
+                        </div>
+                    </div>
+                `;
+                
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleItem(item, row);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function toggleItem(item, rowElement) {
+            const circle = rowElement.querySelector('.check-fill');
+            const pointBadge = rowElement.querySelector('span[class*="font-bold"]');
+            
+            if (checkedItems.has(item.id)) {
+                // Uncheck
+                checkedItems.delete(item.id);
+                currentScore -= item.points;
+                circle.classList.add('hidden');
+                rowElement.classList.remove('ring-2', 'ring-teal-400', 'bg-teal-50');
+                
+                // Reset text color
+                if(item.type === 'good') {
+                   pointBadge.className = "text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded transition-colors";
+                } else {
+                   pointBadge.className = "text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded transition-colors";
+                }
+
+            } else {
+                // Check
+                checkedItems.add(item.id);
+                currentScore += item.points;
+                circle.classList.remove('hidden');
+                rowElement.classList.add('ring-2', 'ring-teal-400', 'bg-teal-50');
+                
+                // Active text color
+                pointBadge.className = "text-xs font-bold text-white bg-slate-800 px-2 py-1 rounded transition-colors";
+            }
+            renderCalc();
+        }
+
+        function resetCalc() {
+            checkedItems.clear();
+            currentScore = 0;
+            initCalculator(); // Re-render list
+            renderCalc();
+        }
+
+        function renderCalc() {
+            const maxScore = 100;
+            const scoreDisplay = document.getElementById('total-score');
+            const scoreBar = document.getElementById('score-bar');
+            
+            // Animation for number
+            animateValue(scoreDisplay, parseInt(scoreDisplay.innerText), currentScore, 300);
+            
+            // Bar width (capped at 100%)
+            let pct = Math.min(Math.max(currentScore, 0), 100);
+            scoreBar.style.width = pct + '%';
+            
+            // Bar Color Logic
+            if(currentScore < 30) {
+                scoreBar.className = "h-2 rounded-full transition-all duration-500 bg-red-500";
+            } else if (currentScore < 70) {
+                scoreBar.className = "h-2 rounded-full transition-all duration-500 bg-yellow-500";
+            } else {
+                scoreBar.className = "h-2 rounded-full transition-all duration-500 bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)]";
+            }
+        }
+
+        // Helper to animate numbers
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>

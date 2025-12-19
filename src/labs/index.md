@@ -56,6 +56,8 @@ A collection of small personal projects, experiments, and utilities to make life
 #### 🏩 Health
 
 - [Vitamin D & Calcium](/labs/stories/health-vit-d-calcium.html) - Template used to generate stories
+- [Essential Vitamins and Minerals](/labs/stories/health-nutrients.html)
+- [Inflammation](/labs/stories/health-inflammation.html)
 - [Sleep Interactive (Long)](/labs/stories/health-sleep-interactive-long.html)
 - [Sleep Interactive (Short)](/labs/stories/health-sleep-interactive-short.html)
 - [Sleep Flashcards](/labs/stories/health-sleep-flashcards.html) - Earlier version of template

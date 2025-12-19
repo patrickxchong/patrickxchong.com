@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Micronutrient Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fdfbf7;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.35);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nutrient-bar-bg {
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .nutrient-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-white text-slate-900 border border-slate-200 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>🥗</span> Plate Check
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 0: COVER -->
+        <div class="slide active bg-gradient-to-b from-slate-900 to-indigo-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-indigo-500 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">💊</div>
+                    <div class="text-4xl absolute -top-2 -right-4 animate-bounce delay-700">⚡</div>
+                    <div class="text-4xl absolute bottom-0 -left-4 animate-pulse delay-300">🥬</div>
+                </div>
+                
+                <h1 class="text-4xl font-bold mb-2">Micronutrient<br>Masterclass</h1>
+                <p class="text-indigo-200 text-lg mb-8 tracking-wide">The Essential Guide</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="goToSlide(1, event)">
+                    <p class="text-sm font-semibold text-slate-800 leading-relaxed">
+                        Vitamins & Minerals run your body's code. <br>Are you missing an update?
+                    </p>
+                    <div class="mt-3 text-xs text-slate-500 font-bold flex items-center gap-1 border-t border-slate-100 pt-2">
+                        START LEARNING <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Basics</h2>
+                <p class="text-slate-500 text-sm">Two main teams of players.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100">
+                    <h3 class="text-orange-900 font-bold text-lg mb-2">1. Fat Soluble</h3>
+                    <div class="flex gap-2 mb-2">
+                        <span class="bg-white px-2 py-1 rounded shadow text-xs font-bold text-orange-600">Vit A</span>
+                        <span class="bg-white px-2 py-1 rounded shadow text-xs font-bold text-orange-600">Vit D</span>
+                        <span class="bg-white px-2 py-1 rounded shadow text-xs font-bold text-orange-600">Vit E</span>
+                        <span class="bg-white px-2 py-1 rounded shadow text-xs font-bold text-orange-600">Vit K</span>
+                    </div>
+                    <p class="text-sm text-orange-800 leading-relaxed">
+                        Stored in fatty tissue. You don't need them every single day, but they need <strong>fat</strong> to be absorbed.
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                    <h3 class="text-blue-900 font-bold text-lg mb-2">2. Water Soluble</h3>
+                    <div class="flex gap-2 mb-2 flex-wrap">
+                        <span class="bg-white px-2 py-1 rounded shadow text-xs font-bold text-blue-600">Vit C</span>
+                        <span class="bg-white px-2 py-1 rounded shadow text-xs font-bold text-blue-600">B-Complex</span>
+                    </div>
+                    <p class="text-sm text-blue-800 leading-relaxed">
+                        Not stored efficiently. You pee out the excess. You need these <strong>almost every day</strong>.
+                    </p>
+                </div>
+
+                <div class="bg-stone-100 p-5 rounded-2xl border border-stone-200">
+                     <h3 class="text-stone-800 font-bold text-lg mb-2">3. Minerals</h3>
+                     <p class="text-sm text-stone-600">Elements from the earth (Calcium, Iron, Zinc, etc) that act as structural blocks or electrical signals.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: VITAMIN A -->
+        <div class="slide bg-orange-50" data-index="2">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Vitamin A</h2>
+                    <span class="text-[10px] font-bold bg-white text-orange-600 px-2 py-1 rounded shadow-sm">Fat Soluble</span>
+                </div>
+                <p class="text-slate-500 text-sm">Vision & Immunity.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-orange-100">
+                    <strong class="text-orange-900 block mb-2">Two Forms:</strong>
+                    <ul class="text-xs space-y-2 text-slate-600">
+                        <li>🦁 <strong>Retinol (Active):</strong> From animals. Ready to use.</li>
+                        <li>🥕 <strong>Beta-Carotene (Inactive):</strong> From plants. Body must convert it (inefficiently).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-orange-100 p-3 rounded-xl">🥩</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Beef Liver</span>
+                        <p class="text-[10px] text-slate-400">The ultimate source.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-orange-100 p-3 rounded-xl">🍠</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Sweet Potato</span>
+                        <p class="text-[10px] text-slate-400">Eat with butter/oil for absorption!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: VITAMIN D -->
+        <div class="slide bg-yellow-50" data-index="3">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Vitamin D</h2>
+                    <span class="text-[10px] font-bold bg-white text-yellow-600 px-2 py-1 rounded shadow-sm">Fat Soluble</span>
+                </div>
+                <p class="text-slate-500 text-sm">The Hormone.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-700">Regulates over 1,000 genes. Crucial for immunity, bone density, and mood.</p>
+                </div>
+                <!-- Sources -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-yellow-100 p-3 rounded-xl">☀️</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Sunlight</span>
+                        <p class="text-[10px] text-slate-400">10am-3pm. UV index > 3.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-yellow-100 p-3 rounded-xl">🐟</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Fatty Fish</span>
+                        <p class="text-[10px] text-slate-400">Salmon, Mackerel, Sardines.</p>
+                    </div>
+                </div>
+                <div class="bg-blue-900 text-white p-4 rounded-2xl shadow-sm text-xs mt-2">
+                    <strong>Synergy Tip:</strong> Vitamin D needs <strong>Magnesium</strong> to activate. Taking D without Mg can deplete your Mg stores!
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: VITAMIN E -->
+        <div class="slide bg-green-50" data-index="4">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Vitamin E</h2>
+                    <span class="text-[10px] font-bold bg-white text-green-600 px-2 py-1 rounded shadow-sm">Fat Soluble</span>
+                </div>
+                <p class="text-slate-500 text-sm">The Antioxidant Shield.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
+                    <p class="text-sm text-slate-700">Protects cell membranes from oxidative stress. Vital for skin and eyes.</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-green-100 p-3 rounded-xl">🌻</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Sunflower Seeds</span>
+                        <p class="text-[10px] text-slate-400">1oz provides 66% DV.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-green-100 p-3 rounded-xl">🥑</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Avocado</span>
+                        <p class="text-[10px] text-slate-400">Also provides the healthy fat needed for absorption.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-green-100 p-3 rounded-xl">🌰</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Almonds</span>
+                        <p class="text-[10px] text-slate-400">Great snack for E.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: VITAMIN K -->
+        <div class="slide bg-lime-50" data-index="5">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Vitamin K</h2>
+                    <span class="text-[10px] font-bold bg-white text-lime-600 px-2 py-1 rounded shadow-sm">Fat Soluble</span>
+                </div>
+                <p class="text-slate-500 text-sm">Clotting & Calcium Traffic.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <strong class="text-lime-800 text-sm">K1 (Plants)</strong>
+                        <p class="text-[10px] text-slate-500 leading-tight mt-1">For blood clotting. Found in Spinach, Kale.</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <strong class="text-yellow-800 text-sm">K2 (Bacteria)</strong>
+                        <p class="text-[10px] text-slate-500 leading-tight mt-1">Moves Calcium to bones. Found in Natto, Cheese.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border-l-4 border-lime-500">
+                    <div class="text-3xl bg-lime-100 p-3 rounded-xl">🥬</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Leafy Greens</span>
+                        <p class="text-[10px] text-slate-400">Kale is King for K1.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border-l-4 border-yellow-500">
+                    <div class="text-3xl bg-yellow-100 p-3 rounded-xl">🧀</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Gouda/Brie</span>
+                        <p class="text-[10px] text-slate-400">Aged cheese has K2.</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-2xl text-xs text-red-800 border border-red-100">
+                    <strong>⚠️ Caution:</strong> If you take blood thinners (e.g., Warfarin), consistancy in Vitamin K intake is critical. Consult your doctor.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: VITAMIN C -->
+        <div class="slide bg-red-50" data-index="6">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Vitamin C</h2>
+                    <span class="text-[10px] font-bold bg-white text-red-500 px-2 py-1 rounded shadow-sm">Water Soluble</span>
+                </div>
+                <p class="text-slate-500 text-sm">Immunity & Collagen.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-700">Essential for skin repair (collagen) and stress defense. Destroyed by heat!</p>
+                </div>
+                
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-red-100 p-3 rounded-xl">🥝</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Kiwi & Guava</span>
+                        <p class="text-[10px] text-slate-400">Higher C than oranges!</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-red-100 p-3 rounded-xl">🫑</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Red Capsicum</span>
+                        <p class="text-[10px] text-slate-400">Raw peppers are C bombs.</p>
+                    </div>
+                </div>
+
+                <div class="bg-stone-800 text-white p-4 rounded-2xl shadow-sm mt-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🤝</span>
+                        <strong class="text-sm">Power Couple</strong>
+                    </div>
+                    <p class="text-xs text-stone-300">
+                        Eat <strong>Vitamin C</strong> with <strong>Plant Iron</strong> (Spinach/Beans) to triple iron absorption.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: B-COMPLEX INTRO -->
+        <div class="slide bg-indigo-50" data-index="7">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">B-Complex</h2>
+                    <span class="text-[10px] font-bold bg-white text-indigo-600 px-2 py-1 rounded shadow-sm">Water Soluble</span>
+                </div>
+                <p class="text-slate-500 text-sm">Energy Generators.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm px-2 text-slate-600">A family of 8 vitamins that turn food into fuel. Deficiencies often cause fatigue or brain fog.</p>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-xl border border-indigo-100">
+                        <strong class="text-indigo-900 block text-sm">B1 (Thiamine)</strong>
+                        <span class="text-[10px] text-slate-500">Glucose metabolism.</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-indigo-100">
+                        <strong class="text-indigo-900 block text-sm">B2 (Riboflavin)</strong>
+                        <span class="text-[10px] text-slate-500">Antioxidant activity.</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-indigo-100">
+                        <strong class="text-indigo-900 block text-sm">B3 (Niacin)</strong>
+                        <span class="text-[10px] text-slate-500">DNA repair & Skin.</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-indigo-100">
+                        <strong class="text-indigo-900 block text-sm">B6</strong>
+                        <span class="text-[10px] text-slate-500">Brain & Neurotransmitters.</span>
+                    </div>
+                </div>
+                <div class="bg-indigo-100 p-4 rounded-2xl text-xs text-indigo-900 mt-2">
+                    <strong>Tip:</strong> B-Vitamins are depleted by stress, alcohol, and birth control pills.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: B12 & FOLATE -->
+        <div class="slide bg-purple-50" data-index="8">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">B12 & B9</h2>
+                <p class="text-slate-500 text-sm">Blood & DNA Builders.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <!-- B12 -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-purple-500">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-slate-800">B12 (Cobalamin)</h3>
+                        <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded">Nerve Health</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">
+                        Only found naturally in animal products.
+                    </p>
+                    <div class="flex gap-2 mt-3">
+                        <span class="text-2xl">🥩</span>
+                        <span class="text-2xl">🥚</span>
+                        <span class="text-2xl">🥛</span>
+                    </div>
+                    <p class="text-[10px] text-red-500 mt-2 font-bold">Vegans MUST supplement.</p>
+                </div>
+
+                <!-- Folate -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-green-500">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-slate-800">B9 (Folate)</h3>
+                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Cell Division</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">
+                        Crucial for pregnancy (fetal development).
+                    </p>
+                    <div class="flex gap-2 mt-3">
+                        <span class="text-2xl">🥦</span>
+                        <span class="text-2xl">🥑</span>
+                        <span class="text-2xl">🥔</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-2">Dark greens, beans, lentils.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: CALCIUM & MG -->
+        <div class="slide bg-stone-50" data-index="9">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Calcium & Mg</h2>
+                <p class="text-slate-500 text-sm">The Structure & The Switch.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex gap-4 items-start">
+                    <div class="text-3xl bg-blue-50 p-2 rounded-lg">🦴</div>
+                    <div>
+                        <strong class="text-slate-800">Calcium</strong>
+                        <p class="text-xs text-slate-600 mt-1">Structure. Requires D & K2 to direct it to bones, not arteries.</p>
+                        <div class="mt-2 text-[10px] text-slate-500 flex gap-2">
+                            <span>🐟 Ikan Bilis</span> <span>🥛 Milk</span> <span>🧊 Tofu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex gap-4 items-start">
+                    <div class="text-3xl bg-green-50 p-2 rounded-lg">⚡</div>
+                    <div>
+                        <strong class="text-slate-800">Magnesium (Mg)</strong>
+                        <p class="text-xs text-slate-600 mt-1">Relaxation. Used in 300+ reactions. Most people are deficient.</p>
+                        <div class="mt-2 text-[10px] text-slate-500 flex gap-2">
+                            <span>🍫 Dark Choc</span> <span>🎃 Pumpkin Seeds</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-stone-200 p-4 rounded-xl text-center text-xs font-bold text-stone-700">
+                    Ratio Matters: 2:1 Calcium to Magnesium.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: IRON -->
+        <div class="slide bg-rose-50" data-index="10">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Iron</h2>
+                    <span class="text-[10px] font-bold bg-white text-rose-600 px-2 py-1 rounded shadow-sm">Mineral</span>
+                </div>
+                <p class="text-slate-500 text-sm">Oxygen Transport.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <strong class="text-rose-900 text-sm">Heme Iron</strong>
+                        <p class="text-[10px] text-slate-500 mt-1">From animals. High absorption.</p>
+                        <span class="text-xl block mt-1">🥩</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <strong class="text-slate-800 text-sm">Non-Heme</strong>
+                        <p class="text-[10px] text-slate-500 mt-1">From plants. Low absorption.</p>
+                        <span class="text-xl block mt-1">🥬</span>
+                    </div>
+                </div>
+                
+                <div class="bg-rose-100 p-4 rounded-2xl border border-rose-200">
+                    <h3 class="font-bold text-rose-900 text-sm mb-2">Absorption Hack</h3>
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="text-center">
+                            <span class="block text-2xl">🥬</span>
+                            <span>Spinach</span>
+                        </div>
+                        <span class="font-bold text-xl">+</span>
+                        <div class="text-center">
+                            <span class="block text-2xl">🍋</span>
+                            <span>Lemon</span>
+                        </div>
+                        <span class="font-bold text-xl">=</span>
+                        <div class="text-center">
+                            <span class="block text-2xl">🚀</span>
+                            <span>3x Boost</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 text-white p-4 rounded-2xl shadow-sm text-xs">
+                    <strong>The Thief:</strong> Calcium inhibits Iron. Don't take Iron pills with Milk!
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: ZINC -->
+        <div class="slide bg-zinc-100" data-index="11">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Zinc</h2>
+                    <span class="text-[10px] font-bold bg-white text-slate-600 px-2 py-1 rounded shadow-sm">Mineral</span>
+                </div>
+                <p class="text-slate-500 text-sm">The Defender.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-700">Critical for immune function, wound healing, and testosterone.</p>
+                </div>
+                
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-slate-100 p-3 rounded-xl">🦪</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Oysters</span>
+                        <p class="text-[10px] text-slate-400">#1 Source on the planet.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-slate-100 p-3 rounded-xl">🎃</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Pumpkin Seeds</span>
+                        <p class="text-[10px] text-slate-400">Great plant source.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-orange-50 p-4 rounded-2xl border border-orange-200 text-xs text-orange-900">
+                    <strong>Balance:</strong> High Zinc intake for long periods can deplete Copper.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: POTASSIUM -->
+        <div class="slide bg-blue-50" data-index="12">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Potassium</h2>
+                    <span class="text-[10px] font-bold bg-white text-blue-600 px-2 py-1 rounded shadow-sm">Electrolyte</span>
+                </div>
+                <p class="text-slate-500 text-sm">Blood Pressure & Muscles.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-700">Balances Sodium. Most modern diets are high Sodium / low Potassium = High Blood Pressure.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                        <span class="text-3xl block mb-1">🍌</span>
+                        <span class="text-xs font-bold">Banana</span>
+                        <span class="block text-[10px] text-slate-400">Good (360mg)</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-center border-2 border-blue-200">
+                        <span class="text-3xl block mb-1">🥔</span>
+                        <span class="text-xs font-bold">Potato</span>
+                        <span class="block text-[10px] text-slate-400">Better (900mg)</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-blue-100 p-3 rounded-xl">🥥</div>
+                    <div>
+                        <span class="font-bold text-slate-700 text-sm">Coconut Water</span>
+                        <p class="text-[10px] text-slate-400">Nature's sports drink.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: SELENIUM & IODINE -->
+        <div class="slide bg-pink-50" data-index="13">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Thyroid Team</h2>
+                    <span class="text-[10px] font-bold bg-white text-pink-600 px-2 py-1 rounded shadow-sm">Trace</span>
+                </div>
+                <p class="text-slate-500 text-sm">Metabolism Masters.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <!-- Iodine -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex gap-4">
+                    <div class="text-3xl">🧂</div>
+                    <div>
+                        <strong class="block text-slate-800 text-sm">Iodine</strong>
+                        <p class="text-xs text-slate-600">Fuel for thyroid hormones. Sources: Seaweed, Iodized Salt, Fish.</p>
+                    </div>
+                </div>
+
+                <!-- Selenium -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex gap-4">
+                    <div class="text-3xl">🇧🇷</div>
+                    <div>
+                        <strong class="block text-slate-800 text-sm">Selenium</strong>
+                        <p class="text-xs text-slate-600">Protects thyroid. Just 2 Brazil Nuts give you 100% daily need!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: SYNERGIES -->
+        <div class="slide bg-slate-800 text-white" data-index="14">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold mb-2">Power Couples</h2>
+                <p class="text-slate-400 text-sm">Nutrients that work better together.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="flex items-center justify-between bg-slate-700 p-4 rounded-2xl">
+                    <div class="text-center">
+                        <span class="text-2xl">🦴</span>
+                        <div class="text-xs font-bold mt-1">Calcium</div>
+                    </div>
+                    <div class="text-2xl text-slate-400">+</div>
+                    <div class="text-center">
+                        <span class="text-2xl">☀️</span>
+                        <div class="text-xs font-bold mt-1">Vit D</div>
+                    </div>
+                    <div class="text-2xl text-slate-400">+</div>
+                    <div class="text-center">
+                        <span class="text-2xl">🥬</span>
+                        <div class="text-xs font-bold mt-1">Vit K2</div>
+                    </div>
+                </div>
+                <p class="text-[10px] text-center text-slate-400 mb-2">For Bones</p>
+
+                <div class="flex items-center justify-between bg-slate-700 p-4 rounded-2xl">
+                    <div class="text-center">
+                        <span class="text-2xl">🥩</span>
+                        <div class="text-xs font-bold mt-1">Iron</div>
+                    </div>
+                    <div class="text-2xl text-slate-400">+</div>
+                    <div class="text-center">
+                        <span class="text-2xl">🍋</span>
+                        <div class="text-xs font-bold mt-1">Vit C</div>
+                    </div>
+                </div>
+                <p class="text-[10px] text-center text-slate-400 mb-2">For Absorption</p>
+
+                <div class="flex items-center justify-between bg-slate-700 p-4 rounded-2xl">
+                    <div class="text-center">
+                        <span class="text-2xl">🥕</span>
+                        <div class="text-xs font-bold mt-1">Vit A/E/K</div>
+                    </div>
+                    <div class="text-2xl text-slate-400">+</div>
+                    <div class="text-center">
+                        <span class="text-2xl">🥑</span>
+                        <div class="text-xs font-bold mt-1">Fat</div>
+                    </div>
+                </div>
+                <p class="text-[10px] text-center text-slate-400 mb-2">For Bioavailability</p>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 15: ANTAGONISTS -->
+        <div class="slide bg-red-900 text-white" data-index="15">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold mb-2">The Enemies</h2>
+                <p class="text-red-200 text-sm">What steals your nutrients?</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bg-red-800 p-4 rounded-2xl border border-red-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <strong class="font-bold">☕ Coffee & Tea</strong>
+                        <span class="text-2xl">🚫</span>
+                    </div>
+                    <p class="text-xs text-red-100">Tannins block Iron absorption. Don't drink tea with your steak!</p>
+                </div>
+
+                <div class="bg-red-800 p-4 rounded-2xl border border-red-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <strong class="font-bold">🍷 Alcohol</strong>
+                        <span class="text-2xl">📉</span>
+                    </div>
+                    <p class="text-xs text-red-100">Depletes B-Vitamins (especially B1), Magnesium, and Zinc.</p>
+                </div>
+
+                <div class="bg-red-800 p-4 rounded-2xl border border-red-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <strong class="font-bold">🍬 Sugar</strong>
+                        <span class="text-2xl">⚡</span>
+                    </div>
+                    <p class="text-xs text-red-100">Processing sugar requires Magnesium, depleting your stores.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: DEFICIENCY CHECK -->
+        <div class="slide bg-white" data-index="16">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Body Signals</h2>
+                <p class="text-slate-500 text-sm">Listen to your body.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="p-3 border-b border-slate-100">
+                    <strong class="text-slate-800 text-sm block">Cracks at mouth corners</strong>
+                    <span class="text-xs text-indigo-600 font-bold">Possible: B2, Iron, Zinc</span>
+                </div>
+                <div class="p-3 border-b border-slate-100">
+                    <strong class="text-slate-800 text-sm block">Bleeding gums</strong>
+                    <span class="text-xs text-red-500 font-bold">Possible: Vitamin C</span>
+                </div>
+                <div class="p-3 border-b border-slate-100">
+                    <strong class="text-slate-800 text-sm block">White spots on nails</strong>
+                    <span class="text-xs text-slate-500 font-bold">Possible: Zinc</span>
+                </div>
+                <div class="p-3 border-b border-slate-100">
+                    <strong class="text-slate-800 text-sm block">Muscle Cramps</strong>
+                    <span class="text-xs text-blue-500 font-bold">Possible: Magnesium, Potassium</span>
+                </div>
+                <div class="p-3 border-b border-slate-100">
+                    <strong class="text-slate-800 text-sm block">Ice craving (Pica)</strong>
+                    <span class="text-xs text-rose-500 font-bold">Possible: Iron</span>
+                </div>
+                <div class="p-3 border-b border-slate-100">
+                    <strong class="text-slate-800 text-sm block">Hair Loss</strong>
+                    <span class="text-xs text-orange-500 font-bold">Possible: Iron, Zinc, Biotin</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 17: SUMMARY -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="17">
+            <h2 class="text-3xl font-bold mb-4">Masterclass<br>Complete</h2>
+            
+            <p class="text-slate-400 text-sm mb-8">
+                Whole foods are always better than pills. Use the Plate Check to see how your daily meal stacks up!
+            </p>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-indigo-500 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+                Replay Story ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <div class="bg-white rounded-t-3xl p-6 h-[90%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Daily Essentials</h3>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Progress Bars -->
+            <div class="bg-stone-50 p-4 rounded-2xl mb-4 space-y-3 shadow-inner">
+                <!-- Calcium -->
+                <div>
+                    <div class="flex justify-between text-[10px] font-bold mb-1 text-slate-600">
+                        <span>Calcium (1000mg)</span>
+                        <span id="txt-ca">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2"><div id="bar-ca" class="bg-blue-500 h-2 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+                <!-- Vit D -->
+                <div>
+                    <div class="flex justify-between text-[10px] font-bold mb-1 text-slate-600">
+                        <span>Vit D (600IU)</span>
+                        <span id="txt-d">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2"><div id="bar-d" class="bg-yellow-500 h-2 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+                <!-- Iron -->
+                <div>
+                    <div class="flex justify-between text-[10px] font-bold mb-1 text-slate-600">
+                        <span>Iron (18mg)</span>
+                        <span id="txt-iron">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2"><div id="bar-iron" class="bg-rose-500 h-2 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+                <!-- Vit C -->
+                <div>
+                    <div class="flex justify-between text-[10px] font-bold mb-1 text-slate-600">
+                        <span>Vit C (90mg)</span>
+                        <span id="txt-c">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2"><div id="bar-c" class="bg-green-500 h-2 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-2 px-1">
+                <span class="text-xs font-bold text-slate-400 uppercase">Add Items</span>
+                <button onclick="resetCalc()" class="text-xs text-red-500 font-bold border border-red-100 px-3 py-1 rounded-lg">Reset</button>
+            </div>
+
+            <!-- Food List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Database for Calculator (Amounts are Approx)
+        const foodDb = [
+            { name: "Milk (1 cup)", icon: "🥛", ca: 300, d: 100, iron: 0, c: 0 },
+            { name: "Salmon (3oz)", icon: "🍣", ca: 10, d: 450, iron: 0.8, c: 0 },
+            { name: "Spinach (1/2c cooked)", icon: "🥬", ca: 120, d: 0, iron: 3, c: 9 },
+            { name: "Orange (1)", icon: "🍊", ca: 50, d: 0, iron: 0.1, c: 70 },
+            { name: "Beef Steak (3oz)", icon: "🥩", ca: 5, d: 0, iron: 2.5, c: 0 },
+            { name: "Egg (1 Large)", icon: "🍳", ca: 25, d: 40, iron: 0.9, c: 0 },
+            { name: "Yogurt (1 cup)", icon: "🥣", ca: 300, d: 0, iron: 0, c: 0 },
+            { name: "Bell Pepper (1/2)", icon: "🫑", ca: 5, d: 0, iron: 0.5, c: 95 },
+            { name: "Lentils (1/2c)", icon: "🥘", ca: 20, d: 0, iron: 3.3, c: 0 },
+            { name: "Almonds (1oz)", icon: "🌰", ca: 76, d: 0, iron: 1, c: 0 },
+            { name: "Kiwi (1)", icon: "🥝", ca: 20, d: 0, iron: 0.2, c: 64 },
+            { name: "Sunshine (15m)", icon: "☀️", ca: 0, d: 5000, iron: 0, c: 0 },
+            { name: "Supp. Multivitamin", icon: "💊", ca: 200, d: 400, iron: 10, c: 60 }
+        ];
+
+        let calcState = { ca: 0, d: 0, iron: 0, c: 0 };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            currentSlide = idx;
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- CALCULATOR ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            foodDb.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-transform mb-2';
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                    </div>
+                    <div class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded pointer-events-none">+ Add</div>
+                `;
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    addToCalc(item);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function addToCalc(item) {
+            calcState.ca += item.ca;
+            calcState.d += item.d;
+            calcState.iron += item.iron;
+            calcState.c += item.c;
+            renderCalc();
+        }
+
+        function resetCalc() {
+            calcState = { ca: 0, d: 0, iron: 0, c: 0 };
+            renderCalc();
+        }
+
+        function renderCalc() {
+            const targets = { ca: 1000, d: 600, iron: 18, c: 90 };
+            
+            updateBar('ca', calcState.ca, targets.ca, 'blue');
+            updateBar('d', calcState.d, targets.d, 'yellow');
+            updateBar('iron', calcState.iron, targets.iron, 'rose');
+            updateBar('c', calcState.c, targets.c, 'green');
+        }
+
+        function updateBar(id, val, target, color) {
+            const pct = Math.min((val / target) * 100, 100);
+            const bar = document.getElementById(`bar-${id}`);
+            const txt = document.getElementById(`txt-${id}`);
+            
+            bar.style.width = pct + '%';
+            txt.innerText = Math.round(pct) + '%';
+            
+            // Remove old colors to handle reset correctly
+            bar.className = `h-2 rounded-full w-0 transition-all duration-300`;
+            
+            if(pct >= 100) {
+                bar.classList.add('bg-green-500'); // Always green if complete
+            } else {
+                bar.classList.add(`bg-${color}-500`);
+            }
+        }
+    </script>
+</body>
+</html>
