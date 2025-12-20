@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KL 3-Day Itinerary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #111;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #fdfbf7;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.35);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleBucketList(event)" class="interactive-zone bg-white/90 backdrop-blur text-slate-900 border border-slate-200 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>🎒</span> My Bucket List
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-gradient-to-br from-indigo-900 to-purple-800 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-pink-500 blur-3xl opacity-30 rounded-full"></div>
+                    <div class="text-8xl animate-float relative z-10">🇲🇾</div>
+                    <div class="text-4xl absolute -top-2 -right-4 animate-bounce delay-700">✈️</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-4">Kuala<br>Lumpur</h1>
+                <p class="text-indigo-200 text-lg mb-8 tracking-wide">3 Days. Modern meets Heritage.</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="goToSlide(1, event)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        <p class="text-xs text-slate-400 font-bold uppercase">Ready to go?</p>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 leading-relaxed">
+                        From the <span class="text-indigo-600">Twin Towers</span> to <span class="text-pink-600">Batu Caves</span> steps. A complete curated guide.
+                    </p>
+                    <div class="mt-3 text-xs text-slate-500 font-bold flex items-center gap-1 border-t border-slate-100 pt-2">
+                        START ITINERARY <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: INTRO -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Why KL?</h2>
+                <p class="text-slate-500 text-sm">A melting pot of cultures & flavors.</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🌇</span>
+                        <div>
+                            <h3 class="text-indigo-900 font-bold text-base">The Contrast</h3>
+                            <p class="text-sm text-indigo-800 mt-1 leading-relaxed">
+                                Skyscrapers sit next to colonial buildings and rainforests. It's affordable, English-friendly, and the food is legendary.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🚇</span>
+                        <div>
+                            <h3 class="text-orange-900 font-bold text-base">Getting Around</h3>
+                            <p class="text-sm text-orange-800 mt-1 leading-relaxed">
+                                <strong>Grab App:</strong> Essential. Cheap & reliable.<br>
+                                <strong>Monorail/LRT:</strong> Great for avoiding traffic jams during rush hour (5pm-7pm).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl border-l-4 border-slate-800 bg-slate-50 text-xs text-slate-600">
+                    <strong>💡 Pro Tip:</strong> Pack an umbrella. It rains almost every afternoon for 30 mins!
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: DAY 1 HEADER -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="2">
+            <div class="text-6xl mb-4">🏙️</div>
+            <h2 class="text-4xl font-bold mb-2">Day 1</h2>
+            <h3 class="text-xl text-indigo-300">The Modern City</h3>
+            <p class="text-slate-400 mt-4 max-w-xs text-sm">Petronas Towers • KLCC Park • Aquaria • Saloma Link • Jalan Alor</p>
+        </div>
+
+        <!-- SLIDE 4: PETRONAS TOWERS -->
+        <div class="slide bg-sky-50" data-index="3">
+            <div class="px-6 pt-12 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Petronas Towers</h2>
+                    <span class="text-[10px] font-bold bg-white text-sky-600 px-2 py-1 rounded shadow-sm">09:00 AM</span>
+                </div>
+                <p class="text-slate-500 text-sm">The World's Tallest Twin Towers.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-sky-100">
+                    <img src="https://images.unsplash.com/photo-1565510400827-c1d09b8f5229?auto=format&fit=crop&q=80&w=300&h=200" class="w-full h-32 object-cover rounded-xl mb-3 bg-gray-200" alt="Petronas Towers">
+                    <h3 class="font-bold text-slate-800">The Skybridge & Deck</h3>
+                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                        Walk the bridge connecting the towers at 170m high, then go up to level 86.
+                    </p>
+                    <div class="mt-3 bg-sky-50 p-3 rounded-lg text-xs space-y-1">
+                        <div class="flex justify-between"><span>🎟️ <strong>Foreigner:</strong></span> <span>~RM 98</span></div>
+                        <div class="flex justify-between"><span>🎟️ <strong>Malaysian:</strong></span> <span>~RM 35</span></div>
+                        <div class="flex justify-between text-red-500"><span>⚠️ <strong>Closed:</strong></span> <span>Mondays</span></div>
+                    </div>
+                </div>
+                
+                <button onclick="addToBucketList('Petronas Towers', '🏙️')" class="interactive-zone w-full py-3 bg-sky-600 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform flex justify-center items-center gap-2">
+                    <span>+</span> Add to Bucket List
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: KLCC PARK -->
+        <div class="slide bg-emerald-50" data-index="4">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">KLCC Park & Aquaria</h2>
+                <p class="text-slate-500 text-sm">Nature meets heavy engineering.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">🌳</span>
+                        <h3 class="font-bold text-slate-800">The Park</h3>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Right at the base of the towers. Perfect for photos. Look for the <strong>Lake Symphony</strong> fountains. It's free!
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-blue-100">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">🦈</span>
+                        <h3 class="font-bold text-slate-800">Aquaria KLCC</h3>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Walk via the underpass. It has a 90m underwater tunnel.
+                        <br><br>
+                        <strong>Price:</strong> ~RM 75 (Adult Non-MyKad)
+                    </p>
+                    <button onclick="addToBucketList('Aquaria KLCC', '🦈')" class="interactive-zone mt-3 w-full py-2 bg-blue-100 text-blue-700 text-xs font-bold rounded-lg">Add Aquaria</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: LUNCH -->
+        <div class="slide bg-orange-50" data-index="5">
+             <div class="px-6 pt-12 pb-6">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Lunch Break</h2>
+                <p class="text-slate-500 text-sm">Taste the national dish.</p>
+            </div>
+
+            <div class="flex-1 px-6 grid grid-cols-1 gap-4 pb-20">
+                <div class="bg-white p-5 rounded-2xl shadow-sm flex flex-col items-center text-center border-t-4 border-red-500">
+                    <div class="text-6xl mb-2">🍚</div>
+                    <h3 class="font-bold text-xl text-slate-800">Nasi Lemak</h3>
+                    <p class="text-xs text-slate-500 mt-2 px-4">
+                        Coconut milk rice, spicy sambal, crunchy anchovies, peanuts, cucumber, and egg.
+                    </p>
+                </div>
+                <div class="bg-white/50 p-4 rounded-xl text-xs text-slate-600">
+                    <strong>Where to eat nearby:</strong><br>
+                    • Madam Kwan's (Suria KLCC Mall)<br>
+                    • Little Penang Kafe (Suria KLCC Mall)
+                </div>
+                <button onclick="addToBucketList('Eat Nasi Lemak', '🍚')" class="interactive-zone w-full py-3 bg-red-500 text-white rounded-xl font-bold shadow-md">Must Eat!</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: SALOMA LINK -->
+        <div class="slide bg-purple-900 text-white" data-index="6">
+            <div class="px-6 pt-12 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold">Saloma Link</h2>
+                    <span class="text-[10px] font-bold bg-white/20 text-white px-2 py-1 rounded">Sunset / 7:30PM</span>
+                </div>
+                <p class="text-purple-200 text-sm">The glowing bridge.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-4">
+                <div class="bg-white/10 backdrop-blur p-4 rounded-2xl border border-white/20">
+                    <p class="text-sm leading-relaxed mb-4">
+                        A pedestrian bridge connecting the old Kampong Bharu area with the modern KLCC. At night, it lights up with LEDs. 
+                    </p>
+                    <div class="flex items-center gap-2 text-xs text-purple-300">
+                        <span>📸</span> Best angle: From the Kampung Bharu side looking towards the Twin Towers.
+                    </div>
+                </div>
+                <button onclick="addToBucketList('Saloma Link Photo', '🌉')" class="interactive-zone w-full py-3 bg-purple-500 text-white rounded-xl font-bold shadow-lg">Add Photo Stop</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: JALAN ALOR -->
+        <div class="slide bg-red-50" data-index="7">
+            <div class="px-6 pt-12 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Jalan Alor</h2>
+                    <span class="text-[10px] font-bold bg-white text-red-600 px-2 py-1 rounded shadow-sm">Dinner</span>
+                </div>
+                <p class="text-slate-500 text-sm">The Food Street that never sleeps.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <!-- Wong Ah Wah -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border-l-4 border-red-500">
+                    <div class="text-3xl">🍗</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Wong Ah Wah (W.A.W)</h4>
+                        <p class="text-xs text-slate-500 mt-1">Famous for BBQ Chicken Wings & Satay.</p>
+                    </div>
+                </div>
+
+                <!-- Coconut Ice Cream -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border-l-4 border-green-500">
+                    <div class="text-3xl">🥥</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Sangkaya</h4>
+                        <p class="text-xs text-slate-500 mt-1">Coconut ice cream served in a shell.</p>
+                    </div>
+                </div>
+                
+                <button onclick="addToBucketList('Jalan Alor Feast', '🍢')" class="interactive-zone w-full py-3 bg-red-600 text-white rounded-xl font-bold shadow-lg mt-4">Add to Bucket List</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: DAY 2 HEADER -->
+        <div class="slide bg-amber-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="8">
+            <div class="text-6xl mb-4">🕌</div>
+            <h2 class="text-4xl font-bold mb-2">Day 2</h2>
+            <h3 class="text-xl text-amber-300">Culture & History</h3>
+            <p class="text-slate-400 mt-4 max-w-xs text-sm">Batu Caves • Merdeka Sq • Chinatown</p>
+        </div>
+
+        <!-- SLIDE 10: BATU CAVES -->
+        <div class="slide bg-amber-50" data-index="9">
+            <div class="px-6 pt-12 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Batu Caves</h2>
+                    <span class="text-[10px] font-bold bg-white text-amber-600 px-2 py-1 rounded shadow-sm">08:00 AM</span>
+                </div>
+                <p class="text-slate-500 text-sm">272 colorful steps to the temple.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-amber-200">
+                    <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&q=80&w=300&h=200" class="w-full h-32 object-cover rounded-xl mb-3 bg-gray-200" alt="Batu Caves">
+                    <div class="space-y-3">
+                        <div class="flex gap-2 items-start">
+                            <span class="text-xl">🐒</span>
+                            <p class="text-xs text-slate-600"><strong>Watch the monkeys!</strong> They steal food and sunglasses. Do not feed them.</p>
+                        </div>
+                        <div class="flex gap-2 items-start">
+                            <span class="text-xl">👗</span>
+                            <p class="text-xs text-slate-600"><strong>Strict Dress Code:</strong> Legs must be covered (No shorts/mini skirts). Sarongs available for rent (RM 5).</p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addToBucketList('Climb Batu Caves', '🪜')" class="interactive-zone w-full py-3 bg-amber-500 text-white rounded-xl font-bold shadow-lg">Accept Challenge</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: MERDEKA SQUARE -->
+        <div class="slide bg-slate-50" data-index="10">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Merdeka Square</h2>
+                <p class="text-slate-500 text-sm">Where independence was declared.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2">Sultan Abdul Samad Building</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        The stunning Moorish-style building with the clock tower.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2">River of Life</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Just behind the square. Visit <strong>Masjid Jamek</strong> there (Dress modestly).
+                    </p>
+                </div>
+                <button onclick="addToBucketList('Merdeka Square', '🚩')" class="interactive-zone w-full py-2 border-2 border-slate-300 text-slate-600 rounded-xl font-bold">Add to List</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: CHINATOWN -->
+        <div class="slide bg-red-50" data-index="11">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Chinatown</h2>
+                <p class="text-slate-500 text-sm">Petaling Street & Central Market.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <!-- Petaling Street -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-red-600">
+                    <h3 class="font-bold text-slate-800">Petaling Street</h3>
+                    <p class="text-xs text-slate-600 mt-1">Bargaining is mandatory here! Great for knock-off watches and street food.</p>
+                </div>
+
+                <!-- Central Market -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-blue-400">
+                    <h3 class="font-bold text-slate-800">Central Market (Pasar Seni)</h3>
+                    <p class="text-xs text-slate-600 mt-1">Air-conditioned. High quality handicrafts, batik, and souvenirs.</p>
+                </div>
+
+                 <!-- Food -->
+                 <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-orange-400">
+                    <h3 class="font-bold text-slate-800">Must Try: Air Mata Kucing</h3>
+                    <p class="text-xs text-slate-600 mt-1">Famous herbal monk fruit drink stall in the middle of the street.</p>
+                </div>
+                
+                <button onclick="addToBucketList('Shop at Central Market', '🛍️')" class="interactive-zone w-full py-3 bg-red-600 text-white rounded-xl font-bold shadow-lg">Add Shopping</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: DAY 3 HEADER -->
+        <div class="slide bg-green-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="12">
+            <div class="text-6xl mb-4">🦜</div>
+            <h2 class="text-4xl font-bold mb-2">Day 3</h2>
+            <h3 class="text-xl text-green-300">Nature & Luxury</h3>
+            <p class="text-slate-400 mt-4 max-w-xs text-sm">Bird Park • Botanical Gardens • Bukit Bintang</p>
+        </div>
+
+        <!-- SLIDE 14: KL BIRD PARK -->
+        <div class="slide bg-green-50" data-index="13">
+            <div class="px-6 pt-12 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">KL Bird Park</h2>
+                    <span class="text-[10px] font-bold bg-white text-green-600 px-2 py-1 rounded shadow-sm">Morning</span>
+                </div>
+                <p class="text-slate-500 text-sm">World's largest free-flight aviary.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-green-200">
+                    <img src="https://images.unsplash.com/photo-1452570053594-1b985d6ea890?auto=format&fit=crop&q=80&w=300&h=200" class="w-full h-32 object-cover rounded-xl mb-3 bg-gray-200" alt="Parrot">
+                    <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                        Birds fly freely around you. Peacocks everywhere. Great for kids and photos.
+                    </p>
+                     <div class="bg-green-50 p-3 rounded-lg text-xs space-y-1">
+                        <div class="flex justify-between"><span>🎟️ <strong>Adult:</strong></span> <span>~RM 85</span></div>
+                        <div class="flex justify-between"><span>🎟️ <strong>Child:</strong></span> <span>~RM 60</span></div>
+                        <div class="flex justify-between"><span>🕒 <strong>Open:</strong></span> <span>9am - 6pm</span></div>
+                    </div>
+                </div>
+                <button onclick="addToBucketList('KL Bird Park', '🦜')" class="interactive-zone w-full py-3 bg-green-600 text-white rounded-xl font-bold shadow-lg">Add to Bucket List</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: SHOPPING -->
+        <div class="slide bg-pink-50" data-index="14">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Bukit Bintang</h2>
+                <p class="text-slate-500 text-sm">The Golden Triangle.</p>
+            </div>
+
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-100">
+                    <h3 class="font-bold text-slate-800 mb-2">Pavilion Mall</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        High-end luxury. Check out the <strong>Crystal Fountain</strong> at the entrance.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-purple-100">
+                    <h3 class="font-bold text-slate-800 mb-2">Lot 10</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Go to the basement <strong>"Lot 10 Hutong"</strong> for a collection of Malaysia's best heritage street food brands in AC comfort.
+                    </p>
+                </div>
+                 <button onclick="addToBucketList('Shopping Spree', '🛍️')" class="interactive-zone w-full py-3 bg-pink-500 text-white rounded-xl font-bold shadow-lg">Let's Shop</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: SUMMARY -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="15">
+            <h2 class="text-3xl font-bold mb-4">Trip Summary</h2>
+            <p class="text-slate-400 text-sm mb-8">You've seen the best of KL!</p>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12">
+                 <button onclick="toggleBucketList(event)" class="interactive-zone w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform flex justify-between px-6 items-center">
+                    <span>Check Bucket List</span>
+                    <span>🎒</span>
+                </button>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-slate-700 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto text-xs">
+                Restart Guide ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- BUCKET LIST OVERLAY -->
+    <div id="bucket-list-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleBucketList(event)">
+        <div class="bg-white rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800">My KL Bucket List</h3>
+                <button onclick="toggleBucketList(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Progress -->
+            <div class="bg-indigo-50 p-4 rounded-2xl mb-4 shadow-inner">
+                <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                    <span>Progress</span>
+                    <span><span id="collected-count">0</span> Items</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3"><div id="progress-bar-fill" class="bg-indigo-500 h-3 rounded-full w-0 transition-all duration-300"></div></div>
+            </div>
+
+            <!-- List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="bucket-list-container">
+                <!-- Items added here -->
+                <p class="text-center text-slate-400 text-xs mt-10 italic" id="empty-state">Tap "+ Add" on slides to build your list!</p>
+            </div>
+            
+            <button onclick="resetBucketList()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">Clear List</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        let bucketList = [];
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- BUCKET LIST LOGIC ---
+        function toggleBucketList(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('bucket-list-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function addToBucketList(name, icon) {
+            // Avoid duplicates
+            if(bucketList.find(item => item.name === name)) return;
+
+            bucketList.push({ name, icon });
+            renderBucketList();
+            
+            // Visual feedback
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span>✓</span> Added!`;
+            btn.classList.add('bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-600');
+            }, 1000);
+        }
+
+        function renderBucketList() {
+            const container = document.getElementById('bucket-list-container');
+            const countSpan = document.getElementById('collected-count');
+            const bar = document.getElementById('progress-bar-fill');
+            const emptyState = document.getElementById('empty-state');
+
+            container.innerHTML = '';
+            
+            if(bucketList.length === 0) {
+                if(emptyState) container.appendChild(emptyState);
+            } else {
+                bucketList.forEach((item, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl shadow-sm mb-2 animate-slide-up';
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">${item.icon}</span>
+                            <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                        </div>
+                        <button onclick="removeItem(${index})" class="text-slate-300 hover:text-red-500 px-2 font-bold">×</button>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
+            countSpan.innerText = bucketList.length;
+            // Cap visual progress at 10 items for fun
+            const pct = Math.min((bucketList.length / 10) * 100, 100);
+            bar.style.width = `${pct}%`;
+        }
+
+        function removeItem(index) {
+            bucketList.splice(index, 1);
+            renderBucketList();
+        }
+
+        function resetBucketList() {
+            bucketList = [];
+            renderBucketList();
+        }
+    </script>
+</body>
+</html>

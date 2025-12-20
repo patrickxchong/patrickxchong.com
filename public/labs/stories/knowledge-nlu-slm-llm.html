@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LLM vs SLM vs NLU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #ffffff;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* Typewriter effect cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Theme Gradients */
+        .bg-nlu { background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); }
+        .bg-llm { background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%); }
+        .bg-slm { background: linear-gradient(135deg, #ecfccb 0%, #f7fee7 100%); }
+        
+        .card-shadow { box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track"></div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleSelector(event)" class="interactive-zone bg-white/10 backdrop-blur-md text-white border border-white/20 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50 hover:bg-white/20">
+                    <span>⚙️</span> Architect Tool
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-slate-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <!-- Background Decoration -->
+                <div class="absolute top-20 left-10 w-32 h-32 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
+                <div class="absolute bottom-20 right-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-40"></div>
+
+                <div class="text-7xl mb-4 animate-float">🧠</div>
+                <h1 class="text-4xl font-black mb-2 tracking-tight">Decoding<br>AI Language</h1>
+                <p class="text-slate-400 text-lg mb-8">LLM vs. SLM vs. NLU</p>
+                
+                <div class="glass-card bg-white/10 backdrop-blur border border-white/10 px-6 py-4 rounded-2xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform" onclick="goToSlide(1, event)">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs font-bold text-purple-300 tracking-wider">START HERE</span>
+                        <span class="animate-pulse w-2 h-2 bg-green-400 rounded-full"></span>
+                    </div>
+                    <p class="text-sm font-medium text-slate-100 leading-relaxed">
+                        Why does a bank use NLU, a writer use an LLM, and your phone use an SLM?
+                    </p>
+                    <div class="mt-3 text-[10px] text-slate-400 font-bold flex items-center gap-1 border-t border-white/10 pt-2">
+                        TAP TO LEARN <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THE LANDSCAPE -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-6 pb-2">
+                <h2 class="text-3xl font-black text-slate-900">The Landscape</h2>
+                <p class="text-slate-500 text-sm">Where do they all fit?</p>
+            </div>
+            <div class="flex-1 flex flex-col justify-center px-6">
+                <!-- Nested Circles Diagram -->
+                <div class="relative w-full aspect-square bg-slate-50 rounded-full border border-slate-200 flex items-center justify-center shadow-inner">
+                    <span class="absolute top-4 text-xs font-bold text-slate-400">AI (Artificial Intelligence)</span>
+                    
+                    <!-- NLP Circle -->
+                    <div class="w-[85%] aspect-square bg-blue-50 rounded-full border border-blue-100 flex items-center justify-center shadow-sm relative">
+                        <span class="absolute top-3 text-xs font-bold text-blue-400">NLP (Processing)</span>
+                        
+                        <!-- DL Circle -->
+                        <div class="w-[70%] aspect-square bg-purple-50 rounded-full border border-purple-100 flex items-center justify-center shadow-sm relative">
+                            <span class="absolute top-3 text-xs font-bold text-purple-400">Deep Learning</span>
+                            
+                            <!-- LLM Circle -->
+                            <div class="w-[60%] aspect-square bg-purple-100 rounded-full border border-purple-200 flex items-center justify-center shadow-sm text-center p-2">
+                                <span class="text-xs font-black text-purple-600">LLM & SLM<br><span class="text-[9px] font-normal opacity-75">(Generative)</span></span>
+                            </div>
+                        </div>
+
+                        <!-- NLU Bubble (Separate) -->
+                        <div class="absolute bottom-6 right-6 w-20 h-20 bg-blue-100 rounded-full border border-blue-200 flex items-center justify-center shadow-md animate-float">
+                            <span class="text-xs font-black text-blue-600 text-center">NLU<br><span class="text-[9px] font-normal opacity-75">(Understanding)</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 bg-slate-100 p-4 rounded-xl text-xs text-slate-600 leading-relaxed">
+                    <strong>Note:</strong> NLU is the "Old Guard"—focused on specific understanding. LLMs & SLMs are the "New Wave"—focused on generation and prediction.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: NLU INTRO -->
+        <div class="slide bg-nlu" data-index="2">
+            <div class="px-6 pt-6">
+                <div class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded mb-2">THE FOUNDATION</div>
+                <h2 class="text-3xl font-black text-slate-900">What is NLU?</h2>
+                <p class="text-slate-500 text-sm mt-1">Natural Language Understanding</p>
+            </div>
+            <div class="flex-1 px-6 flex flex-col justify-center gap-4">
+                <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-blue-500">
+                    <div class="text-3xl mb-2">🎯</div>
+                    <h3 class="font-bold text-slate-800">The Sniper</h3>
+                    <p class="text-xs text-slate-600 mt-2">
+                        NLU doesn't "chat". It extracts <strong>facts</strong>. It converts messy human speech into structured data a computer can execute.
+                    </p>
+                </div>
+                
+                <div class="bg-white/60 p-4 rounded-xl border border-white">
+                    <div class="text-xs font-mono text-slate-500 mb-1">User says:</div>
+                    <div class="text-lg font-bold text-slate-800">"Book a flight to Paris for tomorrow."</div>
+                    <div class="text-center text-slate-400 my-2">⬇️ NLU Processes ⬇️</div>
+                    <div class="bg-slate-800 text-green-400 p-3 rounded-lg font-mono text-xs text-left">
+                        {<br>
+                        &nbsp;&nbsp;"intent": "book_flight",<br>
+                        &nbsp;&nbsp;"entities": {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"city": "Paris",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"date": "2025-10-21"<br>
+                        &nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: NLU DEEP DIVE -->
+        <div class="slide bg-nlu" data-index="3">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">Intents & Entities</h2>
+                <p class="text-slate-500 text-xs">How chatbots worked before GPT.</p>
+            </div>
+            <div class="flex-1 px-6 pt-4 pb-20 custom-scroll space-y-3">
+                
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-sm text-blue-600">1. Intent (The "What")</span>
+                        <span>🤔</span>
+                    </div>
+                    <p class="text-xs text-slate-600">
+                        Classifies the <strong>purpose</strong>. <br>
+                        <em class="text-slate-400">"Turn on lights"</em> → <code class="bg-slate-100 px-1 rounded">LIGHTS_ON</code>
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-sm text-green-600">2. Entity (The "Details")</span>
+                        <span>🏷️</span>
+                    </div>
+                    <p class="text-xs text-slate-600">
+                        Extracts specific <strong>parameters</strong>. <br>
+                        <em class="text-slate-400">"Set alarm for 7 AM"</em> → <code class="bg-slate-100 px-1 rounded">Time: 07:00</code>
+                    </p>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <strong class="text-red-800 text-xs">The Limitation:</strong>
+                    <p class="text-[10px] text-red-700 mt-1">
+                        If you say something outside its training (e.g., "The sun is too bright"), NLU fails because it has no "LIGHTS_ON" intent mapped to that phrase metaphorically.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: LLM INTRO -->
+        <div class="slide bg-llm" data-index="4">
+            <div class="px-6 pt-6">
+                <div class="inline-block px-2 py-1 bg-purple-100 text-purple-700 text-[10px] font-bold rounded mb-2">THE GIANT</div>
+                <h2 class="text-3xl font-black text-slate-900">What is an LLM?</h2>
+                <p class="text-slate-500 text-sm mt-1">Large Language Model</p>
+            </div>
+            <div class="flex-1 px-6 flex flex-col justify-center gap-4">
+                <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-purple-500">
+                    <div class="text-3xl mb-2">🧙‍♂️</div>
+                    <h3 class="font-bold text-slate-800">The Wizard</h3>
+                    <p class="text-xs text-slate-600 mt-2">
+                        LLMs don't just "extract". They <strong>predict</strong>. Trained on trillions of words (basically the whole internet), they guess the next word in a sequence.
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <div class="text-4xl font-black text-purple-600 mb-1">1 Trillion+</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Parameters</div>
+                    <p class="text-[10px] text-slate-500 mt-2 px-4">
+                        Think of parameters as "brain connections". GPT-4 has nearly 1.8 trillion.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: LLM ARCHITECTURE -->
+        <div class="slide bg-llm" data-index="5">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">The Transformer</h2>
+                <p class="text-slate-500 text-xs">The engine behind the magic.</p>
+            </div>
+            <div class="flex-1 px-6 pt-6 flex flex-col items-center">
+                <!-- Simple Transformer Viz -->
+                <div class="w-full bg-slate-800 rounded-xl p-4 text-white font-mono text-xs mb-4 relative overflow-hidden">
+                    <div class="mb-2 text-purple-400 opacity-70">Context Window</div>
+                    <div class="typing-cursor text-sm text-green-400">The quick brown fox jumps over the...</div>
+                    <div class="mt-4 flex gap-2">
+                        <div class="bg-purple-600 px-2 py-1 rounded opacity-50">dog</div>
+                        <div class="bg-purple-600 px-2 py-1 rounded shadow-lg border border-white">lazy</div>
+                        <div class="bg-purple-600 px-2 py-1 rounded opacity-50">moon</div>
+                    </div>
+                    <div class="text-center mt-2 text-[10px] text-slate-400">Probabilistic Selection</div>
+                </div>
+
+                <div class="space-y-3 w-full">
+                    <div class="flex gap-3 items-start">
+                        <div class="bg-purple-100 p-2 rounded-lg text-lg">👀</div>
+                        <div>
+                            <strong class="text-sm text-slate-800">Attention Mechanism</strong>
+                            <p class="text-[10px] text-slate-500">It looks at the whole sentence at once, understanding that "bank" means "river bank" vs "money bank" based on context.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <div class="bg-purple-100 p-2 rounded-lg text-lg">🎲</div>
+                        <div>
+                            <strong class="text-sm text-slate-800">Stochastic</strong>
+                            <p class="text-[10px] text-slate-500">It's not deterministic. Asking the same question twice might yield slightly different answers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: SLM INTRO -->
+        <div class="slide bg-slm" data-index="6">
+            <div class="px-6 pt-6">
+                <div class="inline-block px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded mb-2">THE SPECIALIST</div>
+                <h2 class="text-3xl font-black text-slate-900">What is an SLM?</h2>
+                <p class="text-slate-500 text-sm mt-1">Small Language Model</p>
+            </div>
+            <div class="flex-1 px-6 flex flex-col justify-center gap-4">
+                <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-green-500">
+                    <div class="text-3xl mb-2">🏎️</div>
+                    <h3 class="font-bold text-slate-800">The Racer</h3>
+                    <p class="text-xs text-slate-600 mt-2">
+                        SLMs are condensed versions of LLMs. They sacrifice "knowing everything about everything" to be fast, cheap, and run on your phone.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                        <div class="text-xl font-black text-green-600">< 7B</div>
+                        <div class="text-[10px] font-bold text-slate-400">Parameters</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                        <div class="text-xl font-black text-green-600">Local</div>
+                        <div class="text-[10px] font-bold text-slate-400">Execution</div>
+                    </div>
+                </div>
+                
+                <p class="text-center text-xs text-slate-400 italic">Examples: Phi-3, Gemma, Llama 3 8B</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: DISTILLATION -->
+        <div class="slide bg-slm" data-index="7">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">How to shrink AI?</h2>
+                <p class="text-slate-500 text-xs">Distillation & Pruning.</p>
+            </div>
+            <div class="flex-1 px-6 pt-8 flex flex-col items-center">
+                
+                <!-- Distillation Viz -->
+                <div class="flex flex-col items-center w-full gap-2">
+                    <div class="w-32 h-32 bg-purple-200 rounded-full flex items-center justify-center text-center p-2 shadow-lg z-10">
+                        <span class="text-xs font-bold text-purple-800">Teacher (LLM)<br><span class="text-[9px]">Trillions of params</span></span>
+                    </div>
+                    
+                    <div class="h-12 border-l-2 border-dashed border-slate-300"></div>
+                    
+                    <div class="w-20 h-20 bg-green-200 rounded-full flex items-center justify-center text-center p-1 shadow-lg z-10">
+                        <span class="text-[10px] font-bold text-green-800">Student (SLM)<br><span class="text-[8px]">Billions</span></span>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-white/80 p-4 rounded-xl text-xs text-slate-600 leading-relaxed border border-green-200">
+                    <strong>Knowledge Distillation:</strong> The massive LLM teaches the SLM. The SLM doesn't learn from raw data; it learns from the LLM's <em>answers</em>, absorbing the logic without needing the massive memory storage.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: COMPARE: ACCURACY -->
+        <div class="slide bg-white" data-index="8">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">Accuracy War</h2>
+                <p class="text-slate-500 text-xs">Who is right more often?</p>
+            </div>
+            <div class="flex-1 px-6 pt-4 pb-20 custom-scroll space-y-4">
+                
+                <!-- LLM -->
+                <div class="border border-purple-100 rounded-xl p-4 bg-purple-50">
+                    <div class="flex justify-between font-bold text-purple-800 text-sm mb-1">
+                        <span>LLM</span>
+                        <span>Broad & Creative</span>
+                    </div>
+                    <p class="text-xs text-slate-600">Great at reasoning, coding, and obscure facts. But prone to confident <strong class="text-red-500">Hallucinations</strong>.</p>
+                </div>
+
+                <!-- SLM -->
+                <div class="border border-green-100 rounded-xl p-4 bg-green-50">
+                    <div class="flex justify-between font-bold text-green-800 text-sm mb-1">
+                        <span>SLM</span>
+                        <span>Narrow & Sharp</span>
+                    </div>
+                    <p class="text-xs text-slate-600">Extremely accurate in specific domains (e.g., a "Medical SLM"). Fails hard if you ask general knowledge questions outside its training.</p>
+                </div>
+
+                <!-- NLU -->
+                <div class="border border-blue-100 rounded-xl p-4 bg-blue-50">
+                    <div class="flex justify-between font-bold text-blue-800 text-sm mb-1">
+                        <span>NLU</span>
+                        <span>Rigid & Precise</span>
+                    </div>
+                    <p class="text-xs text-slate-600">100% predictable. If trained to recognize "Balance Inquiry", it will never accidentally write you a poem about balances.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: COMPARE: COST -->
+        <div class="slide bg-white" data-index="9">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">The Cost</h2>
+                <p class="text-slate-500 text-xs">Hardware & Energy.</p>
+            </div>
+            <div class="flex-1 px-6 flex flex-col justify-center gap-6">
+                
+                <!-- Chart -->
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span>LLM (GPT-4)</span>
+                            <span class="text-red-500">$$$$$</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3"><div class="bg-red-500 h-3 rounded-full w-[95%]"></div></div>
+                        <div class="text-[9px] text-slate-400 mt-1">Requires huge GPU clusters (H100s). Cloud only.</div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span>SLM (Llama 8B)</span>
+                            <span class="text-green-500">$$</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3"><div class="bg-green-500 h-3 rounded-full w-[30%]"></div></div>
+                        <div class="text-[9px] text-slate-400 mt-1">Runs on a MacBook or high-end phone.</div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span>NLU (BERT)</span>
+                            <span class="text-blue-500">$</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3"><div class="bg-blue-500 h-3 rounded-full w-[5%]"></div></div>
+                        <div class="text-[9px] text-slate-400 mt-1">Runs on a raspberry pi or basic CPU.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 11: PROS/CONS LLM -->
+        <div class="slide bg-llm" data-index="10">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">LLM Evaluation</h2>
+            </div>
+            <div class="flex-1 px-6 pt-4 pb-20 custom-scroll space-y-4">
+                <div class="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow-sm">
+                    <strong class="text-green-700 text-sm block mb-1">👍 PROS</strong>
+                    <ul class="text-xs text-slate-600 list-disc ml-4 space-y-1">
+                        <li>Unmatched reasoning & creativity.</li>
+                        <li>"Zero-shot" learning (can do tasks it wasn't trained for).</li>
+                        <li>Handles nuanced, messy human language perfectly.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm">
+                    <strong class="text-red-700 text-sm block mb-1">👎 CONS</strong>
+                    <ul class="text-xs text-slate-600 list-disc ml-4 space-y-1">
+                        <li>Extremely expensive to run.</li>
+                        <li>High latency (slow response).</li>
+                        <li><strong>Privacy Risk:</strong> Data usually leaves your premises (Cloud).</li>
+                        <li>Black box (hard to debug why it said something).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: PROS/CONS SLM -->
+        <div class="slide bg-slm" data-index="11">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">SLM Evaluation</h2>
+            </div>
+            <div class="flex-1 px-6 pt-4 pb-20 custom-scroll space-y-4">
+                <div class="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow-sm">
+                    <strong class="text-green-700 text-sm block mb-1">👍 PROS</strong>
+                    <ul class="text-xs text-slate-600 list-disc ml-4 space-y-1">
+                        <li><strong>Privacy:</strong> Runs 100% offline/locally.</li>
+                        <li>Low latency (snappy).</li>
+                        <li>Cheap to fine-tune for specific jobs (e.g., Coding).</li>
+                        <li>Green AI (Lower carbon footprint).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm">
+                    <strong class="text-red-700 text-sm block mb-1">👎 CONS</strong>
+                    <ul class="text-xs text-slate-600 list-disc ml-4 space-y-1">
+                        <li>Struggles with complex logic puzzles.</li>
+                        <li>Lower "World Knowledge" (doesn't know every capital city).</li>
+                        <li>Context window usually smaller.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: PROS/CONS NLU -->
+        <div class="slide bg-nlu" data-index="12">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">NLU Evaluation</h2>
+            </div>
+            <div class="flex-1 px-6 pt-4 pb-20 custom-scroll space-y-4">
+                <div class="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow-sm">
+                    <strong class="text-green-700 text-sm block mb-1">👍 PROS</strong>
+                    <ul class="text-xs text-slate-600 list-disc ml-4 space-y-1">
+                        <li>Extremely fast (< 10ms).</li>
+                        <li>100% Predictable & Explainable.</li>
+                        <li>Very low compute (runs anywhere).</li>
+                        <li>Great for structured commands.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm">
+                    <strong class="text-red-700 text-sm block mb-1">👎 CONS</strong>
+                    <ul class="text-xs text-slate-600 list-disc ml-4 space-y-1">
+                        <li>Rigid: Fails on phrasing variations.</li>
+                        <li>Zero creativity (cannot write emails/stories).</li>
+                        <li>High maintenance: Needs manual training data for every new intent.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: USE CASES LLM -->
+        <div class="slide bg-llm" data-index="13">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">Use Cases: LLM</h2>
+                <p class="text-slate-500 text-xs">When you need a brain.</p>
+            </div>
+            <div class="flex-1 px-6 pt-6 grid grid-cols-1 gap-4">
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-purple-100">
+                    <div class="bg-purple-100 p-3 rounded-full text-2xl">📝</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Creative Writing</h4>
+                        <p class="text-[10px] text-slate-500">Marketing copy, emails, stories.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-purple-100">
+                    <div class="bg-purple-100 p-3 rounded-full text-2xl">💻</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Coding Assistant</h4>
+                        <p class="text-[10px] text-slate-500">Complex refactoring & debugging.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-purple-100">
+                    <div class="bg-purple-100 p-3 rounded-full text-2xl">🔬</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Research Analysis</h4>
+                        <p class="text-[10px] text-slate-500">Summarizing 100-page PDFs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: USE CASES SLM -->
+        <div class="slide bg-slm" data-index="14">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">Use Cases: SLM</h2>
+                <p class="text-slate-500 text-xs">When you need privacy & speed.</p>
+            </div>
+            <div class="flex-1 px-6 pt-6 grid grid-cols-1 gap-4">
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-green-100">
+                    <div class="bg-green-100 p-3 rounded-full text-2xl">📱</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">On-Device AI</h4>
+                        <p class="text-[10px] text-slate-500">Siri/Google Pixel features that work offline.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-green-100">
+                    <div class="bg-green-100 p-3 rounded-full text-2xl">🏥</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Healthcare</h4>
+                        <p class="text-[10px] text-slate-500">Processing patient notes locally (HIPAA compliant).</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-green-100">
+                    <div class="bg-green-100 p-3 rounded-full text-2xl">🤖</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Robotics/IoT</h4>
+                        <p class="text-[10px] text-slate-500">Smart devices with limited RAM.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: USE CASES NLU -->
+        <div class="slide bg-nlu" data-index="15">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">Use Cases: NLU</h2>
+                <p class="text-slate-500 text-xs">When you need action.</p>
+            </div>
+            <div class="flex-1 px-6 pt-6 grid grid-cols-1 gap-4">
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-blue-100">
+                    <div class="bg-blue-100 p-3 rounded-full text-2xl">🏦</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Banking Chatbots</h4>
+                        <p class="text-[10px] text-slate-500">"Check balance", "Transfer money". (High security/reliability).</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-blue-100">
+                    <div class="bg-blue-100 p-3 rounded-full text-2xl">🏠</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Smart Home</h4>
+                        <p class="text-[10px] text-slate-500">"Turn on kitchen lights".</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-blue-100">
+                    <div class="bg-blue-100 p-3 rounded-full text-2xl">🔍</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Search/Sorting</h4>
+                        <p class="text-[10px] text-slate-500">Routing customer support tickets to departments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 17: HYBRID FUTURE -->
+        <div class="slide bg-slate-50" data-index="16">
+            <div class="px-6 pt-6">
+                <h2 class="text-2xl font-black text-slate-900">The Hybrid Future</h2>
+                <p class="text-slate-500 text-xs">Combining powers.</p>
+            </div>
+            <div class="flex-1 px-6 pt-6 flex flex-col items-center">
+                
+                <div class="relative w-full h-64 border-l-2 border-slate-300 ml-4 pl-4 space-y-6">
+                    <!-- Step 1 -->
+                    <div class="relative">
+                        <div class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-slate-400"></div>
+                        <strong class="text-sm block">1. User Request</strong>
+                        <div class="text-xs text-slate-500 bg-white p-2 rounded border border-slate-200 mt-1 inline-block">
+                            "What's my balance and write me a poem about being rich."
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative">
+                        <div class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-blue-500"></div>
+                        <strong class="text-sm block text-blue-600">2. NLU Router</strong>
+                        <p class="text-[10px] text-slate-500">Splits the request.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex gap-2">
+                        <div class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-purple-500"></div>
+                        <div class="flex-1 bg-blue-50 p-2 rounded border border-blue-200 text-[10px]">
+                            <strong>NLU:</strong> Fetch Balance (SQL)
+                        </div>
+                        <div class="flex-1 bg-purple-50 p-2 rounded border border-purple-200 text-[10px]">
+                            <strong>LLM:</strong> Write Poem
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative">
+                        <div class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-green-500"></div>
+                        <strong class="text-sm block text-green-600">3. Final Response</strong>
+                        <p class="text-[10px] text-slate-500">Merged secure data with creative text.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 18: SUMMARY -->
+        <div class="slide bg-slate-900 text-white" data-index="17">
+            <div class="flex-1 flex flex-col justify-center items-center text-center p-6">
+                <h2 class="text-3xl font-bold mb-6">Cheat Sheet</h2>
+                
+                <div class="w-full space-y-3 mb-8">
+                    <!-- Row NLU -->
+                    <div class="flex items-center gap-3 bg-slate-800 p-3 rounded-xl border-l-4 border-blue-500">
+                        <span class="text-2xl">🎯</span>
+                        <div class="text-left">
+                            <div class="font-bold text-sm">NLU</div>
+                            <div class="text-[10px] text-slate-400">Cheap. Precise. Rigid. The "Sniper".</div>
+                        </div>
+                    </div>
+
+                    <!-- Row SLM -->
+                    <div class="flex items-center gap-3 bg-slate-800 p-3 rounded-xl border-l-4 border-green-500">
+                        <span class="text-2xl">🏎️</span>
+                        <div class="text-left">
+                            <div class="font-bold text-sm">SLM</div>
+                            <div class="text-[10px] text-slate-400">Fast. Private. Efficient. The "Racer".</div>
+                        </div>
+                    </div>
+
+                    <!-- Row LLM -->
+                    <div class="flex items-center gap-3 bg-slate-800 p-3 rounded-xl border-l-4 border-purple-500">
+                        <span class="text-2xl">🧙‍♂️</span>
+                        <div class="text-left">
+                            <div class="font-bold text-sm">LLM</div>
+                            <div class="text-[10px] text-slate-400">Smart. Creative. Expensive. The "Wizard".</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-white text-slate-900 rounded-full font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto">
+                    Replay Story ↺
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ARCHITECT TOOL OVERLAY -->
+    <div id="selector-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleSelector(event)">
+        <div class="bg-white rounded-t-3xl p-6 h-[90%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-slate-800">AI Architect Tool</h3>
+                <button onclick="toggleSelector(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+
+            <p class="text-xs text-slate-500 mb-6">Configure your project to see the recommended model.</p>
+            
+            <!-- Controls -->
+            <div class="space-y-6 flex-1 overflow-y-auto custom-scroll px-1">
+                
+                <!-- Complexity -->
+                <div>
+                    <label class="text-xs font-bold text-slate-700 block mb-2">Complexity</label>
+                    <div class="flex gap-2">
+                        <button onclick="setOption('complexity', 0)" id="comp-0" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">Command</button>
+                        <button onclick="setOption('complexity', 1)" id="comp-1" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">Summary</button>
+                        <button onclick="setOption('complexity', 2)" id="comp-2" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">Creative</button>
+                    </div>
+                </div>
+
+                <!-- Privacy -->
+                <div>
+                    <label class="text-xs font-bold text-slate-700 block mb-2">Privacy / Security</label>
+                    <div class="flex gap-2">
+                        <button onclick="setOption('privacy', 0)" id="priv-0" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">Cloud OK</button>
+                        <button onclick="setOption('privacy', 1)" id="priv-1" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">Strict/Local</button>
+                    </div>
+                </div>
+
+                <!-- Budget -->
+                <div>
+                    <label class="text-xs font-bold text-slate-700 block mb-2">Budget / Hardware</label>
+                    <div class="flex gap-2">
+                        <button onclick="setOption('budget', 0)" id="budg-0" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">Low (IoT)</button>
+                        <button onclick="setOption('budget', 1)" id="budg-1" class="flex-1 py-2 rounded-lg border text-xs font-bold transition-all border-slate-200 text-slate-500">High (GPU)</button>
+                    </div>
+                </div>
+
+                <!-- RESULT BOX -->
+                <div id="result-box" class="hidden animate-slide-up mt-4 p-4 rounded-xl text-center border-2">
+                    <div class="text-xs font-bold uppercase tracking-wider mb-1 opacity-70">Recommendation</div>
+                    <div id="result-title" class="text-3xl font-black mb-2">LLM</div>
+                    <p id="result-desc" class="text-xs leading-relaxed">Description goes here.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        let toolState = {
+            complexity: -1, // 0: Command, 1: Summary, 2: Creative
+            privacy: -1,    // 0: Cloud, 1: Local
+            budget: -1      // 0: Low, 1: High
+        };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- ARCHITECT TOOL LOGIC ---
+        function toggleSelector(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('selector-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function setOption(cat, val) {
+            toolState[cat] = val;
+            updateUI(cat, val);
+            calculateResult();
+        }
+
+        function updateUI(cat, val) {
+            // Reset buttons in category
+            const buttons = document.querySelectorAll(`[id^="${cat.substring(0,4)}"]`);
+            buttons.forEach(b => {
+                b.classList.remove('bg-slate-800', 'text-white', 'border-slate-800');
+                b.classList.add('text-slate-500', 'border-slate-200');
+            });
+
+            // Active button
+            const activeBtn = document.getElementById(`${cat.substring(0,4)}-${val}`);
+            activeBtn.classList.remove('text-slate-500', 'border-slate-200');
+            activeBtn.classList.add('bg-slate-800', 'text-white', 'border-slate-800');
+        }
+
+        function calculateResult() {
+            // Only calc if all 3 selected
+            if (toolState.complexity === -1 || toolState.privacy === -1 || toolState.budget === -1) return;
+
+            const box = document.getElementById('result-box');
+            const title = document.getElementById('result-title');
+            const desc = document.getElementById('result-desc');
+            
+            box.classList.remove('hidden');
+
+            // Logic Tree
+            // 1. If Complexity is LOW (Command) -> NLU (unless budget is high and they want fancy chat, but sticking to basics)
+            if (toolState.complexity === 0) {
+                 setStyle('nlu');
+                 title.innerText = "NLU (Natural Language Understanding)";
+                 desc.innerText = "Best Choice! For simple commands ('Turn on lights'), NLU is faster, cheaper, and more reliable than any generative model.";
+                 return;
+            }
+
+            // 2. If Privacy is STRICT/LOCAL -> SLM
+            if (toolState.privacy === 1) {
+                setStyle('slm');
+                title.innerText = "SLM (Small Language Model)";
+                desc.innerText = "Best Choice! Since you need strict local privacy, an SLM running on-device is the only way to get generative AI without the cloud.";
+                return;
+            }
+
+            // 3. If Budget is LOW -> SLM
+            if (toolState.budget === 0) {
+                setStyle('slm');
+                title.innerText = "SLM (Small Language Model)";
+                desc.innerText = "Best Choice! LLMs are too expensive for low-budget/IoT hardware. An SLM provides 80% of the smarts for 10% of the cost.";
+                return;
+            }
+
+            // 4. If Complexity is HIGH (Creative) + Cloud OK + Budget High -> LLM
+            if (toolState.complexity === 2) {
+                setStyle('llm');
+                title.innerText = "LLM (Large Language Model)";
+                desc.innerText = "Best Choice! For creative writing and complex reasoning, nothing beats the massive parameter count of an LLM.";
+                return;
+            }
+            
+            // Fallback (Mid complexity, cloud ok) -> SLM or LLM (Let's say SLM for efficiency)
+            setStyle('slm');
+            title.innerText = "SLM (Small Language Model)";
+            desc.innerText = "Solid Choice. For summarization tasks, modern SLMs are often 'good enough' and much cheaper than LLMs.";
+        }
+
+        function setStyle(type) {
+            const box = document.getElementById('result-box');
+            box.className = 'animate-slide-up mt-4 p-6 rounded-xl text-center border-2 shadow-lg';
+            
+            if (type === 'nlu') {
+                box.classList.add('bg-blue-50', 'border-blue-200', 'text-blue-900');
+            } else if (type === 'llm') {
+                box.classList.add('bg-purple-50', 'border-purple-200', 'text-purple-900');
+            } else {
+                box.classList.add('bg-green-50', 'border-green-200', 'text-green-900');
+            }
+        }
+    </script>
+</body>
+</html>

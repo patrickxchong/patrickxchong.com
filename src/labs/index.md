@@ -18,21 +18,25 @@ A collection of small personal projects, experiments, and utilities to make life
 
 - **WhatsApp Link Generator**: Generate cross-platform WhatsApp links or open a number/message directly in WhatsApp Web without saving the contact. [🚀 Launch App](/labs/whatsapp-link-generator) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/blob/main/src/labs/whatsapp-link-generator.njk)
 
-- **RapidPlan - MyRapid Trip Planner**: Check trip duration and cost of LRT, MRT, and BRT trips in the Klang Valley. [🚀 Launch App](https://rapidplan.patrickxchong.com/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
+  > 🔒 **Privacy Guaranteed:** Usage is not tracked.
 
-- **Tailwind Compiler**: A tool to compile HTML snippets with Tailwind.CSS classes into minified CSS. [🚀 Launch App](https://labs.patrickxchong.com/tailwind-compiler)
+- **RapidPlan - MyRapid Trip Planner**: Check trip duration and cost of LRT, MRT, and BRT trips in the Klang Valley. [🚀 Launch App](https://rapidplan.patrickxchong.com/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
 
 - **Hide Discord Sidebar**: A browser extension to toggle visibility of Discord servers and channels. [🌐 Chrome Extension](https://chrome.google.com/webstore/detail/hide-discord-sidebar/kaaohmdnmbdagpnenakakpkinddjmenp) | [🦊 Firefox Extension](https://addons.mozilla.org/addon/hide-discord-sidebar/) | [💻 View Code](https://github.com/patrickxchong/hide-discord-sidebar)
 
 - **Convert Image to Text (OCR)**: Accepts direct image pasting, drag & drop, and file uploads. [🚀 Launch App](/labs/convert-image-to-text/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/convert-image-to-text)
 
-  > 🔒 **Privacy First:** Images are processed entirely in the browser and are never sent to an external server.
+  > 🔒 **Privacy Guaranteed:** Images are only processed in the browser and never sent to an external server.
 
 - **QR Reader**: Scan QR codes via paste or upload. [🚀 Launch App](/labs/qr/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/qr)
 
-  > 🔒 **Privacy First:** Images are processed in the browser.
+  > 🔒 **Privacy Guaranteed:** Images are only processed in the browser and never sent to an external server.
 
 - **Image Transform**: Quickly rotate and flip images directly in your browser. [🚀 Launch App](/labs/image-transform/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/image-transform)
+
+  > 🔒 **Privacy Guaranteed:** Images are only processed in the browser and never sent to an external server.
+
+- **Tailwind Compiler**: A tool to compile HTML snippets with Tailwind.CSS classes into minified CSS. [🚀 Launch App](https://labs.patrickxchong.com/tailwind-compiler)
 
 - **Flood Risk Map**: Elevation tiles to assess if an area is flood-prone. [🚀 Launch App](/labs/map/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
 
@@ -58,6 +62,7 @@ A collection of small personal projects, experiments, and utilities to make life
 - [Vitamin D & Calcium](/labs/stories/health-vit-d-calcium.html) - Template used to generate stories
 - [Essential Vitamins and Minerals](/labs/stories/health-nutrients.html)
 - [Inflammation](/labs/stories/health-inflammation.html)
+- [Omega 3](/labs/stories/health-omega3.html)
 - [Sleep Interactive (Long)](/labs/stories/health-sleep-interactive-long.html)
 - [Sleep Interactive (Short)](/labs/stories/health-sleep-interactive-short.html)
 - [Sleep Flashcards](/labs/stories/health-sleep-flashcards.html) - Earlier version of template
@@ -74,8 +79,10 @@ Make it content heavy with at least 10 pages.
 
 #### ✈️ Travel Itineraries
 
-- [Seoul](/labs/stories/itinerary-seoul.html)
-- [Singapore](/labs/stories/itinerary-singapore.html)
+- [Kuala Lumpur](/labs/stories/travel-kl.html)
+- [Kuala Lumpur (Foodie Edition)](/labs/stories/travel-kl-foodie.html)
+- [Seoul](/labs/stories/travel-seoul.html)
+- [Singapore](/labs/stories/travel-singapore.html)
 
 <details> 
 <summary><strong>📝 View Prompt Used</strong></summary>
@@ -104,5 +111,21 @@ Make it content heavy with at least 10 pages.
 Include many quotations from the text, while expositing the meaning and application.
 Add reflection questions per page to make it more engaging
 ```
+</details>
+
+
+#### ✈️ General Knowledge
+
+- [NLU vs SLM vs LLM](/labs/stories/knowledge-nlu-slm-llm.html)
+- [NLU vs SLM vs LLM V2](/labs/stories/knowledge-nlu-slm-llm.html)
+
+<details> 
+<summary><strong>📝 View Prompt Used</strong></summary>
+
+```txt
+Using the uploaded file as a template, populate this with knowledge on LLM, SLM, NLU, how they are similar, different, pros and cons, how they are used in real life.
+Make it content heavy with at least 15 pages.
+```
+
 
 </details>

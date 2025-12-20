@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Omega-3 Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #0f172a;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f0f9ff; /* Very light blue tint */
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px;
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #1e293b, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- VISUALS --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        }
+
+        .molecule-bg {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .nutrient-bar-bg {
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .nutrient-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        .animate-ring::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track"></div>
+            <div class="flex justify-end items-center mt-3 px-2">
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-white/90 backdrop-blur text-sky-900 border border-sky-200 px-4 py-2 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>🧮</span> EPA/DHA Check
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-gradient-to-br from-sky-900 via-blue-900 to-slate-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-blue-500 opacity-10 blur-3xl rounded-full scale-150 animate-pulse"></div>
+                
+                <div class="relative z-10 mb-6">
+                    <div class="text-8xl">🐟</div>
+                    <div class="text-4xl absolute -bottom-2 -right-2 bg-white text-blue-900 rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg">3</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-2 tracking-tight">Omega-3<br><span class="text-sky-300 font-light">Deep Dive</span></h1>
+                <p class="text-sky-200/80 text-lg mb-8 max-w-[250px]">The oil that runs your brain and cools the fire.</p>
+                
+                <div class="glass-card px-6 py-4 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform cursor-pointer" onclick="goToSlide(1, event)">
+                    <p class="text-xs text-sky-800 font-bold uppercase tracking-wider mb-1">Current Reality</p>
+                    <p class="text-sm font-semibold text-slate-800 leading-relaxed">
+                        Most people are eating a <span class="text-red-600">20:1 ratio</span> of bad fats to good fats. It should be 1:1.
+                    </p>
+                    <div class="mt-3 text-xs text-sky-600 font-bold flex items-center gap-1 border-t border-sky-100/50 pt-2">
+                        START THE JOURNEY <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THE INFLAMMATION FIRE -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Fire Inside</h2>
+                <p class="text-slate-500 text-sm">Chronic inflammation is the root.</p>
+            </div>
+            <div class="flex-1 px-6 flex flex-col gap-4 overflow-y-auto custom-scroll pb-20">
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-9xl opacity-10">🔥</div>
+                    <p class="text-slate-700 leading-relaxed relative z-10">
+                        Imagine your body is constantly on fire on a microscopic level. This is <strong>Chronic Inflammation</strong>.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-50 p-4 rounded-xl text-center">
+                        <div class="text-3xl mb-2">🧠</div>
+                        <div class="text-xs font-bold text-slate-600">Brain Fog</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl text-center">
+                        <div class="text-3xl mb-2">🫀</div>
+                        <div class="text-xs font-bold text-slate-600">Heart Disease</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl text-center">
+                        <div class="text-3xl mb-2">🦴</div>
+                        <div class="text-xs font-bold text-slate-600">Joint Pain</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl text-center">
+                        <div class="text-3xl mb-2">😫</div>
+                        <div class="text-xs font-bold text-slate-600">Fatigue</div>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500 italic mt-2">Omega-3 is the biological fire extinguisher.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: THE FAMILY TREE -->
+        <div class="slide bg-sky-50" data-index="2">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-sky-900 mb-2">The 3 Types</h2>
+                <p class="text-sky-700 text-sm">Not all Omega-3s are equal.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-3 pb-20 overflow-y-auto custom-scroll">
+                <!-- ALA -->
+                <div class="bg-white p-4 rounded-2xl border-l-4 border-green-500 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-slate-800">ALA</h3>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Plant Based</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Alpha-linolenic acid</p>
+                    <p class="text-sm text-slate-700 mt-2">Found in flax, chia, walnuts. <br><span class="font-bold text-red-500">Must be converted</span> to be useful.</p>
+                </div>
+
+                <!-- EPA -->
+                <div class="bg-white p-4 rounded-2xl border-l-4 border-blue-500 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-slate-800">EPA</h3>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Anti-Inflammatory</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Eicosapentaenoic acid</p>
+                    <p class="text-sm text-slate-700 mt-2">The "Heart & Body" omega. Reduces cellular inflammation and supports mood.</p>
+                </div>
+
+                <!-- DHA -->
+                <div class="bg-white p-4 rounded-2xl border-l-4 border-purple-500 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-slate-800">DHA</h3>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Brain Builder</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Docosahexaenoic acid</p>
+                    <p class="text-sm text-slate-700 mt-2">Structural component of the brain and retina. 97% of brain fat is DHA.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: THE CONVERSION TRAP -->
+        <div class="slide bg-slate-100" data-index="3">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Trap</h2>
+                <p class="text-slate-500 text-sm">Why chia seeds aren't enough.</p>
+            </div>
+            
+            <div class="flex-1 flex flex-col items-center justify-center px-6 pb-20">
+                <div class="bg-white p-6 rounded-3xl shadow-lg w-full text-center relative">
+                    
+                    <div class="mb-4">
+                        <div class="text-4xl">🌱</div>
+                        <div class="font-bold text-green-600">ALA</div>
+                        <div class="text-xs text-slate-400">Walnuts, Flax</div>
+                    </div>
+
+                    <!-- Down Arrow -->
+                    <div class="flex justify-center my-2">
+                        <div class="text-slate-300 text-2xl">↓</div>
+                    </div>
+
+                    <div class="bg-red-100 p-2 rounded-lg mb-2 mx-auto w-3/4 border border-red-200">
+                        <p class="text-xs font-bold text-red-600">BOTTLENECK</p>
+                        <p class="text-[10px] text-red-500">Delta-6-Desaturase Enzyme</p>
+                    </div>
+
+                    <div class="flex justify-center my-2">
+                        <div class="text-slate-300 text-2xl">↓</div>
+                    </div>
+
+                    <div class="flex justify-center gap-8">
+                        <div>
+                            <div class="text-4xl">❤️</div>
+                            <div class="font-bold text-blue-600">EPA</div>
+                            <div class="text-xs text-slate-400">~5% converted</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl">🧠</div>
+                            <div class="font-bold text-purple-600">DHA</div>
+                            <div class="text-xs text-slate-400"><1% converted</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="mt-6 text-sm text-slate-600 text-center px-4">
+                    Humans are <strong>terrible</strong> at converting plant Omega-3 into the active forms (EPA/DHA) that we actually need.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: ACTIVATION REQUIREMENTS -->
+        <div class="slide bg-amber-50" data-index="4">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-amber-900 mb-2">The Activators</h2>
+                <p class="text-amber-700 text-sm">How to fix the broken conversion.</p>
+            </div>
+
+            <div class="flex-1 px-6 pb-20 overflow-y-auto custom-scroll">
+                <p class="text-sm text-slate-700 mb-6">
+                    If you rely on plant sources (Vegetarians), you <strong>MUST</strong> have these cofactors to force the conversion enzyme to work.
+                </p>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- B6 -->
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                        <div class="bg-amber-100 text-amber-800 font-bold p-3 rounded-lg w-12 text-center text-sm">B6</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800">Vitamin B6</h4>
+                            <p class="text-xs text-slate-500">Crucial for desaturase enzyme.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Magnesium -->
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                        <div class="bg-blue-100 text-blue-800 font-bold p-3 rounded-lg w-12 text-center text-sm">Mg</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800">Magnesium</h4>
+                            <p class="text-xs text-slate-500">The master mineral for metabolism.</p>
+                        </div>
+                    </div>
+
+                    <!-- Zinc -->
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                        <div class="bg-slate-100 text-slate-800 font-bold p-3 rounded-lg w-12 text-center text-sm">Zn</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800">Zinc</h4>
+                            <p class="text-xs text-slate-500">Deficiency halts conversion entirely.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-red-100 p-4 rounded-xl border border-red-200">
+                    <h4 class="font-bold text-red-800 text-sm mb-1">Inhibitors (The Blockers)</h4>
+                    <p class="text-xs text-red-700">
+                        High Insulin, Stress (Cortisol), and Alcohol <strong>shut down</strong> the conversion enzyme.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: OMEGA 6 RIVALRY -->
+        <div class="slide bg-orange-50" data-index="5">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-orange-900 mb-2">The Rival: Omega 6</h2>
+                <p class="text-orange-800 text-sm">The jealous sibling.</p>
+            </div>
+            
+            <div class="flex-1 px-6 pb-20 overflow-y-auto custom-scroll">
+                <div class="bg-white p-5 rounded-2xl shadow-sm mb-6">
+                    <h3 class="font-bold text-slate-800 text-lg mb-2">Competition</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Omega-3 and Omega-6 compete for the <strong>exact same enzymes</strong> in your body.
+                    </p>
+                    <div class="h-4 w-full bg-slate-100 rounded-full mt-4 flex overflow-hidden">
+                        <div class="h-full bg-orange-500 w-[95%]"></div>
+                        <div class="h-full bg-blue-500 w-[5%]"></div>
+                    </div>
+                    <div class="flex justify-between text-xs mt-1 font-bold">
+                        <span class="text-orange-600">Omega 6 (Wins)</span>
+                        <span class="text-blue-600">Omega 3 (Loses)</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm">Where is Omega 6?</h3>
+                    <div class="bg-white p-3 rounded-xl flex items-center gap-3 border border-orange-100">
+                        <span class="text-2xl">🌻</span>
+                        <span class="text-sm text-slate-700">Sunflower/Soybean Oil</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl flex items-center gap-3 border border-orange-100">
+                        <span class="text-2xl">🍟</span>
+                        <span class="text-sm text-slate-700">Fried Foods</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl flex items-center gap-3 border border-orange-100">
+                        <span class="text-2xl">🐓</span>
+                        <span class="text-sm text-slate-700">Grain-fed Chicken</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: THE RATIO -->
+        <div class="slide bg-slate-900 text-white" data-index="6">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold mb-2">The Ratio</h2>
+                <p class="text-slate-400 text-sm">Ancestors vs. Now</p>
+            </div>
+            
+            <div class="flex-1 px-6 flex flex-col justify-center pb-20">
+                
+                <!-- Ancestors -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-green-400 mb-2">Ancestral Diet</h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="bg-blue-500 h-8 w-1/2 rounded-l text-center leading-8 font-bold">1</div>
+                        <div class="bg-orange-500 h-8 w-1/2 rounded-r text-center leading-8 font-bold">1</div>
+                    </div>
+                    <p class="text-xs text-slate-400">Perfect balance. Low inflammation.</p>
+                </div>
+
+                <!-- Modern -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-red-500 mb-2">Modern Diet</h3>
+                    <div class="flex items-center gap-0 mb-2 w-full">
+                        <div class="bg-blue-500 h-8 w-[5%] rounded-l text-center leading-8 font-bold overflow-hidden text-[8px] pt-1">1</div>
+                        <div class="bg-orange-500 h-8 w-[95%] rounded-r text-center leading-8 font-bold pl-2">20</div>
+                    </div>
+                    <p class="text-xs text-slate-400">Total dominance of Omega-6.</p>
+                </div>
+
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                    <p class="text-sm leading-relaxed">
+                        To activate Omega-3 benefits, you don't just need to take more fish oil. You <strong>must</strong> reduce seed oils (Omega-6).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: CELL MEMBRANES -->
+        <div class="slide bg-pink-50" data-index="7">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-pink-900 mb-2">Cell Walls</h2>
+                <p class="text-pink-700 text-sm">Hard vs. Soft.</p>
+            </div>
+            
+            <div class="flex-1 px-6 pb-20 flex flex-col items-center molecule-bg">
+                <div class="flex gap-4 w-full mt-4">
+                    <!-- Hard Cell -->
+                    <div class="flex-1 bg-white p-4 rounded-2xl shadow-sm text-center border-2 border-orange-200">
+                        <div class="w-16 h-16 rounded-full border-4 border-orange-500 mx-auto mb-2 flex items-center justify-center bg-orange-100">
+                            <div class="w-8 h-8 bg-slate-300 rounded-full"></div>
+                        </div>
+                        <h4 class="font-bold text-slate-800">Rigid</h4>
+                        <p class="text-[10px] text-slate-500">High Omega-6</p>
+                        <p class="text-[10px] text-slate-500 mt-2">Nutrients can't get in. Waste can't get out.</p>
+                    </div>
+
+                    <!-- Soft Cell -->
+                    <div class="flex-1 bg-white p-4 rounded-2xl shadow-sm text-center border-2 border-blue-200">
+                        <div class="w-16 h-16 rounded-full border-4 border-dashed border-blue-500 mx-auto mb-2 flex items-center justify-center bg-blue-50">
+                            <div class="w-8 h-8 bg-blue-300 rounded-full"></div>
+                        </div>
+                        <h4 class="font-bold text-slate-800">Fluid</h4>
+                        <p class="text-[10px] text-slate-500">High Omega-3</p>
+                        <p class="text-[10px] text-slate-500 mt-2">Flexible. Sensitive to insulin. Efficient.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-white/80 p-4 rounded-xl text-center text-sm text-slate-700 backdrop-blur">
+                    EPA and DHA physically incorporate themselves into the cell wall, making it "liquid" and adaptable.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: RESOLVINS -->
+        <div class="slide bg-indigo-50" data-index="8">
+             <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-2">The Cleanup Crew</h2>
+                <p class="text-indigo-700 text-sm">Resolvins & Protectins.</p>
+            </div>
+            <div class="flex-1 px-6 pb-20">
+                <div class="prose prose-sm text-slate-600">
+                    <p>Omega-3s aren't just passive oil. Your body breaks them down into powerful molecules called <strong>Resolvins</strong>.</p>
+                </div>
+                
+                <div class="mt-6 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">1</div>
+                        <div>
+                            <strong class="block text-slate-800">Inflammation Happens</strong>
+                            <span class="text-xs text-slate-500">Injury, stress, or toxin triggers immune response.</span>
+                        </div>
+                    </div>
+                    <div class="h-8 border-l-2 border-dashed border-slate-300 ml-5"></div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">2</div>
+                        <div>
+                            <strong class="block text-slate-800">Resolvins Enter</strong>
+                            <span class="text-xs text-slate-500">Derived from EPA/DHA. They signal "The war is over."</span>
+                        </div>
+                    </div>
+                     <div class="h-8 border-l-2 border-dashed border-slate-300 ml-5"></div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">3</div>
+                        <div>
+                            <strong class="block text-slate-800">Healing</strong>
+                            <span class="text-xs text-slate-500">Without Omega-3, inflammation stays "switched on" forever.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: BRAIN HEALTH -->
+        <div class="slide bg-purple-50" data-index="9">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-purple-900 mb-2">The Brain</h2>
+                <p class="text-purple-700 text-sm">DHA is structure.</p>
+            </div>
+            <div class="flex-1 px-6 flex flex-col items-center pb-20 overflow-y-auto custom-scroll">
+                <div class="relative w-40 h-40 mb-6">
+                    <div class="absolute inset-0 bg-purple-200 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                    <div class="relative z-10 text-9xl">🧠</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm w-full mb-4">
+                    <h3 class="font-bold text-purple-900 mb-2">Did you know?</h3>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc pl-4">
+                        <li>Your brain is <strong>60% fat</strong>.</li>
+                        <li>Of that fat, the most critical structural component is DHA.</li>
+                        <li>Low DHA is linked to memory loss, depression, and poor focus.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-purple-100 p-4 rounded-xl text-center w-full">
+                    <p class="text-purple-900 font-bold text-sm">Pregnancy & Childhood</p>
+                    <p class="text-xs text-purple-700 mt-1">DHA accumulates rapidly in the fetal brain during the 3rd trimester. Critical for IQ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: HEART HEALTH -->
+        <div class="slide bg-rose-50" data-index="10">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-rose-900 mb-2">The Heart</h2>
+                <p class="text-rose-700 text-sm">EPA is protection.</p>
+            </div>
+             <div class="flex-1 px-6 pb-20 overflow-y-auto custom-scroll">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 border-l-4 border-rose-500">
+                        <span class="text-2xl">🩸</span>
+                        <div class="text-sm text-slate-700">
+                            <strong>Triglycerides:</strong> EPA lowers blood fat effectively.
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 border-l-4 border-rose-500">
+                        <span class="text-2xl">⚡</span>
+                        <div class="text-sm text-slate-700">
+                            <strong>Rhythm:</strong> Stabilizes electrical activity in the heart (anti-arrhythmic).
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl flex items-center gap-4 border-l-4 border-rose-500">
+                        <span class="text-2xl">🩹</span>
+                        <div class="text-sm text-slate-700">
+                            <strong>Plaque:</strong> Makes arterial plaque more stable and less likely to rupture.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: PLANT SOURCES -->
+        <div class="slide bg-green-50" data-index="11">
+             <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-green-900 mb-2">Plant Sources</h2>
+                    <span class="text-xs bg-green-200 text-green-900 px-2 py-1 rounded font-bold mb-3">ALA Only</span>
+                </div>
+                <p class="text-green-700 text-sm">Good, but inefficient.</p>
+            </div>
+            
+            <div class="flex-1 px-6 grid grid-cols-2 gap-4 pb-20 content-start">
+                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🌰</div>
+                    <div class="font-bold text-slate-800 text-sm">Walnuts</div>
+                    <div class="text-[10px] text-slate-500 mt-1">High ALA. Good for gut.</div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🥣</div>
+                    <div class="font-bold text-slate-800 text-sm">Chia Seeds</div>
+                    <div class="text-[10px] text-slate-500 mt-1">High Fiber + ALA.</div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🌾</div>
+                    <div class="font-bold text-slate-800 text-sm">Flaxseeds</div>
+                    <div class="text-[10px] text-slate-500 mt-1">Must be ground up!</div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
+                    <div class="text-4xl mb-2">🥬</div>
+                    <div class="font-bold text-slate-800 text-sm">Brussels Sprouts</div>
+                    <div class="text-[10px] text-slate-500 mt-1">Surprisingly decent source.</div>
+                </div>
+                
+                <div class="col-span-2 bg-yellow-100 p-3 rounded-xl border border-yellow-200 text-xs text-yellow-800 text-center">
+                    <strong>Remember:</strong> You need to eat HUGE amounts of these to get enough EPA/DHA due to the poor conversion rate.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: MARINE SOURCES -->
+        <div class="slide bg-sky-50" data-index="12">
+            <div class="px-6 pt-8 pb-4">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold text-sky-900 mb-2">Marine Sources</h2>
+                    <span class="text-xs bg-sky-200 text-sky-900 px-2 py-1 rounded font-bold mb-3">EPA + DHA</span>
+                </div>
+                <p class="text-sky-700 text-sm">The gold standard.</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-3 pb-20 overflow-y-auto custom-scroll">
+                <!-- Salmon -->
+                <div class="bg-white p-3 rounded-2xl shadow-sm flex items-center gap-4">
+                    <span class="text-4xl">🍣</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Salmon</h4>
+                        <p class="text-xs text-slate-500">~1500mg EPA/DHA per serving. Farmed has more fat, but Wild has better ratio.</p>
+                    </div>
+                </div>
+
+                <!-- Sardines -->
+                <div class="bg-white p-3 rounded-2xl shadow-sm flex items-center gap-4">
+                    <span class="text-4xl">🐟</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Sardines</h4>
+                        <p class="text-xs text-slate-500">Powerhouse. Low mercury. Eat the bones for calcium too!</p>
+                    </div>
+                </div>
+
+                <!-- Mackerel -->
+                <div class="bg-white p-3 rounded-2xl shadow-sm flex items-center gap-4">
+                    <span class="text-4xl">🐠</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Mackerel</h4>
+                        <p class="text-xs text-slate-500">Very high content. Choose Atlantic (smaller) over King (mercury).</p>
+                    </div>
+                </div>
+
+                 <!-- Algae -->
+                 <div class="bg-white p-3 rounded-2xl shadow-sm flex items-center gap-4 border border-green-200">
+                    <span class="text-4xl">🌿</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Algae Oil</h4>
+                        <p class="text-xs text-slate-500">The <strong>only</strong> vegan source of direct EPA/DHA. It's where fish get it from!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: SUPPLEMENTS -->
+        <div class="slide bg-slate-50" data-index="13">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Supplements</h2>
+                <p class="text-slate-500 text-sm">How to choose.</p>
+            </div>
+            
+            <div class="flex-1 px-6 pb-20 space-y-4 overflow-y-auto custom-scroll">
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-1">Check the Label!</h3>
+                    <p class="text-xs text-slate-500 mb-3">Don't look at "Total Fish Oil". Look at "Total EPA + DHA".</p>
+                    
+                    <div class="bg-slate-100 p-3 rounded text-xs font-mono text-slate-600">
+                        <div class="flex justify-between border-b border-slate-300 pb-1 mb-1">
+                            <span>Fish Oil</span>
+                            <span>1000mg</span>
+                        </div>
+                        <div class="flex justify-between text-blue-600 font-bold">
+                            <span>EPA</span>
+                            <span>180mg</span>
+                        </div>
+                        <div class="flex justify-between text-purple-600 font-bold">
+                            <span>DHA</span>
+                            <span>120mg</span>
+                        </div>
+                        <div class="mt-2 text-[10px] text-red-500 text-right">Only 300mg active! (Low quality)</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-sm text-slate-800">Triglyceride Form</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Natural form. Better absorption. Costs more.</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-sm text-slate-800">Ethyl Ester</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Processed. Oxidizes easily. Cheaper.</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-sm text-slate-800">Krill Oil</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Bound to phospholipids. High absorption but lower dose.</p>
+                    </div>
+                     <div class="bg-white p-3 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-sm text-slate-800">Cod Liver</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Has Vitamin A & D naturally.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: DAILY GOAL -->
+        <div class="slide bg-blue-600 text-white" data-index="14">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <h2 class="text-4xl font-bold mb-4">Your Mission</h2>
+                <div class="bg-white/10 backdrop-blur p-6 rounded-2xl border border-white/20 w-full max-w-xs">
+                    <div class="text-5xl font-bold mb-2">1000<span class="text-2xl">mg</span></div>
+                    <div class="text-sm font-bold uppercase tracking-widest opacity-80 mb-4">EPA + DHA Combined</div>
+                    <p class="text-xs leading-relaxed opacity-90">
+                        This is the therapeutic dose for lowering triglycerides and fighting inflammation.
+                    </p>
+                </div>
+                
+                <button onclick="toggleCalculator(event)" class="mt-8 bg-white text-blue-900 px-8 py-4 rounded-full font-bold shadow-xl active:scale-95 transition-transform animate-bounce pointer-events-auto">
+                    Open Calculator
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: SUMMARY -->
+        <div class="slide bg-slate-900 text-white" data-index="15">
+            <div class="px-6 pt-8 pb-4">
+                <h2 class="text-3xl font-bold mb-2">Summary</h2>
+                <p class="text-slate-400 text-sm">The Takeaway.</p>
+            </div>
+            
+            <div class="flex-1 px-6 space-y-3 pb-10 overflow-y-auto custom-scroll">
+                <div class="bg-slate-800 p-4 rounded-xl flex gap-3">
+                    <div class="text-2xl">⚖️</div>
+                    <div>
+                        <strong class="block text-sm">Balance the Ratio</strong>
+                        <p class="text-xs text-slate-300">Cut Seed Oils (Omega 6). Increase Fish/Algae (Omega 3).</p>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-800 p-4 rounded-xl flex gap-3">
+                    <div class="text-2xl">🐟</div>
+                    <div>
+                        <strong class="block text-sm">Prioritize EPA/DHA</strong>
+                        <p class="text-xs text-slate-300">Plant ALA conversion is too weak. You need the marine form.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-4 rounded-xl flex gap-3">
+                    <div class="text-2xl">⚡</div>
+                    <div>
+                        <strong class="block text-sm">Activate Conversion</strong>
+                        <p class="text-xs text-slate-300">If plant-based, ensure you have Magnesium, Zinc, and B6.</p>
+                    </div>
+                </div>
+
+                <button onclick="goToSlide(0, event)" class="w-full mt-6 py-3 bg-sky-500 text-white rounded-xl font-bold pointer-events-auto active:scale-95">
+                    Restart Guide ↺
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <!-- Stop Propagation on inner card so clicking it doesn't close it -->
+        <div class="bg-white rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Omega Tracker</h3>
+                    <p class="text-xs text-slate-500">Target: 1000mg EPA+DHA</p>
+                </div>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Progress Bars -->
+            <div class="bg-sky-50 p-4 rounded-2xl mb-4 space-y-3 shadow-inner border border-sky-100">
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                        <span>Daily Intake</span>
+                        <span><span id="calc-val">0</span>/1000 mg</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
+                        <div id="bar-omega" class="bg-gradient-to-r from-sky-400 to-blue-600 h-4 rounded-full w-0 transition-all duration-500 shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
+                    </div>
+                    <div id="calc-msg" class="text-[10px] text-center mt-2 font-bold text-slate-400">Add items to start</div>
+                </div>
+            </div>
+
+            <!-- Food List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetCalc()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors pointer-events-auto">Reset Tracker</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Data: EPA+DHA content in mg per serving
+        const foodDb = [
+            { name: "Salmon (3.5oz)", amount: 1800, type: "high", icon: "🍣" },
+            { name: "Sardines (3.5oz)", amount: 1500, type: "high", icon: "🐟" },
+            { name: "Mackerel (3.5oz)", amount: 2500, type: "high", icon: "🐠" },
+            { name: "Cod Liver Oil (1tsp)", amount: 900, type: "high", icon: "🥄" },
+            { name: "Fish Oil Pill (Std)", amount: 300, type: "med", icon: "💊" },
+            { name: "Fish Oil Pill (Conc)", amount: 700, type: "high", icon: "💊" },
+            { name: "Algae Oil (1 cap)", amount: 400, type: "med", icon: "🌿" },
+            { name: "Walnuts (1oz)", amount: 0, type: "low", icon: "🌰", warning: "High ALA, low conversion" },
+            { name: "Chia Seeds (1oz)", amount: 0, type: "low", icon: "🥣", warning: "High ALA, low conversion" },
+            { name: "Tuna (Canned Light)", amount: 230, type: "low", icon: "🥫" },
+            { name: "Grass-fed Beef (3oz)", amount: 80, type: "low", icon: "🥩" },
+        ];
+        let currentTotal = 0;
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            // 1. Check if user clicked an interactive element or button
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            // 2. Logic for Left/Right Navigation based on screen position
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- CALCULATOR ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            foodDb.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'flex justify-between items-center p-3 bg-white border border-slate-100 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-transform mb-2 relative overflow-hidden pointer-events-auto';
+                
+                let warningHtml = '';
+                if(item.warning) {
+                    warningHtml = `<div class="text-[9px] text-orange-500 mt-0.5">${item.warning}</div>`;
+                }
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none z-10">
+                        <span class="text-2xl">${item.icon}</span>
+                        <div>
+                            <div class="text-sm font-bold text-slate-700 leading-none">${item.name}</div>
+                            ${warningHtml}
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end z-10">
+                         <span class="text-xs font-bold ${item.amount > 0 ? 'text-blue-600' : 'text-slate-400'}">${item.amount} mg</span>
+                         <span class="text-[9px] bg-slate-100 px-1 rounded text-slate-500">ADD +</span>
+                    </div>
+                `;
+                
+                // Add light background based on type
+                if(item.amount >= 1000) row.classList.add('bg-blue-50/50');
+
+                row.onclick = (e) => {
+                    e.stopPropagation();
+                    addToCalc(item);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function addToCalc(item) {
+            currentTotal += item.amount;
+            renderCalc();
+        }
+
+        function resetCalc() {
+            currentTotal = 0;
+            renderCalc();
+        }
+
+        function renderCalc() {
+            const maxVal = 1000;
+            const pct = Math.min((currentTotal / maxVal)*100, 100);
+            
+            document.getElementById('calc-val').innerText = currentTotal;
+            
+            const bar = document.getElementById('bar-omega');
+            const msg = document.getElementById('calc-msg');
+            
+            bar.style.width = pct + '%';
+
+            if(currentTotal === 0) {
+                msg.innerText = "Add items to start";
+                msg.className = "text-[10px] text-center mt-2 font-bold text-slate-400";
+                bar.className = "bg-slate-300 h-4 rounded-full w-0 transition-all duration-500";
+            } else if (currentTotal < 500) {
+                msg.innerText = "Low. Keep adding marine sources.";
+                msg.className = "text-[10px] text-center mt-2 font-bold text-orange-500";
+                bar.className = "bg-orange-400 h-4 rounded-full w-0 transition-all duration-500 shadow-[0_0_10px_rgba(251,146,60,0.5)]";
+            } else if (currentTotal < 1000) {
+                msg.innerText = "Getting there! Almost ideal.";
+                msg.className = "text-[10px] text-center mt-2 font-bold text-blue-500";
+                bar.className = "bg-blue-400 h-4 rounded-full w-0 transition-all duration-500 shadow-[0_0_10px_rgba(96,165,250,0.5)]";
+            } else {
+                msg.innerText = "Perfect! Therapeutic dose reached.";
+                msg.className = "text-[10px] text-center mt-2 font-bold text-green-600";
+                bar.className = "bg-gradient-to-r from-green-400 to-emerald-600 h-4 rounded-full w-0 transition-all duration-500 shadow-[0_0_15px_rgba(34,197,94,0.6)]";
+            }
+            
+            // Re-apply width after class change
+            requestAnimationFrame(() => {
+                bar.style.width = pct + '%';
+            });
+        }
+    </script>
+</body>
+</html>

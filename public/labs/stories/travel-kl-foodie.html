@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KL Foodie Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #111;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f8fafc;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 6px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pill-tag {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-end items-center mt-4 px-2">
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-black/80 text-white border border-white/20 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 backdrop-blur-md">
+                    <span>🥘</span> Quest Log
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-slate-900 text-white" data-index="0">
+            <!-- Background Image Placeholder -->
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
+            
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative z-10">
+                <div class="mb-4">
+                    <span class="bg-yellow-400 text-black font-bold px-3 py-1 rounded-full text-xs tracking-wider">3 DAY ITINERARY</span>
+                </div>
+                
+                <h1 class="text-6xl font-extrabold mb-2 leading-tight">EAT<br>KL.</h1>
+                <p class="text-slate-300 text-lg mb-8 font-light">The Ultimate Foodie Quest</p>
+                
+                <div class="glass-card px-6 py-4 rounded-2xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform border-l-4 border-yellow-400" onclick="goToSlide(1, event)">
+                    <p class="text-xs text-slate-500 font-bold uppercase mb-1">Your Mission</p>
+                    <p class="text-sm font-bold text-slate-900 leading-snug">
+                        Conquer 15+ legendary dishes across Chinatown, Little India, and Kampung Baru.
+                    </p>
+                    <div class="mt-3 text-[10px] text-slate-500 font-bold flex items-center gap-1">
+                        TAP TO START <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: INTRO -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">The Strategy</h2>
+                <p class="text-slate-500 text-sm">We tackle KL by region to save travel time.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <div class="bg-red-50 p-4 rounded-2xl border border-red-100 flex gap-4 items-center">
+                    <div class="text-3xl">🏮</div>
+                    <div>
+                        <h3 class="font-bold text-red-900">Day 1: The Classics</h3>
+                        <p class="text-xs text-red-700">Chinatown & Jalan Alor. Old school kopitiams and street food.</p>
+                    </div>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 flex gap-4 items-center">
+                    <div class="text-3xl">🪔</div>
+                    <div>
+                        <h3 class="font-bold text-purple-900">Day 2: Spice Trail</h3>
+                        <p class="text-xs text-purple-700">Brickfields & Bangsar. Banana leaf rice and Indian sweets.</p>
+                    </div>
+                </div>
+                <div class="bg-green-50 p-4 rounded-2xl border border-green-100 flex gap-4 items-center">
+                    <div class="text-3xl">🥥</div>
+                    <div>
+                        <h3 class="font-bold text-green-900">Day 3: Local Heroes</h3>
+                        <p class="text-xs text-green-700">Pudu & Kampung Baru. The best Nasi Lemak and Claypot Rice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 1 SECTION HEADER -->
+        <div class="slide bg-red-600 text-white flex items-center justify-center text-center" data-index="2">
+            <div>
+                <div class="text-6xl mb-4 animate-float">🍜</div>
+                <h2 class="text-4xl font-extrabold">DAY 1</h2>
+                <p class="text-red-200 mt-2 font-bold tracking-widest uppercase">Chinatown & Central</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: DAY 1 BREAKFAST -->
+        <div class="slide bg-stone-50" data-index="3">
+            <div class="h-60 relative">
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1525159367462-811c75249419?q=80&w=800')] bg-cover bg-center"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-50 to-transparent"></div>
+                <div class="absolute bottom-4 left-6">
+                    <span class="pill-tag bg-yellow-400 text-black mb-2 inline-block">08:00 AM</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900">Ho Kow Hainam Kopitiam</h2>
+                </div>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm text-slate-600 mb-4">Legendary spot. Get here early (before 8am) or prepare to queue for 45+ mins. It's worth it.</p>
+                
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Must Order</h3>
+                
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-stone-100 flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-slate-800">Butter & Kaya Toast</div>
+                            <div class="text-[10px] text-slate-500">The gold standard breakfast.</div>
+                        </div>
+                        <button onclick="addToLog('Ho Kow Kaya Toast', 10, event)" class="interactive-zone text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full font-bold active:bg-green-500 active:text-white transition-colors">Eat</button>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-stone-100 flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-slate-800">Curry Chee Cheong Fun</div>
+                            <div class="text-[10px] text-slate-500">Rice rolls in rich curry gravy.</div>
+                        </div>
+                        <button onclick="addToLog('Ho Kow Curry CCF', 15, event)" class="interactive-zone text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full font-bold active:bg-green-500 active:text-white transition-colors">Eat</button>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-stone-100 flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-slate-800">Iced Cham</div>
+                            <div class="text-[10px] text-slate-500">Coffee + Tea mix. Super kaw.</div>
+                        </div>
+                        <button onclick="addToLog('Ho Kow Cham', 5, event)" class="interactive-zone text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full font-bold active:bg-green-500 active:text-white transition-colors">Drink</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: DAY 1 LUNCH -->
+        <div class="slide bg-stone-50" data-index="4">
+            <div class="px-6 pt-12 pb-2">
+                <span class="pill-tag bg-white border border-slate-200 text-slate-500 mb-2 inline-block">12:30 PM</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 leading-none">Lai Foong<br>Lala Noodles</h2>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mb-6">
+                    <p class="text-sm text-orange-900 font-medium"> Michelin Bib Gourmand 🎖️</p>
+                    <p class="text-xs text-orange-800 mt-1">Located just a 5-min walk from Central Market.</p>
+                </div>
+
+                <div class="relative bg-white p-4 rounded-2xl shadow-sm border-l-4 border-red-500 overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-8xl opacity-5">🍜</div>
+                    <div class="relative z-10">
+                        <h3 class="text-xl font-bold text-slate-800 mb-1">Clam (Lala) Noodles</h3>
+                        <p class="text-xs text-slate-500 mb-4 w-3/4">The broth is spiked with superior Chinese wine (Shaoxing) and ginger. Comfort in a bowl.</p>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-xs font-bold text-slate-400">RM 15.00</span>
+                            <button onclick="addToLog('Lai Foong Lala Noodles', 20, event)" class="interactive-zone bg-red-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-md active:scale-95 transition-transform">Mark as Eaten</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: DAY 1 SNACK -->
+        <div class="slide bg-yellow-50" data-index="5">
+             <div class="px-6 pt-12">
+                <span class="pill-tag bg-yellow-200 text-yellow-800 mb-2 inline-block">04:00 PM</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Petaling St. Snacking</h2>
+                <p class="text-slate-500 text-sm mt-1">Walk it off and eat small bites.</p>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24 space-y-3">
+                
+                <!-- Kim Soya Bean -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-yellow-50 p-2 rounded-xl">🥛</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-800">Kim Soya Bean</h4>
+                            <button onclick="addToLog('Kim Soya Bean', 5, event)" class="interactive-zone text-[10px] bg-slate-100 px-2 py-1 rounded font-bold">Eat</button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">Order the Taufufah (warm beancurd) with brown sugar.</p>
+                    </div>
+                </div>
+
+                <!-- Air Mata Kucing -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-stone-100 p-2 rounded-xl">🧊</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-800">Air Mata Kucing</h4>
+                            <button onclick="addToLog('Air Mata Kucing', 5, event)" class="interactive-zone text-[10px] bg-slate-100 px-2 py-1 rounded font-bold">Drink</button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">Stall in front of Hong Leong Bank. Monk fruit & longan drink.</p>
+                    </div>
+                </div>
+
+                <!-- Apam Balik -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="text-3xl bg-yellow-50 p-2 rounded-xl">🥞</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-800">Grandma's Apam Balik</h4>
+                            <button onclick="addToLog('Apam Balik', 10, event)" class="interactive-zone text-[10px] bg-slate-100 px-2 py-1 rounded font-bold">Eat</button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">Crispy peanut pancake stall.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 7: DAY 1 DINNER -->
+        <div class="slide bg-slate-900 text-white" data-index="6">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=1000')] bg-cover bg-center opacity-30"></div>
+            <div class="relative z-10 px-6 pt-12">
+                <span class="pill-tag bg-red-600 text-white mb-2 inline-block">08:00 PM</span>
+                <h2 class="text-4xl font-extrabold mb-1">Wong Ah Wah</h2>
+                <p class="text-slate-400 text-sm">Jalan Alor Night Market</p>
+                
+                <div class="mt-8 space-y-4">
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-2xl">🍗</span>
+                            <button onclick="addToLog('WAW Chicken Wings', 25, event)" class="interactive-zone bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold hover:scale-105 transition-transform">Check</button>
+                        </div>
+                        <h3 class="font-bold text-lg">BBQ Chicken Wings</h3>
+                        <p class="text-xs text-slate-300">The reason this place is famous. Smoky, sticky perfection.</p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-2xl">🦑</span>
+                            <button onclick="addToLog('Salted Egg Sotong', 20, event)" class="interactive-zone bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold hover:scale-105 transition-transform">Check</button>
+                        </div>
+                        <h3 class="font-bold text-lg">Salted Egg Sotong</h3>
+                        <p class="text-xs text-slate-300">Deep fried squid heavily coated in salted egg yolk.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2 HEADER -->
+        <div class="slide bg-purple-700 text-white flex items-center justify-center text-center" data-index="7">
+            <div>
+                <div class="text-6xl mb-4 animate-float">🥘</div>
+                <h2 class="text-4xl font-extrabold">DAY 2</h2>
+                <p class="text-purple-200 mt-2 font-bold tracking-widest uppercase">Brickfields & Bangsar</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: DAY 2 BREAKFAST -->
+        <div class="slide bg-purple-50" data-index="8">
+            <div class="px-6 pt-12 pb-2">
+                <span class="pill-tag bg-purple-200 text-purple-900 mb-2 inline-block">09:00 AM</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">MTR 1924</h2>
+                <p class="text-slate-500 text-sm">Legendary South Indian Vegetarian.</p>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-purple-100 mb-4">
+                    <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=400" class="w-full h-32 object-cover rounded-xl mb-4">
+                    <h3 class="font-bold text-lg text-slate-800">Masala Dosa</h3>
+                    <p class="text-xs text-slate-500 mb-3">Crispy crepe filled with potato masala. Served with pure ghee.</p>
+                    <button onclick="addToLog('MTR Masala Dosa', 15, event)" class="interactive-zone w-full py-2 bg-purple-600 text-white rounded-lg font-bold text-xs">Ate it!</button>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-purple-100 flex-1">
+                        <div class="text-2xl mb-2">☕</div>
+                        <h4 class="font-bold text-xs text-slate-700">Filter Coffee</h4>
+                        <button onclick="addToLog('MTR Filter Coffee', 5, event)" class="interactive-zone mt-2 text-[10px] bg-purple-50 text-purple-700 px-2 py-1 rounded w-full">Track</button>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-purple-100 flex-1">
+                        <div class="text-2xl mb-2">🍘</div>
+                        <h4 class="font-bold text-xs text-slate-700">Rava Idli</h4>
+                        <button onclick="addToLog('MTR Rava Idli', 10, event)" class="interactive-zone mt-2 text-[10px] bg-purple-50 text-purple-700 px-2 py-1 rounded w-full">Track</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: DAY 2 LUNCH -->
+        <div class="slide bg-stone-50" data-index="9">
+            <div class="px-6 pt-12">
+                <span class="pill-tag bg-green-200 text-green-900 mb-2 inline-block">01:00 PM</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">Vishal Food & Catering</h2>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <p class="text-sm text-slate-600 mb-6">Authentic "Mess Hall" style dining. You sit in long rows. It's loud, fast, and delicious.</p>
+                
+                <div class="bg-green-600 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-9xl opacity-10">🍃</div>
+                    <h3 class="text-xl font-bold mb-2">Banana Leaf Rice</h3>
+                    <ul class="text-xs space-y-2 mb-4 list-disc pl-4 opacity-90">
+                        <li>Rice + 3 Veggies</li>
+                        <li>Papadom</li>
+                        <li>Ask for "Crab Curry Gravy" on rice</li>
+                    </ul>
+                    <div class="bg-white/20 p-3 rounded-lg mb-4">
+                        <span class="block text-[10px] font-bold uppercase mb-1">Add-on Side Dish:</span>
+                        <span class="font-bold">Mutton Varuval</span> (Dry curry)
+                    </div>
+                    <button onclick="addToLog('Banana Leaf Rice', 30, event)" class="interactive-zone w-full bg-white text-green-700 font-bold py-2 rounded-lg text-sm active:scale-95 transition-transform">Complete Mission</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: DAY 2 SNACK & DINNER -->
+        <div class="slide bg-white" data-index="10">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900">Evening Bites</h2>
+                <p class="text-slate-500 text-sm">Brickfields Snack -> Bangsar Dinner</p>
+            </div>
+            
+            <div class="px-6 space-y-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <!-- Snack -->
+                <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                    <span class="pill-tag bg-yellow-200 text-yellow-800 mb-2 inline-block">04:00 PM</span>
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Pisang Goreng</h3>
+                        <span class="text-2xl">🍌</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1 mb-3">Famous stall opposite the YMCA. Golden fried bananas.</p>
+                    <button onclick="addToLog('Brickfields Pisang Goreng', 10, event)" class="interactive-zone bg-white border border-yellow-200 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold">Eat</button>
+                </div>
+
+                <!-- Dinner -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span class="pill-tag bg-slate-200 text-slate-800 mb-2 inline-block">08:00 PM</span>
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Devi's Corner</h3>
+                        <span class="text-2xl">🦀</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1 mb-3">Bangsar. Order the <strong>Crab Rasam</strong> (spicy soup) and Garlic Naan.</p>
+                    <button onclick="addToLog('Devis Crab Rasam', 20, event)" class="interactive-zone bg-slate-800 text-white px-3 py-1 rounded-full text-xs font-bold">Eat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3 HEADER -->
+        <div class="slide bg-green-600 text-white flex items-center justify-center text-center" data-index="11">
+            <div>
+                <div class="text-6xl mb-4 animate-float">🥥</div>
+                <h2 class="text-4xl font-extrabold">DAY 3</h2>
+                <p class="text-green-200 mt-2 font-bold tracking-widest uppercase">Pudu & Kg Baru</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: DAY 3 BREAKFAST -->
+        <div class="slide bg-white" data-index="12">
+            <div class="px-6 pt-12">
+                <span class="pill-tag bg-orange-100 text-orange-800 mb-2 inline-block">08:30 AM</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">ICC Pudu</h2>
+                <p class="text-slate-500 text-sm">The Hawker Center Mecca.</p>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24 space-y-4">
+                
+                <div class="bg-stone-50 p-4 rounded-xl border-l-4 border-orange-400">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-slate-800">Ah Fook Chee Cheong Fun</h3>
+                        <button onclick="addToLog('Ah Fook CCF', 15, event)" class="interactive-zone text-xs font-bold text-orange-500 bg-white border border-orange-200 px-2 py-1 rounded">Check</button>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Get the "Yong Tau Foo" items to go with the noodles.</p>
+                </div>
+
+                <div class="bg-stone-50 p-4 rounded-xl border-l-4 border-yellow-400">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-slate-800">Bunn Choon Egg Tarts</h3>
+                        <button onclick="addToLog('Bunn Choon Tart', 10, event)" class="interactive-zone text-xs font-bold text-yellow-600 bg-white border border-yellow-200 px-2 py-1 rounded">Check</button>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Flaky pastry. Get the Charcoal Sesame one too.</p>
+                </div>
+
+                <div class="bg-stone-50 p-4 rounded-xl border-l-4 border-brown-400">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-slate-800">Hainan Tea (Ah Weng Koh)</h3>
+                        <button onclick="addToLog('Hainan Tea', 5, event)" class="interactive-zone text-xs font-bold text-slate-600 bg-white border border-slate-200 px-2 py-1 rounded">Check</button>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Rich, frothy, coffee-tea blend.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 14: DAY 3 LUNCH -->
+        <div class="slide bg-stone-900 text-white" data-index="13">
+             <div class="px-6 pt-12 pb-2">
+                <span class="pill-tag bg-red-600 text-white mb-2 inline-block">12:30 PM</span>
+                <h2 class="text-3xl font-extrabold">Heun Kee Claypot Chicken</h2>
+            </div>
+            <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <div class="bg-white/10 p-5 rounded-2xl border border-white/20 mb-6">
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Cooked over charcoal fire near the entrance. The rice gets a crispy crust at the bottom.
+                    </p>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <div class="bg-stone-800 p-4 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🥘</span>
+                            <div>
+                                <div class="font-bold">Claypot Chicken Rice</div>
+                                <div class="text-[10px] text-slate-400">Dark soy sauce, salted fish, wax sausage.</div>
+                            </div>
+                        </div>
+                        <button onclick="addToLog('Heun Kee Claypot', 25, event)" class="interactive-zone bg-red-600 px-3 py-1 rounded-full text-xs font-bold">Eat</button>
+                    </div>
+                    
+                    <div class="bg-stone-800 p-4 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🍲</span>
+                            <div>
+                                <div class="font-bold">Pig Stomach Soup</div>
+                                <div class="text-[10px] text-slate-400">Peppery soup to wash it down.</div>
+                            </div>
+                        </div>
+                        <button onclick="addToLog('Peppery Soup', 10, event)" class="interactive-zone bg-stone-600 px-3 py-1 rounded-full text-xs font-bold">Drink</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- SLIDE 15: DAY 3 DINNER -->
+        <div class="slide bg-green-50" data-index="14">
+            <div class="px-6 pt-12">
+                <span class="pill-tag bg-green-600 text-white mb-2 inline-block">07:30 PM</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Nasi Lemak Wanjo</h2>
+                <p class="text-slate-500 text-sm">Kampung Baru</p>
+            </div>
+             <div class="px-6 py-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                <img src="https://images.unsplash.com/photo-1628045934149-550f55e0ae04?q=80&w=600" class="w-full h-40 object-cover rounded-xl mb-4 shadow-md">
+                
+                <p class="text-sm text-slate-600 mb-4">Located in the historic Malay village in the city center. This is THE classic KL Nasi Lemak experience.</p>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-green-100">
+                    <h3 class="font-bold text-slate-800 mb-2">The Perfect Plate:</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2 text-xs text-slate-600">
+                            <span class="w-4 h-4 bg-red-100 text-red-600 flex items-center justify-center rounded-full text-[8px] font-bold">1</span>
+                            Nasi Lemak (Coconut Rice)
+                        </li>
+                        <li class="flex items-center gap-2 text-xs text-slate-600">
+                            <span class="w-4 h-4 bg-red-100 text-red-600 flex items-center justify-center rounded-full text-[8px] font-bold">2</span>
+                            Sambal Sotong (Squid)
+                        </li>
+                        <li class="flex items-center gap-2 text-xs text-slate-600">
+                            <span class="w-4 h-4 bg-red-100 text-red-600 flex items-center justify-center rounded-full text-[8px] font-bold">3</span>
+                            Ayam Goreng Berempah (Spiced Fried Chicken)
+                        </li>
+                    </ul>
+                    <button onclick="addToLog('Wanjo Nasi Lemak', 30, event)" class="interactive-zone mt-4 w-full bg-green-600 text-white font-bold py-2 rounded-lg text-sm active:scale-95 transition-transform">Conquer The National Dish</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: BONUS ROUND -->
+        <div class="slide bg-pink-50" data-index="15">
+            <div class="px-6 pt-12 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900">Dessert & Supper</h2>
+                <p class="text-slate-500 text-sm">Because there's a separate stomach.</p>
+            </div>
+            
+             <div class="px-6 space-y-4 flex-1 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-pink-100 flex items-center gap-4">
+                    <div class="text-3xl">🍦</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Inside Scoop</h3>
+                        <p class="text-xs text-slate-500 mt-1">Get the <strong>Durian</strong> or <strong>Teh Tarik</strong> ice cream.</p>
+                        <button onclick="addToLog('Durian Ice Cream', 15, event)" class="interactive-zone mt-2 text-[10px] bg-pink-100 text-pink-600 px-2 py-1 rounded font-bold">Eat</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-pink-100 flex items-center gap-4">
+                    <div class="text-3xl">🫓</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Mamak Supper</h3>
+                        <p class="text-xs text-slate-500 mt-1">Any "Nasi Kandar Pelita" or "Mamak". Order <strong>Roti Tisu</strong>.</p>
+                        <button onclick="addToLog('Roti Tisu', 10, event)" class="interactive-zone mt-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-bold">Eat</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 17: END -->
+        <div class="slide bg-black text-white flex flex-col justify-center items-center text-center p-8" data-index="16">
+            <div class="mb-6">
+                <div class="text-6xl mb-2">🏆</div>
+                <h2 class="text-3xl font-bold">Quest Complete</h2>
+            </div>
+            
+            <div class="glass-card w-full max-w-xs p-6 rounded-2xl mb-8">
+                <p class="text-xs text-slate-400 uppercase tracking-widest mb-2">Final Score</p>
+                <div class="text-5xl font-extrabold text-yellow-400 mb-2" id="final-score">0</div>
+                <p class="text-sm font-bold text-slate-800">Points Collected</p>
+                <p class="text-xs text-slate-500 mt-2" id="final-rank">Novice Eater</p>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="goToSlide(0, event)" class="interactive-zone px-6 py-3 bg-white text-black rounded-full font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto text-sm">
+                    Replay
+                </button>
+                <button onclick="toggleCalculator(event)" class="interactive-zone px-6 py-3 bg-yellow-500 text-black rounded-full font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto text-sm">
+                    View Log
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- QUEST LOG OVERLAY -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <div class="bg-white rounded-t-3xl p-6 h-[85%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Foodie Quest Log</h3>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Stats -->
+            <div class="bg-slate-50 p-4 rounded-2xl mb-4 shadow-inner">
+                <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                    <span>Gluttony Level</span>
+                    <span><span id="quest-points">0</span> XP</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-4"><div id="quest-bar" class="bg-yellow-500 h-4 rounded-full w-0 transition-all duration-300"></div></div>
+                <div class="mt-2 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="quest-title">Hungry Tourist</div>
+            </div>
+
+            <!-- Log List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="log-list">
+                <div class="text-center text-slate-400 text-xs mt-10 italic" id="empty-state">
+                    Tap "Eat" buttons on the slides<br>to track your meals!
+                </div>
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetQuest()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">Reset Quest</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        let questState = {
+            points: 0,
+            log: []
+        };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+            
+            // If it's the last slide, update the score display
+            if(idx === totalSlides - 1) {
+                updateFinalScore();
+            }
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- QUEST LOG LOGIC ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function addToLog(itemName, points, e) {
+            if(e) {
+                e.stopPropagation();
+                // Simple feedback animation on button
+                const btn = e.target;
+                const originalText = btn.innerText;
+                btn.innerText = "✓";
+                btn.classList.add('bg-green-500', 'text-white');
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('bg-green-500', 'text-white');
+                }, 1000);
+            }
+
+            // Check duplicates
+            if (questState.log.some(i => i.name === itemName)) return;
+
+            questState.points += points;
+            questState.log.push({ name: itemName, pts: points });
+            renderLog();
+        }
+
+        function resetQuest() {
+            questState = { points: 0, log: [] };
+            renderLog();
+        }
+
+        function renderLog() {
+            const list = document.getElementById('log-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            // Calculate Progress (Max roughly 250pts)
+            const maxPts = 250;
+            const pct = Math.min((questState.points / maxPts)*100, 100);
+            
+            document.getElementById('quest-points').innerText = questState.points;
+            document.getElementById('quest-bar').style.width = pct + '%';
+            
+            // Rank Title
+            let title = "Hungry Tourist";
+            if (questState.points > 50) title = "Foodie Apprentice";
+            if (questState.points > 100) title = "KL Glutton";
+            if (questState.points > 200) title = "Malaysian Legend";
+            document.getElementById('quest-title').innerText = title;
+
+            // List
+            if (questState.log.length > 0) {
+                emptyState.style.display = 'none';
+                list.innerHTML = '';
+                questState.log.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl shadow-sm mb-2';
+                    row.innerHTML = `
+                        <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                        <div class="text-xs font-bold text-green-500">+${item.pts} XP</div>
+                    `;
+                    list.appendChild(row);
+                });
+            } else {
+                emptyState.style.display = 'block';
+                list.innerHTML = '';
+                list.appendChild(emptyState);
+            }
+        }
+
+        function updateFinalScore() {
+            document.getElementById('final-score').innerText = questState.points;
+            document.getElementById('final-rank').innerText = document.getElementById('quest-title').innerText;
+        }
+    </script>
+</body>
+</html>

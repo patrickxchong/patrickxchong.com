@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LLM vs SLM vs NLU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #e2e8f0;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #0f172a; /* Slate 900 */
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; /* iPhone Max width */
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #111, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #38bdf8; /* Sky 400 */
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; 
+            z-index: 10;
+            background-color: #0f172a; /* Ensure bg covers prev slide */
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); /* Slate 800 with opacity */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .tech-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+
+        .bar-bg {
+            background-color: #1e293b;
+            border-radius: 9999px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.5); }
+        }
+        .pulse-glow { animation: pulse-glow 2s infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-between items-center mt-3 px-2">
+                <div class="text-[10px] text-slate-400 font-mono">AI SERIES v1.2</div>
+                <!-- Interactive Button -->
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-indigo-600 text-white border border-indigo-400 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-2 z-50">
+                    <i class="fas fa-microchip"></i> Model Picker
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-slate-900" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <!-- Background decorative elements -->
+                <div class="absolute top-20 left-10 w-32 h-32 bg-blue-500 rounded-full blur-[80px] opacity-20"></div>
+                <div class="absolute bottom-20 right-10 w-40 h-40 bg-purple-500 rounded-full blur-[80px] opacity-20"></div>
+
+                <div class="relative mb-6">
+                    <div class="text-7xl animate-float relative z-10"><i class="fas fa-brain text-indigo-400"></i></div>
+                    <div class="absolute -top-2 -right-6 text-2xl animate-bounce delay-700">⚡</div>
+                </div>
+                
+                <h1 class="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">LLM, SLM <br>& NLU</h1>
+                <p class="text-slate-400 text-lg mb-8 tracking-wide font-light">Navigating the Alphabet Soup</p>
+                
+                <div class="glass-card px-6 py-5 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform cursor-pointer border-l-4 border-l-indigo-500" onclick="goToSlide(1, event)">
+                    <p class="text-sm font-semibold text-slate-200 leading-relaxed">
+                        Is bigger always better? Why is everyone talking about "Small" models in 2025?
+                    </p>
+                    <div class="mt-3 text-xs text-indigo-300 font-bold flex items-center gap-1 border-t border-slate-700 pt-2">
+                        START LEARNING <span class="text-lg">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: DEFINITIONS -->
+        <div class="slide bg-slate-900" data-index="1">
+            <div class="px-6 pt-4 pb-2">
+                <h2 class="text-2xl font-bold text-white mb-1">The Acronyms</h2>
+                <p class="text-slate-400 text-xs">A quick dictionary before we dive deep.</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-3 overflow-y-auto custom-scroll pb-20">
+                <!-- NLU -->
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-green-900/50 p-2 rounded-lg text-green-400"><i class="fas fa-comment-dots"></i></div>
+                        <h3 class="font-bold text-green-400">NLU</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        <strong class="text-white">Natural Language Understanding.</strong> The "Old Guard". It focuses on classifying text into specific Intents (Actions) and Entities (Variables).
+                    </p>
+                </div>
+
+                <!-- LLM -->
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-blue-900/50 p-2 rounded-lg text-blue-400"><i class="fas fa-server"></i></div>
+                        <h3 class="font-bold text-blue-400">LLM</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        <strong class="text-white">Large Language Model.</strong> The "Giant Brain". 100B+ parameters. Trained on the entire internet. Generates creative text, code, and reasoning.
+                    </p>
+                </div>
+
+                <!-- SLM -->
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="bg-purple-900/50 p-2 rounded-lg text-purple-400"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="font-bold text-purple-400">SLM</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        <strong class="text-white">Small Language Model.</strong> The "Agile Specialist". <10B parameters. Designed to run on laptops or phones. Efficient, private, fast.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: NLU DEEP DIVE -->
+        <div class="slide bg-[#0b1121]" data-index="2">
+            <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-green-400 mb-2">NLU: The Specialist</h2>
+                <p class="text-slate-400 text-sm">Before ChatGPT, this ruled the world.</p>
+            </div>
+            
+            <div class="flex-1 flex flex-col px-6 mt-4">
+                <div class="relative h-64 w-full bg-slate-800/50 rounded-xl border border-dashed border-slate-700 flex items-center justify-center mb-6">
+                    <!-- Visualization of NLU -->
+                    <div class="text-center space-y-4">
+                        <div class="bg-slate-700 px-4 py-2 rounded-lg text-sm text-white">"Book a flight to Paris"</div>
+                        <div class="text-2xl text-slate-500">⬇️</div>
+                        <div class="flex gap-2 justify-center">
+                            <div class="bg-green-900 text-green-300 px-2 py-1 rounded text-xs border border-green-700">
+                                <span class="block text-[8px] opacity-70 uppercase">Intent</span>
+                                BOOK_FLIGHT
+                            </div>
+                            <div class="bg-yellow-900 text-yellow-300 px-2 py-1 rounded text-xs border border-yellow-700">
+                                <span class="block text-[8px] opacity-70 uppercase">Entity</span>
+                                DEST: PARIS
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-bold text-white text-sm border-b border-slate-700 pb-2">Characteristics</h3>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex gap-2">
+                            <i class="fas fa-check text-green-500 mt-0.5"></i>
+                            <span><strong>Deterministic:</strong> You explicitly define what the bot can understand. If you didn't train "Book a Hotel", it fails.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fas fa-check text-green-500 mt-0.5"></i>
+                            <span><strong>Fast & Cheap:</strong> Requires tiny computing power.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fas fa-times text-red-500 mt-0.5"></i>
+                            <span><strong>Rigid:</strong> Cannot handle "Creative" requests or general knowledge questions.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: LLM ARRIVAL -->
+        <div class="slide bg-[#0f172a]" data-index="3">
+            <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-blue-400 mb-2">Enter the LLM</h2>
+                <p class="text-slate-400 text-sm">The dawn of Generative AI.</p>
+            </div>
+
+            <div class="flex-1 px-6 pb-20 overflow-y-auto custom-scroll">
+                <div class="my-6 text-center">
+                    <div class="inline-block relative">
+                        <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 rounded-full"></div>
+                        <i class="fas fa-network-wired text-6xl text-blue-300 relative z-10 animate-pulse"></i>
+                    </div>
+                </div>
+
+                <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                    Unlike NLU, LLMs (GPT-4, Gemini, Claude) work by <strong class="text-blue-400">Next Token Prediction</strong>. They don't just categorize text; they continue it.
+                </p>
+
+                <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-blue-500 mb-4">
+                    <h3 class="font-bold text-white text-sm mb-2">The Scale</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <div class="text-2xl font-bold text-blue-400">1 Trillion+</div>
+                            <div class="text-[10px] text-slate-400">Parameters</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-blue-400">PB</div>
+                            <div class="text-[10px] text-slate-400">Training Data</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Superpowers</h4>
+                    <div class="bg-slate-800/50 p-3 rounded-lg flex items-center gap-3">
+                        <i class="fas fa-lightbulb text-yellow-400"></i>
+                        <span class="text-xs">Reasoning & Logic</span>
+                    </div>
+                    <div class="bg-slate-800/50 p-3 rounded-lg flex items-center gap-3">
+                        <i class="fas fa-code text-pink-400"></i>
+                        <span class="text-xs">Coding & Translation</span>
+                    </div>
+                    <div class="bg-slate-800/50 p-3 rounded-lg flex items-center gap-3">
+                        <i class="fas fa-book-open text-cyan-400"></i>
+                        <span class="text-xs">World Knowledge</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: LLM DOWNSIDES -->
+        <div class="slide bg-slate-900" data-index="4">
+            <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-red-400 mb-2">The Cost of Power</h2>
+                <p class="text-slate-400 text-sm">Why we can't use GPT-4 for everything.</p>
+            </div>
+
+            <div class="flex-1 px-6 grid grid-cols-1 gap-4 mt-4 pb-20 overflow-y-auto custom-scroll">
+                <!-- Cost -->
+                <div class="glass-card p-5 rounded-xl border-l-2 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-200">Financial Cost</h3>
+                        <span class="text-xl">💰</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">
+                        Inference is expensive. Running a 70B+ model requires massive GPU clusters (H100s). You pay per million tokens.
+                    </p>
+                </div>
+
+                <!-- Latency -->
+                <div class="glass-card p-5 rounded-xl border-l-2 border-orange-500">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-200">Latency</h3>
+                        <span class="text-xl">🐢</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">
+                        Data must travel to the cloud, process, and return. Unacceptable for real-time robotics or instant voice.
+                    </p>
+                </div>
+
+                <!-- Privacy -->
+                <div class="glass-card p-5 rounded-xl border-l-2 border-yellow-500">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-200">Privacy</h3>
+                        <span class="text-xl">🔒</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">
+                        Your data leaves your device. For hospitals or banks, sending PII to a public API is often a compliance nightmare.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: SLM RISE -->
+        <div class="slide bg-slate-900" data-index="5">
+             <div class="px-6 pt-4 pb-2">
+                <div class="flex items-center gap-2">
+                    <h2 class="text-2xl font-bold text-purple-400 mb-1">Rise of SLMs</h2>
+                    <span class="bg-purple-900 text-purple-200 text-[10px] px-2 py-0.5 rounded-full border border-purple-500">Trending 2025</span>
+                </div>
+                <p class="text-slate-400 text-xs">Small Language Models (Phi-3, Gemma 2).</p>
+            </div>
+
+            <div class="flex-1 px-6 pb-20 overflow-y-auto custom-scroll">
+                <div class="relative h-40 w-full mt-2 mb-6">
+                    <!-- Illustration: Big cloud vs Small chip -->
+                    <div class="absolute top-4 left-0 w-24 h-24 bg-slate-800 rounded-lg flex items-center justify-center border border-slate-600">
+                        <i class="fas fa-cloud text-4xl text-slate-600"></i>
+                    </div>
+                    <div class="absolute top-10 left-28 text-slate-500 text-xs"><i class="fas fa-arrow-right"></i></div>
+                    
+                    <div class="absolute top-4 right-0 w-24 h-24 bg-purple-900/40 rounded-lg flex items-center justify-center border border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                        <i class="fas fa-microchip text-4xl text-purple-400"></i>
+                    </div>
+                </div>
+
+                <h3 class="text-sm font-bold text-white mb-2">How do they work?</h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                    Researchers realized LLMs are "over-parameterized". By using higher quality data and techniques like <strong>Knowledge Distillation</strong> (a big teacher model teaching a small student), we can compress intelligence.
+                </p>
+
+                <div class="bg-slate-800 p-3 rounded-lg mb-3">
+                    <div class="flex justify-between text-xs font-bold text-purple-400 mb-1">
+                        <span>Llama 3 70B</span>
+                        <span>Phi-3 Mini (3.8B)</span>
+                    </div>
+                    <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div class="bg-blue-500 h-full w-[100%]"></div>
+                    </div>
+                    <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden mt-1">
+                        <div class="bg-purple-500 h-full w-[5%]"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Size Comparison</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: SLM PROS -->
+        <div class="slide bg-slate-900" data-index="6">
+            <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-white mb-2">Why Go Small?</h2>
+                <p class="text-slate-400 text-sm">The "Civic" vs the "Ferrari".</p>
+            </div>
+
+            <div class="flex-1 px-6 space-y-3 mt-4">
+                <!-- Edge -->
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 border border-slate-700">
+                    <div class="text-2xl bg-purple-900/30 p-2 rounded-lg text-purple-400">📱</div>
+                    <div>
+                        <h4 class="font-bold text-purple-200 text-sm">Edge AI</h4>
+                        <p class="text-xs text-slate-400 mt-1">Runs directly on your phone or laptop. No internet needed. Zero latency.</p>
+                    </div>
+                </div>
+
+                <!-- Cost -->
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 border border-slate-700">
+                    <div class="text-2xl bg-green-900/30 p-2 rounded-lg text-green-400">💸</div>
+                    <div>
+                        <h4 class="font-bold text-green-200 text-sm">Dirt Cheap</h4>
+                        <p class="text-xs text-slate-400 mt-1">Train for $ thousands, not $ millions. Host on cheap CPU instances.</p>
+                    </div>
+                </div>
+
+                <!-- Specialized -->
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 border border-slate-700">
+                    <div class="text-2xl bg-blue-900/30 p-2 rounded-lg text-blue-400">🎯</div>
+                    <div>
+                        <h4 class="font-bold text-blue-200 text-sm">Niche Expert</h4>
+                        <p class="text-xs text-slate-400 mt-1">Can be fine-tuned deeply for one specific task (e.g., Medical Billing) and outperform GPT-4 on that task.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: THE COMPARISON TABLE -->
+        <div class="slide bg-[#0f172a]" data-index="7">
+            <div class="px-4 pt-4 mb-2">
+                <h2 class="text-xl font-bold text-white">The Showdown</h2>
+            </div>
+            
+            <div class="flex-1 px-2 overflow-y-auto custom-scroll pb-20">
+                <table class="w-full text-xs text-left border-collapse">
+                    <thead>
+                        <tr class="text-slate-500 border-b border-slate-700">
+                            <th class="p-2">Feature</th>
+                            <th class="p-2 text-blue-400">LLM</th>
+                            <th class="p-2 text-purple-400">SLM</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-300">
+                        <tr class="border-b border-slate-800">
+                            <td class="p-2 font-bold text-slate-400">Size</td>
+                            <td class="p-2">Huge (70B+)</td>
+                            <td class="p-2">Tiny (<10B)</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="p-2 font-bold text-slate-400">Run On</td>
+                            <td class="p-2">Cloud H100s</td>
+                            <td class="p-2">Phone/Laptop</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="p-2 font-bold text-slate-400">Knowledge</td>
+                            <td class="p-2">Everything</td>
+                            <td class="p-2">Focused/Base</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="p-2 font-bold text-slate-400">Reasoning</td>
+                            <td class="p-2">Advanced</td>
+                            <td class="p-2">Basic/Good</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="p-2 font-bold text-slate-400">Privacy</td>
+                            <td class="p-2 text-red-400">Low</td>
+                            <td class="p-2 text-green-400">High (Local)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4 bg-slate-800 p-3 rounded-lg border border-slate-700">
+                    <p class="text-[10px] text-slate-400 italic">
+                        "Think of an LLM as a Professor in a library, and an SLM as a Grad Student with a cheat sheet."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: USE CASE - CODING -->
+        <div class="slide bg-slate-900" data-index="8">
+             <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-white mb-2">Use Case: Coding</h2>
+                <p class="text-slate-400 text-sm">Who wins here?</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 space-y-4">
+                <div class="p-4 rounded-xl bg-blue-900/20 border border-blue-500/30">
+                    <h3 class="font-bold text-blue-400 text-sm mb-2">LLM (ChatGPT/Claude)</h3>
+                    <p class="text-xs text-slate-300">
+                        <strong>Best for:</strong> Architecting entire apps, refactoring complex legacy code, explaining logic.
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-purple-900/20 border border-purple-500/30">
+                    <h3 class="font-bold text-purple-400 text-sm mb-2">SLM (CodeLlama 7B)</h3>
+                    <p class="text-xs text-slate-300">
+                        <strong>Best for:</strong> Local auto-complete (Copilot style) inside VS Code. It runs on your laptop, reads your private repo, and suggests lines instantly.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: USE CASE - HEALTHCARE -->
+        <div class="slide bg-slate-900" data-index="9">
+            <div class="px-6 pt-4">
+               <h2 class="text-2xl font-bold text-white mb-2">Use Case: Medical</h2>
+               <p class="text-slate-400 text-sm">Privacy vs Power.</p>
+           </div>
+
+           <div class="flex-1 px-6 mt-4 space-y-4">
+               <div class="p-4 rounded-xl bg-blue-900/20 border border-blue-500/30">
+                   <h3 class="font-bold text-blue-400 text-sm mb-2">LLM (Med-PaLM)</h3>
+                   <p class="text-xs text-slate-300">
+                       Diagnostic assistant for rare diseases. Needs massive knowledge base to connect disparate symptoms.
+                   </p>
+               </div>
+
+               <div class="p-4 rounded-xl bg-purple-900/20 border border-purple-500/30">
+                   <h3 class="font-bold text-purple-400 text-sm mb-2">SLM (Local)</h3>
+                   <p class="text-xs text-slate-300">
+                       Summarizing patient notes on a hospital tablet. <strong>Crucial:</strong> Patient data never leaves the tablet (HIPAA compliance).
+                   </p>
+               </div>
+           </div>
+       </div>
+
+        <!-- SLIDE 11: USE CASE - IOT & HOME -->
+        <div class="slide bg-slate-900" data-index="10">
+            <div class="px-6 pt-4">
+               <h2 class="text-2xl font-bold text-white mb-2">Smart Home</h2>
+               <p class="text-slate-400 text-sm">When the internet goes out.</p>
+           </div>
+
+           <div class="flex-1 px-6 mt-4">
+                <div class="bg-slate-800 rounded-xl p-6 text-center mb-4">
+                    <i class="fas fa-wifi text-4xl text-red-500 mb-2 opacity-50"></i>
+                    <p class="text-sm text-white font-bold">No Connection</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 font-bold text-xs">NLU</div>
+                        <p class="text-xs text-slate-400">Can turn on lights. (Simple command)</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 font-bold text-xs">LLM</div>
+                        <p class="text-xs text-slate-400">Fails. Needs cloud.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 font-bold text-xs">SLM</div>
+                        <p class="text-xs text-slate-400">Can reason: "It's hot, lower the blinds and turn on the fan" <strong class="text-white">offline</strong>.</p>
+                    </div>
+                </div>
+           </div>
+       </div>
+
+       <!-- SLIDE 12: HYBRID FUTURE -->
+       <div class="slide bg-slate-900" data-index="11">
+            <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-cyan-400 mb-2">The Hybrid Future</h2>
+                <p class="text-slate-400 text-sm">Working together.</p>
+            </div>
+
+            <div class="flex-1 px-6 flex flex-col items-center justify-center">
+                <div class="relative w-64 h-64">
+                    <!-- Central Router -->
+                    <div class="absolute inset-0 m-auto w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center z-20 border-4 border-slate-900">
+                        <span class="text-xs font-bold text-white">Router</span>
+                    </div>
+
+                    <!-- Satellites -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 text-center">
+                        <div class="text-4xl">☁️</div>
+                        <div class="text-[10px] bg-blue-600 px-2 rounded text-white">LLM (Hard Tasks)</div>
+                    </div>
+
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 text-center">
+                        <div class="text-4xl">📱</div>
+                        <div class="text-[10px] bg-purple-600 px-2 rounded text-white">SLM (Easy Tasks)</div>
+                    </div>
+                    
+                    <!-- Connecting Lines -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0">
+                        <line x1="50%" y1="15%" x2="50%" y2="85%" stroke="#475569" stroke-width="2" stroke-dasharray="5,5" />
+                    </svg>
+                </div>
+
+                <p class="text-xs text-center text-slate-400 mt-8 px-4">
+                    Future apps will have a "Router" AI. It sends simple chats to the cheap, fast on-device SLM, and only wakes up the expensive cloud LLM for complex problems.
+                </p>
+            </div>
+       </div>
+
+        <!-- SLIDE 13: WHEN TO USE WHAT (Summary 1) -->
+        <div class="slide bg-slate-900" data-index="12">
+            <div class="px-6 pt-4">
+                <h2 class="text-2xl font-bold text-white mb-2">Decision Matrix</h2>
+                <p class="text-slate-400 text-sm">Cheat sheet for builders.</p>
+            </div>
+
+            <div class="flex-1 px-6 mt-4 space-y-2">
+                <div class="bg-slate-800 p-3 rounded-lg border-l-4 border-green-500">
+                    <h3 class="font-bold text-white text-xs">Use NLU if:</h3>
+                    <p class="text-[10px] text-slate-400">You have fixed commands (Play music, Set alarm) and 0 budget for inference.</p>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-lg border-l-4 border-purple-500">
+                    <h3 class="font-bold text-white text-xs">Use SLM if:</h3>
+                    <p class="text-[10px] text-slate-400">You need offline capability, strict privacy, low latency, or specialized tasks (Summarize email).</p>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-lg border-l-4 border-blue-500">
+                    <h3 class="font-bold text-white text-xs">Use LLM if:</h3>
+                    <p class="text-[10px] text-slate-400">You need world knowledge, complex reasoning, creativity, or coding support.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: INTERACTIVE PROMPT -->
+        <div class="slide bg-slate-900" data-index="13">
+             <div class="px-6 pt-4 text-center h-full flex flex-col justify-center">
+                <div class="mb-8">
+                    <i class="fas fa-flask text-6xl text-indigo-400 animate-pulse"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-4">Test Your Knowledge</h2>
+                <p class="text-slate-400 text-sm mb-8">
+                    Use the <strong>Model Picker</strong> tool (top right button) to simulate a real-world project requirement and see which model fits best.
+                </p>
+                
+                <button onclick="toggleCalculator(event)" class="interactive-zone px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg shadow-indigo-500/50 hover:scale-105 transition-transform">
+                    Open Model Picker
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: END -->
+        <div class="slide bg-black text-white flex flex-col justify-center items-center text-center p-8" data-index="14">
+            <h2 class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">The Takeaway</h2>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12 text-left">
+                <div class="flex items-start gap-4">
+                    <div class="text-green-400 mt-1">✓</div>
+                    <div class="text-sm text-slate-300"><strong>NLU</strong> is dead for chat, but alive for simple commands.</div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="text-blue-400 mt-1">✓</div>
+                    <div class="text-sm text-slate-300"><strong>LLMs</strong> are the heavy lifters for reasoning.</div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="text-purple-400 mt-1">✓</div>
+                    <div class="text-sm text-slate-300"><strong>SLMs</strong> are the future of private, edge AI.</div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-slate-800 text-white border border-slate-700 rounded-full font-bold hover:bg-slate-700 transition-colors pointer-events-auto">
+                Restart Series ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY (MODEL PICKER) -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <div class="bg-slate-900 rounded-t-3xl p-6 h-[90%] shadow-2xl flex flex-col animate-slide-up cursor-default border-t border-slate-700" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-white"><i class="fas fa-cogs mr-2"></i>Project Specs</h3>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl hover:text-white transition-colors">×</button>
+            </div>
+            
+            <!-- Result Display -->
+            <div class="bg-slate-950 p-4 rounded-2xl mb-4 border border-slate-800 min-h-[100px] flex flex-col justify-center items-center relative overflow-hidden transition-all" id="rec-box">
+                <div class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Recommended Model</div>
+                <div id="rec-result" class="text-2xl font-bold text-slate-300">Select Requirements...</div>
+                <div id="rec-sub" class="text-[10px] text-slate-500 mt-2 text-center px-4">Tap items below to build your use case.</div>
+                
+                <!-- Background glow -->
+                <div id="rec-glow" class="absolute inset-0 bg-blue-500/10 blur-xl opacity-0 transition-opacity"></div>
+            </div>
+
+            <!-- Requirement Buttons -->
+            <div class="flex-1 overflow-y-auto custom-scroll" id="req-list">
+                <div class="grid grid-cols-2 gap-3 pb-20">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            
+            <button onclick="resetReqs()" class="mt-4 w-full py-3 text-red-400 text-sm font-bold border border-red-900/30 bg-red-900/10 rounded-xl hover:bg-red-900/20 transition-colors">Reset Specs</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // --- REQUIREMENTS DATABASE ---
+        // Types: 0=Neutral, 1=NLU, 2=SLM, 3=LLM
+        const requirementsDb = [
+            { id: 'offline', name: "Offline Capable", icon: "✈️", type: 'slm', desc: "Must work without internet" },
+            { id: 'privacy', name: "Strict Privacy", icon: "🔒", type: 'slm', desc: "Data cannot leave device" },
+            { id: 'creative', name: "Creative Writing", icon: "✍️", type: 'llm', desc: "Poems, stories, emails" },
+            { id: 'coding', name: "Complex Coding", icon: "💻", type: 'llm', desc: "Architecting software" },
+            { id: 'command', name: "Simple Commands", icon: "💡", type: 'nlu', desc: "Turn on lights, Set timer" },
+            { id: 'reasoning', name: "Deep Reasoning", icon: "🧠", type: 'llm', desc: "Medical diagnosis, Law" },
+            { id: 'lowcost', name: "Zero Inference Cost", icon: "💰", type: 'slm', desc: "Run on user hardware" },
+            { id: 'speed', name: "Instant Latency", icon: "⚡", type: 'slm', desc: "Real-time voice/robotics" },
+            { id: 'knowledge', name: "World Knowledge", icon: "🌍", type: 'llm', desc: "History, Trivia, Facts" },
+            { id: 'legacy', name: "Legacy System", icon: "💾", type: 'nlu', desc: "Bank menu tree" },
+        ];
+
+        let selectedReqs = new Set();
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initRequirements();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- MODEL PICKER LOGIC ---
+        function toggleCalculator(e) {
+            if(e) { e.preventDefault(); e.stopPropagation(); }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initRequirements() {
+            const list = document.getElementById('req-list').firstElementChild;
+            requirementsDb.forEach(item => {
+                const btn = document.createElement('div');
+                btn.className = 'p-3 bg-slate-800 border border-slate-700 rounded-xl cursor-pointer active:scale-95 transition-all text-left group hover:border-indigo-500';
+                btn.dataset.id = item.id;
+                btn.innerHTML = `
+                    <div class="text-2xl mb-1 group-hover:scale-110 transition-transform origin-left">${item.icon}</div>
+                    <div class="font-bold text-slate-200 text-xs">${item.name}</div>
+                    <div class="text-[9px] text-slate-500 leading-tight mt-1">${item.desc}</div>
+                `;
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleReq(item.id, btn);
+                };
+                list.appendChild(btn);
+            });
+        }
+
+        function toggleReq(id, btn) {
+            if (selectedReqs.has(id)) {
+                selectedReqs.delete(id);
+                btn.classList.remove('bg-indigo-900', 'border-indigo-500');
+                btn.classList.add('bg-slate-800', 'border-slate-700');
+            } else {
+                selectedReqs.add(id);
+                btn.classList.remove('bg-slate-800', 'border-slate-700');
+                btn.classList.add('bg-indigo-900', 'border-indigo-500');
+            }
+            calculateRecommendation();
+        }
+
+        function resetReqs() {
+            selectedReqs.clear();
+            const btns = document.querySelectorAll('#req-list div div'); // Select buttons
+            btns.forEach(btn => {
+                btn.classList.remove('bg-indigo-900', 'border-indigo-500');
+                btn.classList.add('bg-slate-800', 'border-slate-700');
+            });
+            calculateRecommendation();
+        }
+
+        function calculateRecommendation() {
+            const resultTitle = document.getElementById('rec-result');
+            const resultSub = document.getElementById('rec-sub');
+            const resultBox = document.getElementById('rec-box');
+            
+            if (selectedReqs.size === 0) {
+                resultTitle.innerText = "Select Requirements...";
+                resultTitle.className = "text-xl font-bold text-slate-500";
+                resultSub.innerText = "Tap items below to build your use case.";
+                resultBox.style.borderColor = "#1e293b";
+                return;
+            }
+
+            let scores = { nlu: 0, slm: 0, llm: 0 };
+            
+            selectedReqs.forEach(id => {
+                const req = requirementsDb.find(r => r.id === id);
+                if (req.type === 'nlu') scores.nlu += 2;
+                if (req.type === 'slm') scores.slm += 2;
+                if (req.type === 'llm') scores.llm += 2;
+            });
+
+            // Logic Overrides
+            // If creative or deep reasoning is selected, NLU is impossible.
+            if (selectedReqs.has('creative') || selectedReqs.has('reasoning') || selectedReqs.has('knowledge')) {
+                scores.nlu = -10;
+            }
+            // If Privacy or Offline is selected, LLM is heavily penalized (unless local llm, but we treat standard LLM as cloud)
+            if (selectedReqs.has('offline') || selectedReqs.has('privacy')) {
+                scores.llm -= 5;
+                scores.slm += 3; // Boost SLM
+            }
+
+            // Determine Winner
+            let winner = 'llm';
+            let maxScore = scores.llm;
+            
+            if (scores.slm > maxScore) { maxScore = scores.slm; winner = 'slm'; }
+            if (scores.nlu > maxScore) { maxScore = scores.nlu; winner = 'nlu'; }
+
+            // Render
+            if (winner === 'slm') {
+                resultTitle.innerText = "Use an SLM";
+                resultTitle.className = "text-2xl font-bold text-purple-400";
+                resultSub.innerText = "Phi-3, Gemma, or Llama 8B. Perfect balance of privacy, efficiency, and capability.";
+                resultBox.style.borderColor = "#a855f7";
+            } else if (winner === 'llm') {
+                resultTitle.innerText = "Use an LLM";
+                resultTitle.className = "text-2xl font-bold text-blue-400";
+                resultSub.innerText = "GPT-4, Claude 3.5. You need raw power, world knowledge, and reasoning.";
+                resultBox.style.borderColor = "#3b82f6";
+            } else {
+                resultTitle.innerText = "Use NLU / Regex";
+                resultTitle.className = "text-2xl font-bold text-green-400";
+                resultSub.innerText = "Don't overengineer it. A simple Intent Classifier or Rule-based system is fastest.";
+                resultBox.style.borderColor = "#4ade80";
+            }
+        }
+    </script>
+</body>
+</html>
