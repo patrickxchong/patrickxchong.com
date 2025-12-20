@@ -16,31 +16,38 @@ A collection of small personal projects, experiments, and utilities to make life
 
 ## 🛠️ Web Tools
 
-- **WhatsApp Link Generator**: Generate cross-platform WhatsApp links or open a number/message directly in WhatsApp Web without saving the contact. [🚀 Launch App](/labs/whatsapp-link-generator) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/blob/main/src/labs/whatsapp-link-generator.njk)
+- **WhatsApp Link Generator**: [🚀 Launch App](/labs/whatsapp-link-generator) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/blob/main/src/labs/whatsapp-link-generator.njk)
 
-  > 🔒 **Privacy Guaranteed:** Usage is not tracked.
+  - Generate cross-platform WhatsApp links or open a number/message directly in WhatsApp Web without saving the contact.
 
-- **RapidPlan - MyRapid Trip Planner**: Check trip duration and cost of LRT, MRT, and BRT trips in the Klang Valley. [🚀 Launch App](https://rapidplan.patrickxchong.com/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
+- **RapidPlan - MyRapid Trip Planner**: [🚀 Launch App](https://rapidplan.patrickxchong.com/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
 
-- **Hide Discord Sidebar**: A browser extension to toggle visibility of Discord servers and channels. [🌐 Chrome Extension](https://chrome.google.com/webstore/detail/hide-discord-sidebar/kaaohmdnmbdagpnenakakpkinddjmenp) | [🦊 Firefox Extension](https://addons.mozilla.org/addon/hide-discord-sidebar/) | [💻 View Code](https://github.com/patrickxchong/hide-discord-sidebar)
+  - Check trip duration and cost of LRT, MRT, and BRT trips in the Klang Valley.
 
-- **Convert Image to Text (OCR)**: Accepts direct image pasting, drag & drop, and file uploads. [🚀 Launch App](/labs/convert-image-to-text/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/convert-image-to-text)
+- **Hide Discord Sidebar**: [🌐 Chrome Extension](https://chrome.google.com/webstore/detail/hide-discord-sidebar/kaaohmdnmbdagpnenakakpkinddjmenp) | [🦊 Firefox Extension](https://addons.mozilla.org/addon/hide-discord-sidebar/) | [💻 View Code](https://github.com/patrickxchong/hide-discord-sidebar)
 
-  > 🔒 **Privacy Guaranteed:** Images are only processed in the browser and never sent to an external server.
+  - A browser extension to toggle visibility of Discord servers and channels.
 
-- **QR Reader**: Scan QR codes via paste or upload. [🚀 Launch App](/labs/qr/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/qr)
+- **Convert Image to Text (OCR)**: [🚀 Launch App](/labs/convert-image-to-text/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/convert-image-to-text)
 
-  > 🔒 **Privacy Guaranteed:** Images are only processed in the browser and never sent to an external server.
+  - Accepts direct image pasting, drag & drop, and file uploads. Images are only processed in the browser and never sent to an external server. (🔒 **Privacy Guaranteed!**)
 
-- **Image Transform**: Quickly rotate and flip images directly in your browser. [🚀 Launch App](/labs/image-transform/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/image-transform)
+- **QR Reader**: [🚀 Launch App](/labs/qr/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/qr)
 
-  > 🔒 **Privacy Guaranteed:** Images are only processed in the browser and never sent to an external server.
+  - Scan QR codes via paste or upload. Images are only processed in the browser and never sent to an external server. (🔒 **Privacy Guaranteed!**)
 
-- **Tailwind Compiler**: A tool to compile HTML snippets with Tailwind.CSS classes into minified CSS. [🚀 Launch App](https://labs.patrickxchong.com/tailwind-compiler)
+- **Image Transform**: [🚀 Launch App](/labs/image-transform/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/image-transform)
 
-- **Flood Risk Map**: Elevation tiles to assess if an area is flood-prone. [🚀 Launch App](/labs/map/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
+  - Quickly rotate and flip images directly in your browser. (🔒 **Privacy Guaranteed!**)
 
-- **COVID Dashboard (Archive)**: Historical view of new cases and vaccinations by state. [📊 View Data](https://datastudio.google.com/s/s8gdYST88Js)
+- **Tailwind Compiler**: [🚀 Launch App](https://labs.patrickxchong.com/tailwind-compiler)
+  - A tool to compile HTML snippets with Tailwind.CSS classes into minified CSS. Data is processed on Vercel.
+
+- **Flood Risk Map**: [🚀 Launch App](/labs/map/) | [💻 View Code](https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map)
+  - Elevation tiles to assess if an area is flood-prone.
+
+- **COVID Dashboard (Archive)**: [📊 View Dashboard](https://datastudio.google.com/s/s8gdYST88Js)
+  - Historical view of new cases and vaccinations by state.
 
 ---
 
