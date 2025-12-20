@@ -94,6 +94,30 @@ Make it content heavy with at least 10 pages.
 
 </details>
 
+#### ✈️ General Knowledge
+
+- [NLU vs SLM vs LLM](/labs/stories/knowledge-nlu-slm-llm.html)
+- [NLU vs SLM vs LLM V2](/labs/stories/knowledge-nlu-slm-llm-v2.html)
+
+<details> 
+<summary><strong>📝 View Prompt Used</strong></summary>
+```txt
+Using the uploaded file as a template, populate this with knowledge on LLM, SLM, NLU, how they are similar, different, pros and cons, how they are used in real life.
+Make it content heavy with at least 15 pages.
+```
+</details>
+
+- [Investment Summary](/labs/stories/knowledge-investment-summary.html)
+<details> 
+  <summary><strong>📝 View Prompt Used</strong></summary>
+
+```txt
+Using the uploaded file as a template, populate this with an investment report of the US and global markets in the past week, and the general sentiment and potential market moving factors in the upcoming week.
+Make it content heavy with at least 15 pages.
+```
+
+</details>
+
 #### 📖 Bible Studies
 
 - [Joshua](/labs/stories/biblestudy-joshua.html)
@@ -111,21 +135,5 @@ Make it content heavy with at least 10 pages.
 Include many quotations from the text, while expositing the meaning and application.
 Add reflection questions per page to make it more engaging
 ```
-</details>
-
-
-#### ✈️ General Knowledge
-
-- [NLU vs SLM vs LLM](/labs/stories/knowledge-nlu-slm-llm.html)
-- [NLU vs SLM vs LLM V2](/labs/stories/knowledge-nlu-slm-llm.html)
-
-<details> 
-<summary><strong>📝 View Prompt Used</strong></summary>
-
-```txt
-Using the uploaded file as a template, populate this with knowledge on LLM, SLM, NLU, how they are similar, different, pros and cons, how they are used in real life.
-Make it content heavy with at least 15 pages.
-```
-
 
 </details>

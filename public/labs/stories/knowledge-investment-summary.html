@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Market Pulse: Dec 20, 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE LAYOUT --- */
+        body {
+            background-color: #111827; /* Darker background for finance feel */
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            overflow: hidden; 
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f8fafc;
+            overflow: hidden;
+            touch-action: manipulation; 
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 414px; 
+                height: 850px;
+                border-radius: 24px;
+                box-shadow: 0 0 0 12px #333, 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* --- HEADER --- */
+        .story-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 8px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            pointer-events: none; 
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            height: 3px;
+        }
+        .progress-segment {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #fff;
+            width: 0%;
+            height: 100%;
+            display: block;
+            transition: width 0.1s linear;
+        }
+        .progress-fill.completed { width: 100%; }
+        .progress-fill.active { width: 100%; }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; 
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
+        /* --- INTERACTIVE ZONES --- */
+        .interactive-zone {
+            position: relative;
+            z-index: 30; 
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .custom-scroll {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- UTILITIES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .bar-bg {
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+        }
+        
+        .ticker-pill {
+            font-family: 'Courier New', monospace;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* Finance Colors */
+        .text-up { color: #16a34a; }
+        .bg-up { background-color: #16a34a; }
+        .text-down { color: #dc2626; }
+        .bg-down { background-color: #dc2626; }
+    </style>
+</head>
+<body>
+
+    <div class="story-container" id="app">
+        
+        <!-- HEADER -->
+        <div class="story-header">
+            <div class="progress-container" id="progress-track">
+                <!-- Segments injected via JS -->
+            </div>
+            <div class="flex justify-between items-center mt-3 px-2">
+                <div class="text-[10px] font-bold text-white bg-red-600 px-2 py-1 rounded shadow-sm animate-pulse">LIVE</div>
+                <button onclick="toggleCalculator(event)" class="interactive-zone bg-slate-900/80 backdrop-blur text-white border border-slate-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg active:scale-95 transition-transform pointer-events-auto flex items-center gap-1 z-50">
+                    <span>📊</span> Portfolio Check
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active bg-slate-900 text-white" data-index="0">
+            <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 bg-blue-500 blur-3xl opacity-20 rounded-full"></div>
+                    <div class="text-7xl animate-float relative z-10">📈</div>
+                    <div class="text-4xl absolute -bottom-2 -right-4 animate-bounce delay-700">🐻</div>
+                </div>
+                
+                <h1 class="text-4xl font-bold mb-2">Market<br>Pulse</h1>
+                <p class="text-slate-400 text-sm mb-6 tracking-wide uppercase">Week of Dec 20, 2025</p>
+                
+                <div class="glass-card px-5 py-4 rounded-xl text-left w-full max-w-xs interactive-zone active:scale-95 transition-transform border-l-4 border-green-500" onclick="goToSlide(1, event)">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs text-slate-500 font-bold uppercase">S&P 500</span>
+                        <span class="text-xs font-bold text-green-600">+0.88% Today</span>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800">6,834.50</div>
+                    <div class="mt-2 text-[10px] text-slate-500 flex items-center gap-1">
+                        Records hit, then retreated. <span class="font-bold text-blue-600">Tap to Start →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: EXECUTIVE SUMMARY -->
+        <div class="slide bg-white" data-index="1">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">The Santa Pause?</h2>
+                <p class="text-slate-500 text-sm">Records eclipsed, but fatigue sets in.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">🎅</span>
+                        <div>
+                            <h3 class="text-slate-900 font-bold text-sm">Mixed Signals</h3>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                The Dow and S&P 500 hit fresh records mid-week before retreating. The week ended with a "Triple Witching" volatility spike, leaving the S&P down <strong>0.6%</strong> for the week despite Friday's rally.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">✂️</span>
+                        <div>
+                            <h3 class="text-blue-900 font-bold text-sm">Fed Cut #3</h3>
+                            <p class="text-xs text-blue-800 mt-1 leading-relaxed">
+                                As expected, the Fed cut rates by <strong>25 bps</strong> to 3.50%-3.75%. However, 3 members dissented—the first major split in years—signaling the "easy cuts" are over.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="bg-red-50 p-5 rounded-2xl border border-red-100">
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">🛢️</span>
+                        <div>
+                            <h3 class="text-red-900 font-bold text-sm">Oil Slick</h3>
+                            <p class="text-xs text-red-800 mt-1 leading-relaxed">
+                                WTI Crude crashed <strong>4%</strong> to ~$56. Supply glut fears are dominating despite geopolitical noise.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: US INDICES -->
+        <div class="slide bg-slate-50" data-index="2">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-1">US Indices</h2>
+                <p class="text-slate-500 text-sm">Friday Close (Dec 19)</p>
+            </div>
+            <div class="flex-1 px-5 space-y-3 pb-24 overflow-y-auto custom-scroll">
+                
+                <!-- DOW -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="text-xs text-slate-400 font-bold">DOW JONES</div>
+                            <div class="text-2xl font-bold text-slate-800">48,135</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-green-600">+0.38%</div>
+                            <div class="text-[10px] text-slate-400">Weekly: +1.1%</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-[10px] text-slate-500">Value stocks rotated back into favor.</div>
+                </div>
+
+                <!-- S&P 500 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="text-xs text-slate-400 font-bold">S&P 500</div>
+                            <div class="text-2xl font-bold text-slate-800">6,834</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-green-600">+0.88%</div>
+                            <div class="text-[10px] text-red-400">Weekly: -0.6%</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-[10px] text-slate-500">Tech drag weighed on the weekly performance.</div>
+                </div>
+
+                <!-- NASDAQ -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="text-xs text-slate-400 font-bold">NASDAQ</div>
+                            <div class="text-2xl font-bold text-slate-800">23,308</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-green-600">+1.31%</div>
+                            <div class="text-[10px] text-red-400">Weekly: -1.6%</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-[10px] text-slate-500">Friday rebound led by Oracle & Micron.</div>
+                </div>
+
+                <!-- RUSSELL -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="text-xs text-slate-400 font-bold">RUSSELL 2000</div>
+                            <div class="text-2xl font-bold text-slate-800">2,529</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-green-600">+0.86%</div>
+                            <div class="text-[10px] text-green-600">Weekly: +1.2%</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-[10px] text-slate-500">Small caps hit new highs earlier in the week.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 4: THE FED -->
+        <div class="slide bg-blue-50" data-index="3">
+            <div class="px-6 pt-10">
+                <h2 class="text-3xl font-bold text-blue-900 mb-2">Fed Watch</h2>
+                <p class="text-blue-600 text-sm">Rates: 3.50% - 3.75%</p>
+            </div>
+            <div class="flex-1 flex flex-col justify-center px-6 gap-2">
+                
+                <div class="relative h-64 w-full mt-2">
+                    <!-- Central Hub -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-full shadow-lg border-4 border-blue-200 z-20 text-center w-40 h-40 flex flex-col justify-center">
+                        <div class="text-3xl mb-1">🏦</div>
+                        <div class="font-bold text-blue-900 text-2xl">25 bps</div>
+                        <div class="text-[10px] text-blue-500 uppercase font-bold">Cut Confirmed</div>
+                    </div>
+
+                    <!-- Orbital 1 -->
+                    <div class="absolute top-0 left-0 bg-white p-3 rounded-xl shadow-sm border border-blue-100 w-32 z-10 animate-float">
+                        <div class="text-xs text-slate-400 uppercase font-bold">Dissenters</div>
+                        <div class="font-bold text-slate-800">3 Votes</div>
+                        <div class="text-[9px] text-red-500">"Pause now!"</div>
+                    </div>
+
+                    <!-- Orbital 2 -->
+                    <div class="absolute bottom-0 right-0 bg-white p-3 rounded-xl shadow-sm border border-blue-100 w-32 z-10 animate-float" style="animation-delay: 1s;">
+                        <div class="text-xs text-slate-400 uppercase font-bold">Next Meeting</div>
+                        <div class="font-bold text-slate-800">Jan 28</div>
+                        <div class="text-[9px] text-green-500">50% odds of hold</div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-100 p-4 rounded-xl border-l-4 border-blue-600 text-sm text-blue-900 mt-4">
+                    <strong>The Pivot is Over?</strong> With unemployment steady at 4.2% and inflation sticky at 2.6%, the Fed signaled this might be the last cut until mid-2026.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: WINNERS -->
+        <div class="slide bg-white" data-index="4">
+            <div class="px-6 pt-10 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Winners</h2>
+                    <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-1 rounded">Weekly</span>
+                </div>
+                <p class="text-slate-500 text-sm">Tech rebounds, Defense surges.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bg-slate-50 p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-slate-100">
+                    <div class="text-2xl font-bold text-slate-300">01</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-800 ticker-pill">ORCL</span>
+                            <span class="font-bold text-green-600 text-sm">+6.6%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">TikTok JV deal rumors fueled a massive Friday rally.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-slate-100">
+                    <div class="text-2xl font-bold text-slate-300">02</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-800 ticker-pill">MU</span>
+                            <span class="font-bold text-green-600 text-sm">+17.0%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Micron earnings blew past estimates. AI memory demand is insatiable.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-slate-100">
+                    <div class="text-2xl font-bold text-slate-300">03</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-800 ticker-pill">RTX</span>
+                            <span class="font-bold text-green-600 text-sm">+4.2%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Defense stocks rose on geopolitical tension in the Arctic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: LOSERS -->
+        <div class="slide bg-white" data-index="5">
+            <div class="px-6 pt-10 pb-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-3xl font-bold text-slate-800">Losers</h2>
+                    <span class="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-1 rounded">Weekly</span>
+                </div>
+                <p class="text-slate-500 text-sm">Retail and Energy get crushed.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="bg-red-50 p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-red-100">
+                    <div class="text-2xl font-bold text-red-200">01</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-800 ticker-pill">NKE</span>
+                            <span class="font-bold text-red-600 text-sm">-10.5%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Warned of China sales decline. The turnaround is stalled.</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-red-100">
+                    <div class="text-2xl font-bold text-red-200">02</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-bold text-slate-800 ticker-pill">XOM</span>
+                            <span class="font-bold text-red-600 text-sm">-3.8%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Oil's drop to $56 hammered the entire energy sector.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: GLOBAL - JAPAN -->
+        <div class="slide bg-red-50" data-index="6">
+            <div class="px-6 pt-10 pb-6">
+                <div class="flex items-center gap-2">
+                    <span class="text-4xl">🇯🇵</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Japan</h2>
+                </div>
+                <p class="text-slate-500 text-sm mt-2">The star of 2025.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-4">
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-red-600">
+                    <h3 class="font-bold text-slate-800 text-lg">Nikkei 225</h3>
+                    <div class="text-3xl font-bold text-red-600 mt-1">42,500</div>
+                    <div class="text-sm font-bold text-green-600 mt-1">+24% YTD</div>
+                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
+                        Despite the BOJ hiking rates to 0.75% this week, Japanese equities remain the global leader for 2025.
+                    </p>
+                </div>
+                
+                <div class="bg-white/50 p-4 rounded-xl">
+                    <div class="flex justify-between text-xs text-slate-600 font-bold mb-1">
+                        <span>USD/JPY</span>
+                        <span>138.50</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill bg-red-500" style="width: 60%"></div></div>
+                    <p class="text-[10px] text-slate-400 mt-1">Yen strengthens as rate gap narrows.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: COMMODITIES -->
+        <div class="slide bg-stone-100" data-index="7">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Commodities</h2>
+                <p class="text-slate-500 text-sm">A tale of two assets.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-4 overflow-y-auto custom-scroll pb-24">
+                
+                <!-- GOLD -->
+                <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-200 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-bold text-yellow-600 uppercase">Gold (Spot)</div>
+                            <div class="text-3xl font-bold text-slate-800">$4,370</div>
+                        </div>
+                        <span class="text-3xl">🥇</span>
+                    </div>
+                    <div class="mt-2 text-sm font-bold text-green-600">+0.2% Today</div>
+                    <p class="text-[10px] text-slate-500 mt-2">
+                        Near all-time highs ($4,398). Safe-haven demand remains robust amid geopolitical friction.
+                    </p>
+                </div>
+
+                <!-- OIL -->
+                <div class="bg-slate-800 text-white p-5 rounded-2xl border border-slate-700 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase">Crude Oil (WTI)</div>
+                            <div class="text-3xl font-bold text-white">$56.65</div>
+                        </div>
+                        <span class="text-3xl">🛢️</span>
+                    </div>
+                    <div class="mt-2 text-sm font-bold text-red-400">-4.0% Weekly</div>
+                    <p class="text-[10px] text-slate-400 mt-2">
+                        Oversupply concerns outweigh Middle East tensions. "Drill, baby, drill" policies are flooding the market.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 9: CRYPTO -->
+        <div class="slide bg-indigo-950 text-white" data-index="8">
+            <div class="px-6 pt-10 pb-6">
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl">₿</span>
+                    <h2 class="text-3xl font-bold">Crypto</h2>
+                </div>
+                <p class="text-indigo-300 text-sm mt-1">The $100k dream lives on.</p>
+            </div>
+            
+            <div class="flex-1 px-6 space-y-6">
+                <div class="text-center py-8">
+                    <div class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-200 animate-pulse">
+                        $88,800
+                    </div>
+                    <p class="text-xs text-indigo-300 mt-2 uppercase tracking-widest">Bitcoin Price</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-800">
+                        <div class="text-xs text-indigo-400 mb-1">Weekly Low</div>
+                        <div class="text-lg font-bold text-red-300">$84,600</div>
+                    </div>
+                    <div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-800">
+                        <div class="text-xs text-indigo-400 mb-1">Weekly High</div>
+                        <div class="text-lg font-bold text-green-300">$90,300</div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-900 p-4 rounded-xl text-xs text-indigo-200 leading-relaxed border-l-4 border-orange-500">
+                    <strong>Institutional Flow:</strong> Spot ETF inflows resumed Thursday after a 3-day outflow streak. The "buy the dip" crowd defended the $85k support vigorously.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: ECONOMIC CALENDAR -->
+        <div class="slide bg-white" data-index="9">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Next Week</h2>
+                <p class="text-slate-500 text-sm">Dec 22 - Dec 26</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3 overflow-y-auto custom-scroll pb-24">
+                
+                <div class="flex gap-4 items-center p-3 border-b border-slate-100">
+                    <div class="bg-slate-100 px-3 py-2 rounded-lg text-center min-w-[60px]">
+                        <div class="text-xs font-bold text-slate-500">TUE</div>
+                        <div class="text-lg font-bold text-slate-800">23</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">PCE Inflation Data</div>
+                        <div class="text-[10px] text-slate-500">The Fed's favorite gauge. Exp: 2.5% YoY.</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-center p-3 border-b border-slate-100">
+                    <div class="bg-slate-100 px-3 py-2 rounded-lg text-center min-w-[60px]">
+                        <div class="text-xs font-bold text-slate-500">WED</div>
+                        <div class="text-lg font-bold text-slate-800">24</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">Q3 GDP (Final)</div>
+                        <div class="text-[10px] text-slate-500">Expected revised down to 1.9%.</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-center p-3 border-b border-slate-100 opacity-50">
+                    <div class="bg-slate-100 px-3 py-2 rounded-lg text-center min-w-[60px]">
+                        <div class="text-xs font-bold text-slate-500">THU</div>
+                        <div class="text-lg font-bold text-slate-800">25</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">Market Closed</div>
+                        <div class="text-[10px] text-slate-500">Christmas Day 🎄</div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                    <h4 class="font-bold text-yellow-800 text-sm mb-1">Trading Note</h4>
+                    <p class="text-xs text-yellow-700">Expect extremely low volume. Algorithms will dominate price action. Flash crashes possible.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: SENTIMENT -->
+        <div class="slide bg-slate-900 text-white" data-index="10">
+            <div class="px-6 pt-10 pb-6 text-center">
+                <h2 class="text-3xl font-bold mb-2">Fear & Greed</h2>
+                <div class="relative w-64 h-32 mx-auto mt-8 overflow-hidden">
+                    <!-- Gauge Semi Circle -->
+                    <div class="absolute bottom-0 left-0 w-full h-full bg-slate-700 rounded-t-full"></div>
+                    <div class="absolute bottom-0 left-0 w-full h-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500 rounded-t-full opacity-80"></div>
+                    <!-- Needle -->
+                    <div class="absolute bottom-0 left-1/2 w-1 h-28 bg-white origin-bottom transform -translate-x-1/2 rotate-12 transition-transform duration-1000" id="gauge-needle"></div>
+                    <div class="absolute bottom-0 left-1/2 w-4 h-4 bg-white rounded-full transform -translate-x-1/2 translate-y-1/2"></div>
+                </div>
+                <div class="text-5xl font-bold mt-4">64</div>
+                <div class="text-xl font-bold text-green-400 uppercase tracking-widest mt-1">Greed</div>
+            </div>
+            <div class="px-8 text-center text-slate-400 text-sm">
+                <p>Down from "Extreme Greed" (78) last month.</p>
+                <p class="mt-4 text-xs italic">"Be fearful when others are greedy."</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: STRATEGY -->
+        <div class="slide bg-green-50" data-index="11">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-green-900 mb-2">The Playbook</h2>
+                <p class="text-green-700 text-sm">Tactics for 2026.</p>
+            </div>
+            <div class="flex-1 px-6 space-y-4 overflow-y-auto custom-scroll pb-20">
+                
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-600">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-800">Rotation is Real</h3>
+                        <span class="text-xl">🔄</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        Tech is crowded. Smart money is moving into <strong>Healthcare</strong> and <strong>Industrials</strong> which benefit from the "re-shoring" trend and lower rates.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-blue-600">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-800">Bond Laddering</h3>
+                        <span class="text-xl">🪜</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        With the 10Y yield at 4.15%, lock in yields now. The Fed is slowing down, but rates will likely settle lower (3.0%) by 2027.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-purple-600">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-800">Emerging Markets</h3>
+                        <span class="text-xl">🌏</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        If the Dollar weakens in 2026 (as expected), Emerging Markets (ex-China) could outperform US Large Caps. Look at India & Vietnam.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: CHART OF WEEK -->
+        <div class="slide bg-white" data-index="12">
+            <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Chart of the Week</h2>
+                <p class="text-slate-500 text-sm">VIX (Volatility) Awakening</p>
+            </div>
+            <div class="flex-1 flex flex-col justify-center px-4">
+                <!-- CSS Chart Mockup -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 h-64 relative overflow-hidden flex items-end gap-1">
+                    <!-- Bars -->
+                    <div class="w-1/6 bg-slate-300 rounded-t h-[20%]"></div>
+                    <div class="w-1/6 bg-slate-300 rounded-t h-[25%]"></div>
+                    <div class="w-1/6 bg-slate-300 rounded-t h-[22%]"></div>
+                    <div class="w-1/6 bg-slate-300 rounded-t h-[30%]"></div>
+                    <div class="w-1/6 bg-red-400 rounded-t h-[60%] animate-pulse"></div> <!-- Friday Spike -->
+                    
+                    <div class="absolute top-2 right-2 text-right">
+                        <div class="text-2xl font-bold text-red-500">16.86</div>
+                        <div class="text-[10px] text-slate-400">VIX Index</div>
+                    </div>
+                </div>
+                <div class="mt-4 text-xs text-slate-600 leading-relaxed px-2">
+                    Volatility spiked to its highest level since October on "Triple Witching" Friday. This suggests options traders are paying up for protection heading into 2026.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: ANALYST RATINGS -->
+        <div class="slide bg-stone-50" data-index="13">
+             <div class="px-6 pt-10 pb-4">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Analyst Calls</h2>
+                <p class="text-slate-500 text-sm">Major moves this week.</p>
+            </div>
+            <div class="flex-1 px-4 space-y-3">
+                <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm">
+                    <div class="font-bold text-red-500 text-sm w-12 text-center">SELL</div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">Costco (COST)</div>
+                        <div class="text-[10px] text-slate-500">Downgraded at Roth Capital. "Growth slowing."</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm">
+                    <div class="font-bold text-green-500 text-sm w-12 text-center">BUY</div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">IMAX Corp</div>
+                        <div class="text-[10px] text-slate-500">Upgraded at JPMorgan. "Strong 2026 movie slate."</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm">
+                    <div class="font-bold text-green-500 text-sm w-12 text-center">BUY</div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">Hershey (HSY)</div>
+                        <div class="text-[10px] text-slate-500">Upgraded at Morgan Stanley. "Turnaround play."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: SUMMARY -->
+        <div class="slide bg-slate-900 text-white flex flex-col justify-center items-center text-center p-8" data-index="14">
+            <h2 class="text-3xl font-bold mb-4">Summary</h2>
+            
+            <div class="space-y-4 w-full max-w-xs mb-12">
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">📉</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Mixed Week</strong>
+                        Records hit, then lost. S&P 500 flat/down for week.
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">🏦</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">Fed Slows Down</strong>
+                        Rates cut to 3.5%, but future cuts in doubt.
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-4 text-left">
+                    <div class="text-2xl">🤖</div>
+                    <div class="text-xs text-slate-300">
+                        <strong class="block text-white text-sm">AI Saves the Day</strong>
+                        Micron & Oracle earnings prevented a larger selloff.
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToSlide(0, event)" class="interactive-zone px-8 py-3 bg-green-500 text-green-950 rounded-full font-bold shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+                Replay Report ↺
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CALCULATOR OVERLAY -->
+    <div id="calculator-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex-col justify-end interactive-zone" onclick="toggleCalculator(event)">
+        <!-- Stop Propagation on inner card so clicking it doesn't close it -->
+        <div class="bg-white rounded-t-3xl p-6 h-[75%] shadow-2xl flex flex-col animate-slide-up cursor-default" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Portfolio Sizing</h3>
+                <button onclick="toggleCalculator(event)" class="text-slate-400 p-2 text-2xl font-bold active:scale-90 transition-transform">×</button>
+            </div>
+            
+            <!-- Progress Bars -->
+            <div class="bg-slate-50 p-4 rounded-2xl mb-4 space-y-3 shadow-inner">
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+                        <span>Total Allocation</span>
+                        <span><span id="calc-total">0</span>/100%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-3"><div id="bar-total" class="bg-blue-500 h-3 rounded-full w-0 transition-all duration-300"></div></div>
+                </div>
+                
+                <div class="flex justify-between items-center mt-2">
+                     <span class="text-xs font-bold text-slate-500">Risk Profile:</span>
+                     <span id="risk-label" class="text-xs font-bold px-2 py-1 rounded bg-slate-200 text-slate-600">Empty</span>
+                </div>
+            </div>
+
+            <!-- Asset List -->
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1" id="calc-list">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button onclick="resetCalc()" class="mt-4 w-full py-3 text-red-500 text-sm font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">Reset Portfolio</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        const assetDb = [
+            { name: "US Tech Growth (High Risk)", risk: 3, val: 10, icon: "🚀" },
+            { name: "S&P 500 ETF (Med Risk)", risk: 2, val: 10, icon: "🇺🇸" },
+            { name: "Dividend Aristocrats (Low Risk)", risk: 1, val: 10, icon: "💰" },
+            { name: "Int'l Emerging Mkts (High Risk)", risk: 3, val: 10, icon: "🌏" },
+            { name: "Bonds / Treasuries (Safe)", risk: 0, val: 10, icon: "📜" },
+            { name: "Gold / Commodities (Hedge)", risk: 1, val: 10, icon: "🥇" },
+            { name: "Crypto (Extreme Risk)", risk: 4, val: 10, icon: "₿" },
+            { name: "Cash (Zero Risk)", risk: 0, val: 10, icon: "💵" }
+        ];
+        
+        let portfolio = [];
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgress();
+            initCalculator();
+            
+            // Global Click Handler
+            const app = document.getElementById('app');
+            app.addEventListener('click', handleGlobalClick);
+            
+            // Key Navigation
+            document.addEventListener('keydown', handleKey);
+        });
+
+        // --- GLOBAL NAVIGATION HANDLER ---
+        function handleGlobalClick(e) {
+            if (e.target.closest('.interactive-zone') || e.target.closest('button')) {
+                return; 
+            }
+
+            const appWidth = document.getElementById('app').offsetWidth;
+            const rect = document.getElementById('app').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX < appWidth * 0.3) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        // --- PROGRESS & SLIDES ---
+        function initProgress() {
+            const container = document.getElementById('progress-track');
+            container.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                fill.id = `fill-${i}`;
+                seg.appendChild(fill);
+                container.appendChild(seg);
+            }
+            updateProgress(0);
+        }
+
+        function updateProgress(idx) {
+            for(let i=0; i<totalSlides; i++) {
+                const el = document.getElementById(`fill-${i}`);
+                if(i < idx) el.classList.add('completed');
+                else el.classList.remove('completed');
+                
+                if(i === idx) el.classList.add('active'); 
+                else el.classList.remove('active');
+            }
+        }
+
+        function showSlide(idx) {
+            if(idx < 0) idx = 0;
+            if(idx >= totalSlides) idx = totalSlides - 1;
+            
+            currentSlide = idx;
+            
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            updateProgress(idx);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        
+        function goToSlide(idx, e) {
+            if(e) e.stopPropagation();
+            showSlide(idx);
+        }
+
+        function handleKey(e) {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        }
+
+        // --- INTERACTIVITY ---
+        function toggleCalculator(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const el = document.getElementById('calculator-overlay');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function initCalculator() {
+            const list = document.getElementById('calc-list');
+            assetDb.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'flex justify-between items-center p-3 bg-white border border-slate-100 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-transform mb-2';
+                row.innerHTML = `
+                    <div class="flex items-center gap-3 pointer-events-none">
+                        <span class="text-xl">${item.icon}</span>
+                        <div class="text-sm font-bold text-slate-700">${item.name}</div>
+                    </div>
+                    <div class="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded pointer-events-none">+ 10%</div>
+                `;
+                row.onclick = (e) => {
+                    e.stopPropagation(); 
+                    addToCalc(item);
+                };
+                list.appendChild(row);
+            });
+        }
+
+        function addToCalc(item) {
+            const currentTotal = portfolio.reduce((acc, curr) => acc + curr.val, 0);
+            if (currentTotal >= 100) return; // Max 100%
+
+            portfolio.push(item);
+            renderCalc();
+        }
+
+        function resetCalc() {
+            portfolio = [];
+            renderCalc();
+        }
+
+        function renderCalc() {
+            const total = portfolio.reduce((acc, curr) => acc + curr.val, 0);
+            
+            document.getElementById('calc-total').innerText = total;
+            const barTotal = document.getElementById('bar-total');
+            barTotal.style.width = total + '%';
+
+            if(total >= 100) barTotal.classList.replace('bg-blue-500', 'bg-green-500');
+            else barTotal.classList.replace('bg-green-500', 'bg-blue-500');
+
+            // Risk Calc
+            let riskScore = 0;
+            if (portfolio.length > 0) {
+                const totalRisk = portfolio.reduce((acc, curr) => acc + (curr.risk * curr.val), 0);
+                riskScore = totalRisk / total;
+            }
+
+            const riskLabel = document.getElementById('risk-label');
+            if (portfolio.length === 0) {
+                riskLabel.innerText = "Empty";
+                riskLabel.className = "text-xs font-bold px-2 py-1 rounded bg-slate-200 text-slate-600";
+            } else if (riskScore < 1.5) {
+                riskLabel.innerText = "Conservative 🛡️";
+                riskLabel.className = "text-xs font-bold px-2 py-1 rounded bg-green-100 text-green-700";
+            } else if (riskScore < 2.5) {
+                riskLabel.innerText = "Balanced ⚖️";
+                riskLabel.className = "text-xs font-bold px-2 py-1 rounded bg-blue-100 text-blue-700";
+            } else {
+                riskLabel.innerText = "Aggressive 🔥";
+                riskLabel.className = "text-xs font-bold px-2 py-1 rounded bg-red-100 text-red-700";
+            }
+        }
+    </script>
+</body>
+</html>
