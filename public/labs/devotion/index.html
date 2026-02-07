@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Devotional Directory</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Playfair Display", "serif"],
+            },
+            colors: {
+              stone: {
+                50: "#fafaf9",
+                100: "#f5f5f4",
+                200: "#e7e5e4",
+                800: "#292524",
+                900: "#1c1917",
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-stone-50 min-h-screen text-stone-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 flex flex-col"
+  >
+    <nav
+      class="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-stone-200"
+    >
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center py-4 gap-4"
+        >
+          <div class="flex items-center self-start md:self-auto">
+            <span
+              class="text-2xl font-serif font-bold text-stone-900 tracking-tight"
+              >Daily<span class="text-indigo-600">Walk</span></span
+            >
+          </div>
+
+          <div class="flex flex-col sm:flex-row w-full md:w-auto gap-3">
+            <div class="relative min-w-[140px]">
+              <select
+                id="bookFilter"
+                class="appearance-none block w-full pl-3 pr-10 py-2 border border-stone-200 rounded-lg bg-stone-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-shadow cursor-pointer"
+              >
+                <option value="">All Books</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+
+            <div class="relative w-full sm:w-64 group">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <svg
+                  class="h-5 w-5 text-stone-400 group-focus-within:text-indigo-500 transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="searchInput"
+                class="block w-full pl-10 pr-3 py-2 border border-stone-200 rounded-lg bg-stone-50 placeholder-stone-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all shadow-sm"
+                placeholder="Search topics..."
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-1">
+      <div
+        id="loading"
+        class="flex flex-col items-center justify-center py-20 space-y-4"
+      >
+        <div
+          class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"
+        ></div>
+        <p class="text-stone-500 font-serif italic text-lg">
+          Preparing the word...
+        </p>
+      </div>
+
+      <section id="heroSection" class="hidden animate-fade-in">
+        <div
+          class="relative rounded-2xl overflow-hidden bg-white shadow-xl border border-stone-100"
+        >
+          <div
+            class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-indigo-50 rounded-full blur-3xl opacity-50"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-stone-100 rounded-full blur-3xl opacity-50"
+          ></div>
+
+          <div
+            class="relative px-6 py-10 sm:px-10 sm:py-12 md:flex md:items-center md:justify-between"
+          >
+            <div class="mt-0 md:w-1/3 flex justify-center md:justify-end">
+              <div
+                class="bg-stone-50 p-6 rounded-xl border border-stone-200 text-center w-full max-w-xs transform rotate-1 transition hover:rotate-0 duration-300"
+              >
+                <span
+                  id="heroPassage"
+                  class="block text-3xl font-serif font-bold text-stone-800"
+                >
+                </span>
+              </div>
+            </div>
+
+            <div class="md:w-2/3 pl-0 md:pl-8 pt-4">
+              <div class="flex justify-between">
+                <span
+                  class="inline-block px-2 py-1 text-xs font-semibold tracking-wider text-indigo-700 bg-indigo-50 rounded uppercase"
+                >
+                  Today's Devotional
+                </span>
+                <div
+                  id="heroDate"
+                  class="text-sm font-medium text-stone-400"
+                ></div>
+              </div>
+              <h2
+                id="heroTitle"
+                class="text-3xl sm:text-4xl font-serif font-bold text-stone-900 leading-tight my-4 pb-8"
+              ></h2>
+
+              <div class="flex flex-wrap gap-3" id="heroButtons"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="directorySection" class="hidden space-y-6">
+        <div
+          class="flex items-end justify-between border-b border-stone-200 pb-2"
+        >
+          <h3 class="text-2xl font-serif font-bold text-stone-800">
+            All Devotionals
+          </h3>
+          <span
+            id="countDisplay"
+            class="text-sm text-stone-500 font-medium"
+          ></span>
+        </div>
+
+        <div
+          id="directoryGrid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        ></div>
+
+        <div
+          id="noResults"
+          class="hidden text-center py-20 bg-white rounded-xl border border-stone-100 shadow-sm"
+        >
+          <svg
+            class="mx-auto h-12 w-12 text-stone-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+            />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-stone-900">
+            No devotionals found
+          </h3>
+          <p class="mt-1 text-sm text-stone-500">
+            Try adjusting your search terms or filter.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-white border-t border-stone-200 mt-12">
+      <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-stone-400 text-sm">
+          &copy; <span id="year"></span> Devotional Directory. All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script type="module">
+      // Import both the base client and the SSR helper
+      import { createBrowserClient } from "https://cdn.jsdelivr.net/npm/@supabase/ssr/+esm";
+
+      const SUPABASE_URL = "https://hqbwenoxakzrsbpoyzar.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_A5pISL8R6WFr7WccV_birQ_k_P5ByTj";
+
+      const supabaseClient = createBrowserClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+      );
+
+      // This will automatically look for the cookies set by your Vercel handler
+      const {
+        data: { session },
+        error,
+      } = await supabaseClient.auth.getSession();
+
+      if (session) {
+        console.log("User is logged in:", session.user);
+        // Supabase has now automatically moved the session into localStorage for you!
+      }
+
+      // GLOBAL STATE
+      let allDevotionals = [];
+      let uniqueBooks = new Set();
+
+      // INITIALIZATION
+      //   Don't need DOM content loaded for type module
+      fetchDirectory();
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Search Input Logic
+      const searchInput = document.getElementById("searchInput");
+      const bookFilter = document.getElementById("bookFilter");
+
+      searchInput.addEventListener("input", runFilter);
+      bookFilter.addEventListener("change", runFilter);
+
+      // 1. FETCH DATA FROM SUPABASE
+      async function fetchDirectory() {
+        console.log("Fetching devotional data...");
+        try {
+          // Fetch data from 'devotional' table
+          // We filter out entries where bible_passage is NULL to avoid empty/draft rows
+          let { data, error } = await supabaseClient
+            .from("devotional_public")
+            .select("*")
+            .not("devotional_markdown", "is", null)
+            .order("date", { ascending: false });
+
+          if (error) throw error;
+          console.log("Fetched Data:", data);
+
+          // Process the raw data into our app structure
+          allDevotionals = data.map((item) => {
+            // Extract title from Markdown (looking for first H1 header # Title)
+            let extractedTitle = "Daily Devotional";
+            if (item.devotional_markdown) {
+              const titleMatch = item.devotional_markdown.match(/^#\s+(.+)$/m);
+              if (titleMatch) {
+                extractedTitle = titleMatch[1];
+              }
+            }
+
+            return {
+              id: item.id,
+              date: item.date,
+              bible_passage: item.bible_passage,
+              bible_gateway_url: `https://www.biblegateway.com/passage/?version=ESV&search=${item.bible_passage}`,
+              title: extractedTitle, // Derived from markdown
+              story: item.devotional_story,
+            };
+          });
+
+          // Process Books for Filter
+          processBooks(allDevotionals);
+
+          initializeUI(allDevotionals);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          document.getElementById("loading").innerHTML = `
+                    <div class="text-center text-red-500 bg-red-50 p-4 rounded-lg">
+                        <p class="font-bold">Unable to load devotionals.</p>
+                        <p class="text-sm mt-1">Please check your configuration or try refreshing.</p>
+                    </div>`;
+        }
+      }
+
+      // 2. PROCESS BOOKS
+      function processBooks(data) {
+        uniqueBooks.clear();
+        data.forEach((item) => {
+          if (!item.bible_passage) return;
+
+          // Extract book name (e.g. "1 John 4:18" -> "1 John", "Genesis 1" -> "Genesis")
+          const match = item.bible_passage.match(/^(\d?\s?[a-zA-Z]+)/);
+          if (match) {
+            uniqueBooks.add(match[1].trim());
+          }
+        });
+
+        // Populate Dropdown
+        const select = document.getElementById("bookFilter");
+
+        // Clear existing options except the first one
+        select.innerHTML = '<option value="">All Books</option>';
+
+        const sortedBooks = Array.from(uniqueBooks).sort();
+
+        sortedBooks.forEach((book) => {
+          const option = document.createElement("option");
+          option.value = book;
+          option.textContent = book;
+          select.appendChild(option);
+        });
+      }
+
+      // 3. UI INITIALIZATION
+      function initializeUI(data) {
+        document.getElementById("loading").classList.add("hidden");
+
+        // A. Setup Hero (Today's Devotional - MYT)
+        const todayMYT = getMalaysiaDate();
+        const featured = data.find((item) => item.date === todayMYT) || data[0];
+
+        if (featured) {
+          renderHero(featured);
+          document.getElementById("heroSection").classList.remove("hidden");
+        }
+
+        // B. Setup Grid
+        renderDirectory(data);
+        document.getElementById("directorySection").classList.remove("hidden");
+        document
+          .getElementById("directorySection")
+          .classList.add("animate-fade-in-up");
+      }
+
+      // 4. RENDER HERO
+      function renderHero(item) {
+        document.getElementById("heroTitle").textContent = item.title;
+        document.getElementById("heroPassage").textContent = item.bible_passage;
+        document.getElementById("heroDate").textContent = formatDate(item.date);
+
+        // Generate Buttons
+        const buttonsContainer = document.getElementById("heroButtons");
+        buttonsContainer.innerHTML = generateActionButtons(item, true);
+      }
+
+      // 5. RENDER GRID
+      function renderDirectory(items) {
+        const container = document.getElementById("directoryGrid");
+        const noResults = document.getElementById("noResults");
+        const countDisplay = document.getElementById("countDisplay");
+
+        container.innerHTML = "";
+        countDisplay.textContent = `${items.length} ${items.length === 1 ? "Entry" : "Entries"}`;
+
+        if (items.length === 0) {
+          container.classList.add("hidden");
+          noResults.classList.remove("hidden");
+          return;
+        }
+
+        container.classList.remove("hidden");
+        noResults.classList.add("hidden");
+
+        items.forEach((item) => {
+          const card = document.createElement("div");
+          card.className =
+            "group bg-white rounded-xl border border-stone-100 p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full";
+
+          card.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="inline-block px-2 py-1 text-xs font-semibold tracking-wider text-indigo-700 bg-indigo-50 rounded uppercase">
+                                ${item.bible_passage}
+                            </span>
+                            <span class="text-xs font-medium text-stone-400">
+                                ${formatDate(item.date)}
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-stone-900 mb-2 group-hover:text-indigo-700 transition-colors">
+                            ${item.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-stone-50 grid grid-cols-1 gap-2">
+                        ${generateActionButtons(item, false)}
+                    </div>
+                `;
+          container.appendChild(card);
+        });
+      }
+
+      // 6. HELPER: Generate Buttons
+      function generateActionButtons(item, isHero) {
+        // URLs
+        const bibleUrl =
+          item.bible_gateway_url ||
+          `https://www.biblegateway.com/passage/?search=${encodeURIComponent(item.bible_passage)}&version=ESV`;
+        const textUrl = `text/?date=${item.date}`;
+        const storyUrl = `story/?date=${item.date}`;
+
+        if (isHero) {
+          return `
+                    <a href="${bibleUrl}" target="_blank" class="flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        Read Scripture
+                    </a>
+                    
+                    <a href="${textUrl}" class="flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg text-stone-700 bg-white border border-stone-300 hover:bg-stone-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Devotional Text
+                    </a>
+                    
+                    <a href="${storyUrl}" target="_blank" class="flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg text-stone-700 bg-white border border-stone-300 hover:bg-stone-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg class="w-4 h-4 mr-2 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        Story Recap
+                    </a>
+                `;
+        } else {
+          // Grid Card Buttons
+          return `
+                    <a href="${bibleUrl}" target="_blank" class="flex w-full items-center justify-center px-3 py-2 text-sm font-medium rounded-lg  text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Read Scripture
+                    </a>
+                    <div class="flex gap-2 mb-2">
+                        <a href="${textUrl}" class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg text-stone-700 bg-white border border-stone-200 hover:bg-stone-50 hover:text-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             Text
+                        </a>
+                        <a href="${storyUrl}" class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg text-stone-700 bg-white border border-stone-200 hover:bg-stone-50 hover:text-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             Story
+                        </a>
+                    </div>
+                `;
+        }
+      }
+
+      // 7. FILTER LOGIC
+      function runFilter() {
+        const query = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const selectedBook = document
+          .getElementById("bookFilter")
+          .value.toLowerCase();
+
+        const filtered = allDevotionals.filter((item) => {
+          const matchesSearch =
+            item.bible_passage.toLowerCase().includes(query) ||
+            item.title.toLowerCase().includes(query) ||
+            item.date.includes(query);
+
+          // Matches "John 3:16" with "John"
+          const matchesBook =
+            selectedBook === "" ||
+            item.bible_passage.toLowerCase().startsWith(selectedBook);
+
+          return matchesSearch && matchesBook;
+        });
+
+        renderDirectory(filtered);
+      }
+
+      // 8. UTILS
+      function getMalaysiaDate() {
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        const malaysiaTime = new Date(utc + 3600000 * 8);
+        return malaysiaTime.toISOString().split("T")[0];
+      }
+
+      function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString("en-US", options);
+      }
+    </script>
+    <style>
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fade-in 0.8s ease-out forwards;
+      }
+      .animate-fade-in-up {
+        animation: fade-in 0.8s ease-out 0.2s forwards;
+        opacity: 0;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Devotional Reader</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+      /* Tailwind resets generic element styles, so we need custom CSS 
+           to make the converted Markdown look good (Typography).
+        */
+      .markdown-body h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: #1f2937;
+        line-height: 1.2;
+      }
+      .markdown-body h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #374151;
+      }
+      .markdown-body h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #4b5563;
+      }
+      .markdown-body p {
+        margin-bottom: 1.25rem;
+        line-height: 1.8;
+        color: #374151;
+      }
+      .markdown-body ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-bottom: 1.25rem;
+        color: #374151;
+      }
+      .markdown-body ol {
+        list-style-type: decimal;
+        padding-left: 1.5rem;
+        margin-bottom: 1.25rem;
+        color: #374151;
+      }
+      .markdown-body li {
+        margin-bottom: 0.5rem;
+      }
+      .markdown-body blockquote {
+        border-left: 4px solid #3b82f6;
+        padding-left: 1rem;
+        font-style: italic;
+        color: #4b5563;
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 0 0.5rem 0.5rem 0;
+        margin-bottom: 1.5rem;
+      }
+      .markdown-body strong {
+        font-weight: 700;
+        color: #111827;
+      }
+      .markdown-body a {
+        color: #2563eb;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      /* Smooth fade in */
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+      <div
+        class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-xl font-bold text-gray-900 tracking-tight">
+          Devotional
+        </h1>
+
+        <div class="flex items-center gap-2">
+          <button
+            onclick="changeDate(-1)"
+            class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
+            title="Previous Day"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+
+          <input
+            type="date"
+            id="datePicker"
+            class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none text-center font-medium text-gray-700"
+          />
+
+          <button
+            onclick="changeDate(1)"
+            class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
+            title="Next Day"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow px-4 py-8">
+      <article
+        class="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 min-h-[50vh]"
+      >
+        <div
+          id="bible-link-container"
+          class="hidden pb-6 border-n border-gray-100 text-2xl"
+        >
+          <a
+            id="bible-btn"
+            href="#"
+            target="_blank"
+            class="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 transition cursor-pointer"
+          >
+            Open Passage on Bible Gateway <span>&rarr;</span>
+          </a>
+        </div>
+        <div
+          id="loader"
+          class="hidden flex flex-col items-center justify-center py-12 space-y-4"
+        >
+          <div
+            class="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"
+          ></div>
+          <p class="text-gray-400 text-sm">Retrieving devotional...</p>
+        </div>
+
+        <div id="error-msg" class="hidden text-center py-10 text-red-500"></div>
+
+        <div id="content-area" class="markdown-body fade-in hidden"></div>
+      </article>
+    </main>
+
+    <footer class="py-6 text-center text-gray-400 text-sm">
+      &copy; 2026 Devotional Reader
+    </footer>
+
+    <script type="module">
+      // Import both the base client and the SSR helper as requested
+      import { createBrowserClient } from "https://cdn.jsdelivr.net/npm/@supabase/ssr/+esm";
+
+      // --- CONFIGURATION ---
+      const SUPABASE_URL = "https://hqbwenoxakzrsbpoyzar.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_A5pISL8R6WFr7WccV_birQ_k_P5ByTj";
+
+      const supabase = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // --- AUTH CHECK (From your snippet) ---
+      // Checks if user is logged in (useful if your table has Row Level Security)
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        console.log("User is logged in:", session.user);
+      }
+
+      // --- INITIALIZATION ---
+      // 1. Get query param
+      const urlParams = new URLSearchParams(window.location.search);
+      const dateParam = urlParams.get("date");
+
+      // 2. Setup date picker
+      const datePicker = document.getElementById("datePicker");
+      if (dateParam) {
+        datePicker.value = dateParam;
+      } else {
+        const today = new Date().toISOString().split("T")[0];
+        datePicker.value = today;
+      }
+
+      // 3. Attach Event Listeners
+      // We use window.fetchContent because the HTML needs to see it,
+      // but we define it here to access the 'supabase' variable.
+      window.fetchContent = async function () {
+        const date = document.getElementById("datePicker").value;
+        const loader = document.getElementById("loader");
+        const contentArea = document.getElementById("content-area");
+        const errorMsg = document.getElementById("error-msg");
+        const bibleContainer = document.getElementById("bible-link-container");
+        const bibleBtn = document.getElementById("bible-btn");
+
+        // Reset UI
+        loader.classList.remove("hidden");
+        contentArea.classList.add("hidden");
+        errorMsg.classList.add("hidden");
+        bibleContainer.classList.add("hidden");
+
+        // Update URL
+        const newUrl = `${window.location.pathname}?date=${date}`;
+        window.history.replaceState({ path: newUrl }, "", newUrl);
+
+        try {
+          // --- SUPABASE QUERY ---
+          // We select the columns matching your screenshot schema
+          const { data, error } = await supabase
+            .from("devotional_public")
+            .select("devotional_markdown, bible_passage")
+            .eq("date", date)
+            .maybeSingle(); // Use maybeSingle: returns null data if empty, instead of error
+
+          loader.classList.add("hidden");
+
+          if (error) {
+            throw error;
+          }
+
+          if (data && data.devotional_markdown) {
+            // 1. Convert Markdown to HTML
+            const htmlContent = marked.parse(data.devotional_markdown);
+
+            // 2. Inject
+            contentArea.innerHTML = htmlContent;
+            contentArea.classList.remove("hidden");
+
+            // 3. Update Bible Link
+            if (data.bible_passage) {
+              bibleBtn.href = `https://www.biblegateway.com/passage/?version=ESV&search=${data.bible_passage}`;
+              bibleBtn.innerText = `Passage: ${data.bible_passage} →`;
+              bibleContainer.classList.remove("hidden");
+            }
+          } else {
+            // Handle empty state (Row not found or markdown is null)
+            errorMsg.textContent = `No devotional found for ${date}.`;
+            errorMsg.classList.remove("hidden");
+          }
+        } catch (err) {
+          loader.classList.add("hidden");
+          errorMsg.innerHTML = `<strong>Error:</strong> ${err.message}`;
+          errorMsg.classList.remove("hidden");
+          console.error("Supabase Error:", err);
+        }
+      };
+
+      // Make changeDate global so the buttons can find it
+      window.changeDate = function (days) {
+        const currentVal = datePicker.value;
+        if (!currentVal) return;
+
+        const date = new Date(currentVal);
+        date.setDate(date.getDate() + days);
+
+        const nextDate = date.toISOString().split("T")[0];
+        datePicker.value = nextDate;
+
+        window.fetchContent();
+      };
+
+      // Listen for manual date picker changes
+      datePicker.addEventListener("change", window.fetchContent);
+
+      // Initial Fetch
+      window.fetchContent();
+    </script>
+  </body>
+</html>

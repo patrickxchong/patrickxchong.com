@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Daily Devotional Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Ensure the viewer takes full height on mobile */
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      /* The container for the injected story */
+      #story-container {
+        width: 100%;
+        height: 100dvh; /* Dynamic Viewport Height */
+        padding-top: 40px; /* Space for floating date picker */
+        overflow-y: auto;
+        background-color: #f3f4f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Loading Spinner styles */
+      .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Floating Date Picker */
+      #controls {
+        position: absolute;
+        top: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 9999px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        backdrop-filter: blur(4px);
+      }
+
+      /* Arrow Button Styles */
+      .nav-btn {
+        background: #eff6ff;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        color: #2563eb;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-btn:hover {
+        background-color: #dbeafe;
+        transform: scale(1.05);
+      }
+      .nav-btn:active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="controls">
+      <button
+        onclick="changeDate(-1)"
+        class="nav-btn"
+        aria-label="Previous Day"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+
+      <input
+        type="date"
+        id="datePicker"
+        onchange="updatePageWithDate()"
+        class="p-1 border-0 rounded text-gray-700 bg-transparent font-bold text-md focus:outline-none text-center w-36"
+      />
+
+      <button onclick="changeDate(1)" class="nav-btn" aria-label="Next Day">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="story-container">
+      <div id="status-msg" class="text-gray-500">
+        Select a date to view devotion
+      </div>
+    </div>
+
+    <script type="module">
+      // Import both the base client and the SSR helper
+      import { createBrowserClient } from "https://cdn.jsdelivr.net/npm/@supabase/ssr/+esm";
+
+      // --- CONFIGURATION ---
+      const SUPABASE_URL = "https://hqbwenoxakzrsbpoyzar.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_A5pISL8R6WFr7WccV_birQ_k_P5ByTj";
+      // ---------------------
+
+      const supabase = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // --- INITIALIZATION ---
+      // 1. Get query param
+      const urlParams = new URLSearchParams(window.location.search);
+      const dateParam = urlParams.get("date");
+      const datePicker = document.getElementById("datePicker");
+
+      // 2. Set default date
+      if (dateParam) {
+        datePicker.value = dateParam;
+      } else {
+        // Adjust for timezone offset to ensure "today" is local date
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        datePicker.value = `${year}-${month}-${day}`;
+      }
+
+      // 3. Load content
+      fetchDevotional();
+
+      // --- MAIN LOGIC ---
+
+      async function fetchDevotional() {
+        const date = document.getElementById("datePicker").value;
+        const container = document.getElementById("story-container");
+
+        // Show Loading
+        container.innerHTML = '<div class="loader"></div>';
+
+        try {
+          // Query Supabase
+          // We select the 'devotional_story' column where 'date' matches.
+          // .maybeSingle() returns null data instead of an error if no row is found.
+          const { data, error } = await supabase
+            .from("devotional_public")
+            .select("devotional_story")
+            .eq("date", date)
+            .maybeSingle();
+
+          if (error) {
+            throw error;
+          }
+
+          if (data && data.devotional_story) {
+            // 1. Inject the HTML string
+            container.innerHTML = data.devotional_story;
+
+            // 2. Execute any scripts found in the injected HTML (if necessary)
+            executeScripts(container);
+          } else {
+            // No data found for this date
+            container.innerHTML = `<div class="p-4 text-center max-w-md bg-white rounded shadow">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Not Generated Yet</h2>
+                        <p class="text-gray-600">The content for ${date} hasn't been generated in the database yet.</p>
+                    </div>`;
+          }
+        } catch (error) {
+          console.error("Supabase Error:", error);
+          container.innerHTML = `<div class="text-red-500 p-4 bg-white rounded">
+                    <strong>Error Loading Content</strong><br>
+                    ${error.message || "Check console for details."}
+                </div>`;
+        }
+      }
+
+      // --- GLOBAL FUNCTIONS (Attached to window for HTML buttons) ---
+
+      /**
+       * Navigation Logic: Add or subtract days
+       * @param {number} days - Number of days to shift
+       */
+      window.changeDate = function (days) {
+        const dateInput = document.getElementById("datePicker");
+        if (!dateInput.value) return;
+
+        const currentDate = new Date(dateInput.value);
+
+        // Add/Subtract days
+        currentDate.setDate(currentDate.getDate() + days);
+
+        // Format back to YYYY-MM-DD
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+        const day = String(currentDate.getDate()).padStart(2, "0");
+
+        dateInput.value = `${year}-${month}-${day}`;
+
+        // Trigger update
+        window.updatePageWithDate();
+      };
+
+      /**
+       * Updates URL query string and reloads page
+       */
+      window.updatePageWithDate = function () {
+        const date = document.getElementById("datePicker").value;
+        if (date) {
+          const currentUrl = new URL(window.location.href);
+          currentUrl.searchParams.set("date", date);
+          window.location.href = currentUrl.toString();
+        }
+      };
+
+      /**
+       * Helper to run scripts inside innerHTML injected content
+       */
+      function executeScripts(containerElement) {
+        const scripts = containerElement.querySelectorAll("script");
+
+        scripts.forEach((oldScript) => {
+          const newScript = document.createElement("script");
+
+          // Copy attributes (src, type, etc.)
+          Array.from(oldScript.attributes).forEach((attr) =>
+            newScript.setAttribute(attr.name, attr.value),
+          );
+
+          // Copy content
+          newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+
+          // Replace old script with new one to force execution
+          oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+      }
+    </script>
+  </body>
+</html>
