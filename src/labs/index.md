@@ -144,3 +144,7 @@ Add reflection questions per page to make it more engaging
 ```
 
 </details>
+
+### Other Creations
+- [Worship Team Icebreaker](/labs/icebreaker/)
+- [Bible Devotional](/labs/devotion/)
