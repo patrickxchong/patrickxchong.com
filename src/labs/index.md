@@ -147,4 +147,5 @@ Add reflection questions per page to make it more engaging
 
 ### Other Creations
 - [Worship Team Icebreaker](/labs/icebreaker/)
+- [GCC Worship Wrapped 2025](/labs/stories/gcc-worship-wrapped-2025.html)
 - [Bible Devotional](/labs/devotion/)

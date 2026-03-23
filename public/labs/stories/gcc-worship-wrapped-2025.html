@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GCC Worship Wrapped 2025</title>
+    <link rel="icon" href="https://gospelcitychurch.my/wp-content/uploads/2023/03/cropped-gcc-logo_multi_yellow-192x192.png" sizes="192x192">
+    <meta property="og:image" content="https://gospelcitychurch.my/wp-content/uploads/2026/01/image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Mountains+of+Christmas:wght@700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;600;800&family=Space+Grotesk:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sp-green': '#1ED760',
+                        'sp-black': '#121212',
+                        'sp-purple': '#8C52FF',
+                        'sp-pink': '#FF0055',
+                        'sp-blue': '#2E77D0',
+                        'sp-yellow': '#F59B23',
+                        'sp-cyan': '#00FFFF',
+                        'sp-red': '#E91429',
+                        'spotify-green': '#1ED760',
+                        'spotify-black': '#121212',
+                        'spotify-purple': '#8C52FF',
+                        'spotify-pink': '#FF0055',
+                        'spotify-blue': '#2E77D0',
+                        'spotify-yellow': '#F59B23',
+                        'spotify-orange': '#FF4500',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        christmas: ['"Mountains of Christmas"', 'cursive'],
+                        marker: ['"Permanent Marker"', 'cursive'],
+                    },
+                    animation: {
+                        'bg-pan': 'bgPan 10s ease infinite alternate',
+                        'breathe': 'breathe 4s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'marquee': 'marquee 15s linear infinite',
+                        'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scale-up': 'scaleUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+                        'slide-in-right': 'slideInRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'slide-in': 'slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up-fade': 'slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'snow': 'snow 10s linear infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'wiggle': 'wiggle 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideInRight: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        slideUpFade: {
+                            '0%': { transform: 'translateY(40px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        popIn: {
+                            '0%': { transform: 'scale(0.5)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        snow: {
+                            '0%': { transform: 'translateY(-10px)', opacity: '0.8' },
+                            '100%': { transform: 'translateY(100vh)', opacity: '0.2' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scaleUp: {
+                            '0%': { transform: 'scale(0.5)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        breathe: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        bgPan: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '100%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000;
+            margin: 0;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #121212;
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Desktop Mockup */
+        @media (min-width: 768px) {
+            .story-container {
+                width: 400px;
+                height: 800px;
+                border-radius: 30px;
+                box-shadow: 0 0 0 12px #222, 0 30px 60px -10px rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            width: 100%;
+            padding: 0 12px;
+            display: flex;
+            gap: 4px;
+            z-index: 60;
+        }
+
+        .progress-bar-bg {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            flex: 1;
+            border-radius: 4px;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #fff;
+            width: 0%;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .completed-fill { width: 100%; }
+
+        /* Slide Content */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .slide.active { display: flex; }
+
+        /* Background Shapes & Textures */
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .geometric-shape {
+            position: absolute;
+            z-index: 1;
+        }
+
+        /* Marquee Text */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: absolute;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 10s linear infinite;
+        }
+
+        /* Typography */
+        .headline-xl {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+
+        .big-text {
+            font-size: 3.5rem;
+            line-height: 0.9;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+        .massive-text {
+            font-size: 4.5rem;
+            line-height: 0.85;
+            font-weight: 900;
+            letter-spacing: -3px;
+        }
+
+        /* Theme Classes */
+        .theme-pink .progress-bar-fill { background: #000; }
+        .theme-green .progress-bar-fill { background: #fff; }
+        .theme-purple .progress-bar-fill { background: #fff; }
+        .theme-yellow .progress-bar-fill { background: #000; }
+        .theme-red .progress-bar-fill { background: #0F0; } /* Christmas Theme */
+        
+        .cover-art-shadow {
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+        }
+
+        /* Snow effect */
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            font-size: 1.2em;
+            font-family: Arial;
+            text-shadow: 0 0 2px rgba(0,0,0,0.3);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Bento Card */
+        .bento-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="story-container" id="app">
+    <div class="texture-overlay"></div>
+    <div class="progress-container" id="progress-container"></div>
+
+    <!-- Navigation Overlay -->
+    <div id="nav-overlay" class="absolute inset-0 z-50 flex">
+        <div id="nav-prev" class="w-1/3 h-full cursor-pointer" onclick="prevSlide()"></div>
+        <div id="nav-next" class="w-2/3 h-full cursor-pointer" onclick="nextSlide()"></div>
+    </div>
+
+    <!-- Slides Container -->
+    <div id="slides-container" class="relative w-full h-full"></div>
+</div>
+
+<script>
+    // --- 1. DATA PROCESSING ---
+    
+    // CSV Data (Embedded)
+    const csvSummarised = `Song Name,Frequency
+My God Is So Big,6
+Only A Holy God,5
+"O Come, All You Unfaithful",5
+Jesus Strong And Kind / Jesus Loves Me,5
+Yet Not I But Through Christ In Me,4
+This Life I Live ,4
+Rejoice,4
+Holy Holy Holy,4
+His Mercy Is More,4
+Christ Is Mine Forevermore,4
+Behold Our God,4
+This Is My Father's World,3
+The Gospel Changes Everything,3
+Just As I Am,3
+Jesus Paid It All,3
+Jesus Loves Me,3
+Give Me Oil In My Lamp,3
+Christ Our Hope in Life and Death,3
+All I Have Is Christ  ,3
+Turn Your Eyes,2
+This Is Amazing Grace,2
+There Is One Gospel,2
+There Is A Higher Throne ,2
+The Lord Is My Salvation,2
+"Shout For Joy, Hallelujah / Segala Puji Syukur",2
+Psalm 150 (Praise The Lord),2
+O Praise The Name (Anastasis),2
+O Come All Ye Faithful,2
+O Church Arise ,2
+Nothing But The Blood ,2
+Not In Me,2
+Let Your Kingdom Come ,2
+Joy To The World,2
+I've Got That Joy Joy Joy Joy,2
+I Will Boast In Christ Alone,2
+I Surrender All,2
+How Great Thou Art,2
+How Great Is Our God,2
+How Deep the Father's Love for Us,2
+He Who Is Mighty ,2
+Great Is Thy Faithfulness ,2
+God Is Over All ,2
+Come Unto Jesus,2
+Be Thou My Vision,2
+All Glory Be To Christ,2
+All Creatures Of Our God And King,2
+Yesus Pokok Dan Kita Cabangnya,1
+With Christ In The Vessel,1
+What A Friend We Have In Jesus,1
+Undivided ,1
+Tis So Sweet To Trust In Jesus,1
+This I Believe (The Creed),1
+The Solid Rock (My Hope Is Built On Nothing Less),1
+The Goodness of Jesus,1
+Take My Life,1
+Standing On The Promises,1
+Speak O Lord,1
+Silent Night,1
+Rock Of Ages,1
+Our God Will Go Before Us,1
+"O Lord, My Rock and My Redeemer",1
+"O Come, O Come, Emmanuel",1
+Mighty To Save,1
+Living Hope,1
+Known and Loved,1
+Kau Yang Terindah,1
+It Is Well With My Soul,1
+In Christ Alone,1
+I Will Trust My Saviour Jesus,1
+I Love You Jesus Deep Down in My Heart,1
+⁠⁠I Am Not My Own,1
+Hymn of Heaven,1
+Heart of Worship,1
+He Will Hold Me Fast,1
+He Loves Us,1
+He Leadeth Me,1
+Hark The Herald Angels Sing,1
+God The Uncreated One,1
+God is Good All the Time,1
+Glorious,1
+Give Me Jesus,1
+From Everlasting (Psalm 90),1
+Everlasting God ,1
+Crown Him With Many Crowns,1
+Come Thou Fount Of Every Blessing,1
+Come Let Us Gather,1
+Come Behold The Wondrous Mystery,1
+⁠Christ the True and Better,1
+Christ Our Wisdom,1
+By Faith,1
+Before The Throne Of God Above ,1
+Because He Lives ,1
+Almost Home,1
+All Sufficient Merit,1
+"10,000 Reasons",1`;
+
+    const csvByDate = `Song Name,Date
+Jesus Loves Me,2025-12-28
+There Is A Higher Throne ,2025-12-28
+All Glory Be To Christ,2025-12-28
+Hymn of Heaven,2025-12-28
+O Come All Ye Faithful,2025-12-25
+He Who Is Mighty ,2025-12-25
+Hark The Herald Angels Sing,2025-12-25
+"O Come, All You Unfaithful",2025-12-25
+Joy To The World,2025-12-25
+"O Come, O Come, Emmanuel",2025-12-21
+Joy To The World,2025-12-21
+Silent Night,2025-12-21
+⁠Christ the True and Better,2025-12-21
+O Come All Ye Faithful,2025-12-14
+Come Let Us Gather,2025-12-14
+He Who Is Mighty ,2025-12-14
+Only A Holy God,2025-12-07
+Not In Me,2025-12-07
+"O Come, All You Unfaithful",2025-12-07
+Rejoice,2025-11-30
+"O Come, All You Unfaithful",2025-11-30
+From Everlasting (Psalm 90),2025-11-30
+How Great Is Our God,2025-11-30
+My God Is So Big,2025-11-23
+His Mercy Is More,2025-11-23
+Holy Holy Holy,2025-11-23
+Jesus Strong And Kind / Jesus Loves Me,2025-11-16
+This I Believe (The Creed),2025-11-16
+The Gospel Changes Everything,2025-11-16
+How Deep the Father's Love for Us,2025-11-09
+Just As I Am,2025-11-09
+Yet Not I But Through Christ In Me,2025-11-09
+In Christ Alone,2025-11-02
+Christ Is Mine Forevermore,2025-11-02
+All I Have Is Christ  ,2025-11-02
+I Love You Jesus Deep Down in My Heart,2025-10-26
+He Will Hold Me Fast,2025-10-26
+Turn Your Eyes,2025-10-26
+Psalm 150 (Praise The Lord),2025-10-19
+Because He Lives ,2025-10-19
+I Will Boast In Christ Alone,2025-10-19
+My God Is So Big,2025-10-12
+Behold Our God,2025-10-12
+I Surrender All,2025-10-12
+Rejoice,2025-10-05
+How Deep the Father's Love for Us,2025-10-05
+Yet Not I But Through Christ In Me,2025-10-05
+God Is Over All ,2025-09-28
+Only A Holy God,2025-09-28
+⁠⁠I Am Not My Own,2025-09-28
+Give Me Oil In My Lamp,2025-09-21
+This Is My Father's World,2025-09-21
+"O Lord, My Rock and My Redeemer",2025-09-21
+This Life I Live ,2025-09-21
+By Faith,2025-09-14
+Almost Home,2025-09-14
+Christ Is Mine Forevermore,2025-09-14
+My God Is So Big,2025-09-07
+All Glory Be To Christ,2025-09-07
+It Is Well With My Soul,2025-09-07
+Crown Him With Many Crowns,2025-08-31
+All Sufficient Merit,2025-08-31
+Yet Not I But Through Christ In Me,2025-08-31
+My God Is So Big,2025-08-24
+Turn Your Eyes,2025-08-24
+O Church Arise ,2025-08-24
+Give Me Oil In My Lamp,2025-08-17
+Great Is Thy Faithfulness ,2025-08-17
+Our God Will Go Before Us,2025-08-17
+With Christ In The Vessel,2025-08-10
+This Life I Live ,2025-08-10
+Come Unto Jesus,2025-08-10
+Yesus Pokok Dan Kita Cabangnya,2025-08-03
+Rock Of Ages,2025-08-03
+Yet Not I But Through Christ In Me,2025-08-03
+The Goodness of Jesus,2025-08-03
+Tis So Sweet To Trust In Jesus,2025-08-03
+Jesus Strong And Kind / Jesus Loves Me,2025-07-27
+Only A Holy God,2025-07-27
+Speak O Lord,2025-07-27
+Holy Holy Holy,2025-07-20
+Not In Me,2025-07-20
+His Mercy Is More,2025-07-20
+Rejoice,2025-07-13
+Behold Our God,2025-07-13
+The Solid Rock (My Hope Is Built On Nothing Less),2025-07-13
+His Mercy Is More,2025-07-06
+Be Thou My Vision,2025-07-06
+Heart of Worship,2025-07-06
+This Is Amazing Grace,2025-06-29
+Holy Holy Holy,2025-06-29
+How Great Is Our God,2025-06-29
+How Great Thou Art,2025-06-29
+The Gospel Changes Everything,2025-06-29
+God Is Over All ,2025-06-22
+Only A Holy God,2025-06-22
+Known and Loved,2025-06-22
+"O Come, All You Unfaithful",2025-06-15
+"Shout For Joy, Hallelujah / Segala Puji Syukur",2025-06-15
+Behold Our God,2025-06-15
+I Will Boast In Christ Alone,2025-06-15
+Just As I Am,2025-06-15
+My God Is So Big,2025-06-08
+Only A Holy God,2025-06-08
+His Mercy Is More,2025-06-08
+Standing On The Promises,2025-06-01
+O Praise The Name (Anastasis),2025-06-01
+He Loves Us,2025-06-01
+Jesus Loves Me,2025-06-01
+Jesus Strong And Kind / Jesus Loves Me,2025-05-25
+Christ Our Hope in Life and Death,2025-05-25
+Come Unto Jesus,2025-05-25
+I've Got That Joy Joy Joy Joy,2025-05-18
+Psalm 150 (Praise The Lord),2025-05-18
+Christ Is Mine Forevermore,2025-05-18
+O Church Arise ,2025-05-18
+Give Me Oil In My Lamp,2025-05-11
+Jesus Paid It All,2025-05-11
+"O Come, All You Unfaithful",2025-05-11
+Kau Yang Terindah,2025-05-11
+My God Is So Big,2025-05-04
+Let Your Kingdom Come ,2025-05-04
+Mighty To Save,2025-05-04
+God is Good All the Time,2025-04-27
+This Is My Father's World,2025-04-27
+There Is One Gospel,2025-04-27
+All Creatures Of Our God And King,2025-04-20
+O Praise The Name (Anastasis),2025-04-20
+Jesus Paid It All,2025-04-20
+Nothing But The Blood ,2025-04-13
+Give Me Jesus,2025-04-13
+Christ Our Hope in Life and Death,2025-04-13
+Jesus Strong And Kind / Jesus Loves Me,2025-04-13
+Glorious,2025-04-13
+I Will Trust My Saviour Jesus,2025-04-13
+There Is A Higher Throne ,2025-04-06
+The Lord Is My Salvation,2025-04-06
+I Surrender All,2025-04-06
+I've Got That Joy Joy Joy Joy,2025-03-30
+This Life I Live ,2025-03-30
+Be Thou My Vision,2025-03-30
+He Leadeth Me,2025-03-23
+"Shout For Joy, Hallelujah / Segala Puji Syukur",2025-03-23
+Undivided ,2025-03-23
+Take My Life,2025-03-23
+"10,000 Reasons",2025-03-23
+All Creatures Of Our God And King,2025-03-16
+Jesus Paid It All,2025-03-16
+The Gospel Changes Everything,2025-03-16
+Jesus Loves Me,2025-03-09
+Living Hope,2025-03-09
+Christ Our Hope in Life and Death,2025-03-09
+This Is My Father's World,2025-03-02
+Come Behold The Wondrous Mystery,2025-03-02
+Come Thou Fount Of Every Blessing,2025-03-02
+What A Friend We Have In Jesus,2025-02-23
+Nothing But The Blood ,2025-02-23
+This Life I Live ,2025-02-23
+This Is Amazing Grace,2025-02-16
+Great Is Thy Faithfulness ,2025-02-16
+Just As I Am,2025-02-16
+Rejoice,2025-02-09
+The Lord Is My Salvation,2025-02-09
+Christ Our Wisdom,2025-02-09
+Everlasting God ,2025-02-02
+Behold Our God,2025-02-02
+All I Have Is Christ  ,2025-02-02
+Let Your Kingdom Come ,2025-01-26
+There Is One Gospel,2025-01-26
+All I Have Is Christ  ,2025-01-26
+God The Uncreated One,2025-01-20
+Holy Holy Holy,2025-01-20
+How Great Thou Art,2025-01-20
+Jesus Strong And Kind / Jesus Loves Me,2025-01-12
+Before The Throne Of God Above ,2025-01-12
+Christ Is Mine Forevermore,2025-01-12`;
+
+    function parseCSV(csv) {
+        const lines = csv.trim().split('\n');
+        return lines.slice(1).map(line => {
+            const parts = [];
+            let current = '';
+            let inQuote = false;
+            for (let char of line) {
+                if (char === '"') inQuote = !inQuote;
+                else if (char === ',' && !inQuote) { parts.push(current.trim()); current = ''; }
+                else current += char;
+            }
+            parts.push(current.trim());
+            return parts;
+        });
+    }
+
+    const summaryData = parseCSV(csvSummarised).map(row => ({
+        name: row[0].replace(/"/g, ''),
+        count: parseInt(row[1]) || 0
+    }));
+
+    const dateData = parseCSV(csvByDate).map(row => ({
+        name: row[0].replace(/"/g, ''),
+        date: row[1]
+    }));
+
+    // --- ANALYTICS ---
+    const totalSongs = dateData.length;
+    const totalMinutes = totalSongs * 4.3; // Avg 4.3 mins per song
+    const uniqueSongsCount = summaryData.length;
+    const topSong = summaryData[0];
+    const top5 = summaryData.slice(0, 5);
+
+    // Genre Inference
+    const hymnKeywords = ['holy', 'thou', 'hymn', 'art', 'thee', 'my soul', 'come', 'vision', 'behold'];
+    let hymnCount = 0;
+    let contemporaryCount = 0;
+    summaryData.forEach(song => {
+        const lower = song.name.toLowerCase();
+        if (hymnKeywords.some(k => lower.includes(k))) hymnCount += song.count;
+        else contemporaryCount += song.count;
+    });
+    const topGenre = hymnCount > contemporaryCount ? "Classic Hymns" : "Modern Worship";
+
+    // Artist Logic (Multi-Artist Detection)
+    const artistMappings = [
+        { name: "CityAlight", keywords: ["yet not i", "christ is mine", "only a holy god", "jesus strong", "rejoice", "this life i live", "my god is so big"] },
+        { name: "Sovereign Grace", keywords: ["o come, all you unfaithful", "his mercy is more", "he who is mighty", "behold our god", "jesus paid it all"] },
+        { name: "Getty Music", keywords: ["in christ alone", "christ our hope", "holy holy holy", "speak o lord"] },
+    ];
+
+    let artistCounts = {};
+    // Initialize
+    artistMappings.forEach(a => artistCounts[a.name] = 0);
+    artistCounts["Other"] = 0;
+
+    summaryData.forEach(song => {
+        let found = false;
+        const lower = song.name.toLowerCase();
+        for (let artist of artistMappings) {
+            if (artist.keywords.some(k => lower.includes(k))) {
+                artistCounts[artist.name] += song.count;
+                found = true;
+                break;
+            }
+        }
+        if (!found) artistCounts["Other"] += 1; // Count unique unmapped
+    });
+
+    const sortedArtists = Object.entries(artistCounts)
+        .filter(([name]) => name !== "Other")
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+    
+    // Top single artist for outro
+    const topArtist = sortedArtists[0][0];
+
+    // First Song
+    const sortedDates = dateData
+        .filter(d => d.date)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    const firstSong = sortedDates.length > 0 ? sortedDates[0] : { name: "Jesus Loves Me", date: "2025-01-05" };
+    const firstSongDate = new Date(firstSong.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+
+    // December Songs (Top 5 by frequency)
+    const decSongs = dateData
+        .filter(d => d.date.includes('-12-'))
+        .map(d => d.name);
+    // Count frequency
+    const decSongCounts = decSongs.reduce((acc, name) => {
+        acc[name] = (acc[name] || 0) + 1;
+        return acc;
+    }, {});
+    // Only include songs with frequency > 1
+    const decUnique = Object.entries(decSongCounts)
+        .filter(([_, count]) => count > 1)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 5)
+        .map(([name]) => name);
+
+    // --- SLIDE CONFIGURATION ---
+    const slides = [
+        // 1. INTRO
+        {
+            id: 'intro',
+            themeClass: 'theme-pink',
+            bgColor: '#FF0055',
+            duration: 4500,
+            render: () => `
+                <div class="geometric-shape w-96 h-96 bg-sp-purple rounded-full blur-2xl top-[-50px] left-[-50px] animate-pulse-fast"></div>
+                <div class="geometric-shape w-64 h-64 bg-sp-yellow rounded-full blur-xl bottom-10 right-[-20px] animate-bounce"></div>
+                
+                <div class="flex flex-col justify-center h-full px-6 z-10 relative">
+                    <div class="marquee-container w-full absolute top-20 left-0 opacity-20">
+                        <div class="marquee-content text-9xl font-black">GCC WORSHIP 2025 GCC WORSHIP 2025</div>
+                    </div>
+                    <h2 class="text-xl font-bold mb-4 opacity-0 animate-slide-up-fade">It's that time again.</h2>
+                    <h1 class="massive-text leading-none mb-6 opacity-0 animate-pop-in" style="animation-delay: 0.3s">
+                        GCC Worship 2025<br>Wrapped
+                    </h1>
+                    <div class="w-24 h-2 bg-sp-yellow mb-6 opacity-0 animate-slide-in-right"></div>
+                    <p class="text-2xl font-bold opacity-0 animate-slide-up-fade" style="animation-delay: 0.6s">
+                        Let's dive into the sounds of our Sunday mornings.
+                    </p>
+                </div>
+            `
+        },
+        // 2. FIRST SONG (NEW)
+        {
+            id: 'first-song',
+            themeClass: 'theme-yellow',
+            bgColor: '#F59B23',
+            duration: 5000,
+            render: () => `
+                <div class="absolute inset-0 bg-[#F59B23]"></div>
+                <div class="absolute inset-0 flex items-center justify-center opacity-20">
+                    <i class="fas fa-calendar-alt text-[20rem] text-black transform -rotate-12"></i>
+                </div>
+                <div class="flex flex-col justify-center h-full px-8 z-10 relative">
+                    <p class="text-2xl font-bold text-black mb-6 opacity-0 animate-slide-in-right">It all started on</p>
+                    <h1 class="text-5xl font-black text-black leading-none mb-2 opacity-0 animate-pop-in">${firstSongDate}</h1>
+                    <p class="text-xl text-black font-bold mb-12 opacity-0 animate-fade-in opacity-80">The first song we sang together...</p>
+                    
+                    <div class="bg-black text-white p-6 rounded-2xl transform rotate-2 opacity-0 animate-slide-up-fade" style="animation-delay: 0.3s">
+                        <div class="text-sp-green text-sm font-bold uppercase tracking-widest mb-2">Track 01</div>
+                        <div class="text-3xl font-black">${firstSong.name}</div>
+                    </div>
+                </div>
+            `
+        },
+       // 2. MINUTES: Big Numbers, Bento Box
+        {
+            id: 'minutes',
+            duration: 5000,
+            bgColor: '#8C52FF',
+            render: () => `
+                <div class="absolute inset-0 bg-[#8C52FF]"></div>
+                <div class="flex flex-col h-full px-6 pt-24 z-10 relative">
+                    <h2 class="text-3xl font-bold mb-2 opacity-0 animate-slide-up">That's a lot of</h2>
+                    <h2 class="text-3xl font-bold mb-8 opacity-0 animate-slide-up" style="animation-delay: 0.1s">Sunday mornings.</h2>
+                    
+                    <div class="flex-1 flex flex-col justify-center">
+                        <div class="wrapped-title text-9xl font-bold drop-shadow-lg opacity-0 animate-scale-up">
+                            ${Math.floor(totalMinutes).toLocaleString()}
+                        </div>
+                        <p class="text-xl font-bold uppercase tracking-widest mt-2">Minutes of Worship</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-16 opacity-0 animate-slide-up" style="animation-delay: 0.4s">
+                        <div class="bento-card p-4">
+                            <div class="text-4xl font-bold">${totalSongs}</div>
+                            <div class="text-xs opacity-70 uppercase font-bold mt-1">Total Songs</div>
+                        </div>
+                        <div class="bento-card p-4 bg-white text-black">
+                            <div class="text-4xl font-bold">${uniqueSongsCount}</div>
+                            <div class="text-xs opacity-70 uppercase font-bold mt-1">Unique Tracks</div>
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+         // 6. TOP ARTISTS: Grid
+        {
+            id: 'artists',
+            duration: 6000,
+            bgColor: '#2E77D0',
+            render: () => `
+                 <div class="absolute inset-0 bg-[#2E77D0]"></div>
+                 <div class="flex flex-col h-full px-6 pt-20 z-10 relative">
+                    <h2 class="text-sm font-bold uppercase tracking-widest mb-4 opacity-70">The Artists</h2>
+                    <h1 class="text-5xl font-black mb-10 opacity-0 animate-slide-in">Who Defined<br>Your Year</h1>
+                    
+                    <div class="grid gap-6">
+                        <div class="bg-white text-black rounded-[32px] p-6 opacity-0 animate-scale-up relative overflow-hidden group">
+                             <div class="absolute right-[-20px] bottom-[-20px] text-9xl opacity-10 font-black text-black group-hover:scale-110 transition-transform">1</div>
+                             <div class="text-3xl font-black mb-1">${topArtist}</div>
+                             <div class="text-sm font-bold text-gray-500 uppercase">Top Artist</div>
+                             <div class="w-16 h-16 bg-black rounded-full absolute top-6 right-6 flex items-center justify-center text-white text-xl">
+                                <i class="fas fa-crown"></i>
+                             </div>
+                        </div>
+
+                        ${sortedArtists.slice(1).map((artist, idx) => `
+                            <div class="bg-black/20 backdrop-blur-md rounded-[24px] p-5 flex items-center justify-between opacity-0 animate-slide-up" style="animation-delay: ${(idx+1)*0.2}s">
+                                <div>
+                                    <div class="text-xl font-bold">${artist[0]}</div>
+                                    <div class="text-xs opacity-60 uppercase font-bold">#${idx + 2} Artist</div>
+                                </div>
+                                <div class="text-2xl font-black opacity-50">${idx + 2}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                 </div>
+            `
+        },
+        // 6. TOP SONG (UPDATED)
+        {
+            id: 'top-song',
+            themeClass: 'theme-purple',
+            bgColor: '#8C52FF',
+            duration: 6000,
+            render: () => `
+                 <div class="absolute inset-0 bg-[#121212]"></div>
+                 <div class="absolute inset-0" style="background-image: radial-gradient(#8C52FF 2px, transparent 2px); background-size: 30px 30px; opacity: 0.3;"></div>
+
+                <div class="flex flex-col items-center justify-center h-full px-6 z-10 relative">
+                    <p class="text-sp-purple text-2xl font-bold tracking-[0.2em] mb-8 uppercase opacity-0 animate-fade-in">Top Song 2025</p>
+                    
+                    <div class="w-64 h-64 bg-black mb-8 relative group animate-float cover-art-shadow border-4 border-white">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <img class="w-64 h-64" src="https://i.pinimg.com/736x/97/34/91/973491f29f1ff72d7c54b9e7aa116255.jpg" />
+                        </div>
+                    </div>
+
+                    <!-- Added line-clamp and dynamic sizing support -->
+                    <div class="w-full text-center">
+                        <h1 class="text-3xl md:text-4xl font-black text-white mb-2 opacity-0 animate-slide-up-fade leading-tight line-clamp-3 overflow-hidden">
+                            ${topSong.name}
+                        </h1>
+                    </div>
+                    
+                    <div class="mt-8 flex gap-4">
+                        <div class="bg-white text-black px-4 py-2 rounded font-bold opacity-0 animate-pop-in" style="animation-delay: 0.5s">
+                            #1 Hit
+                        </div>
+                        <div class="bg-sp-purple text-black px-4 py-2 rounded font-bold opacity-0 animate-pop-in" style="animation-delay: 0.4s">
+                            ${topSong.count} Sundays
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        // 4. TOP 5 (Receipt Style)
+        {
+            id: 'top-5',
+            duration: 7000,
+            bgColor: '#F59B23', // Orange
+            textColor: 'black',
+            barsDark: true,
+            render: () => `
+                <div class="absolute inset-0 bg-w-orange"></div>
+                
+                <div class="flex flex-col h-full px-4 pt-20 z-10 relative items-center">
+                    <h2 class="headline-xl text-5xl mb-8 text-black text-center">Top Songs</h2>
+                    
+                    <!-- The Receipt -->
+                    <div class="w-full bg-white text-black p-6 font-mono text-sm relative shadow-2xl transform rotate-1 max-w-sm">
+                        <!-- Rip marks -->
+                        <div class="absolute top-0 left-0 w-full h-4 -mt-4 bg-white" style="clip-path: polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%);"></div>
+                        
+                        <div class="text-center border-b-2 border-black border-dashed pb-4 mb-4">
+                            <div class="font-black text-2xl uppercase">GCC 2025</div>
+                            <div class="text-xs">Sunday Service Records</div>
+                        </div>
+
+                        <div class="flex flex-col gap-3">
+                            <div class="flex justify-between items-start">
+                                    <div class="flex gap-2">
+                                        <span class="font-bold">##</span>
+                                        <span class="uppercase font-bold max-w-[240px] leading-tight">Song Name</span>
+                                    </div>
+                                    <span>Count</span>
+                                </div>
+                            ${top5.map((song, i) => `
+                                <div class="flex justify-between items-start">
+                                    <div class="flex gap-2">
+                                        <span class="font-bold">0${i+1}</span>
+                                        <span class="uppercase font-bold max-w-[240px] leading-tight">${song.name}</span>
+                                    </div>
+                                    <span>${song.count}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t-2 border-black border-dashed flex justify-between font-bold">
+                            <span>TOTAL TRACKS</span>
+                            <span>${totalSongs}</span>
+                        </div>
+                        
+                        <div class="mt-8 text-center">
+                            <i class="fas fa-barcode text-4xl"></i>
+                            <div class="text-[10px] mt-1">THANK YOU FOR LISTENING</div>
+                        </div>
+                        
+                        <!-- Rip marks bottom -->
+                         <div class="absolute bottom-0 left-0 w-full h-4 -mb-4 bg-white" style="clip-path: polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%);"></div>
+                    </div>
+                </div>
+            `
+        },
+        // 8. DECEMBER (Holiday)
+        {
+            id: 'december',
+            theme: 'dark',
+            duration: 6000,
+            bgColor: '#1a472a',
+            render: () => `
+                <div class="absolute inset-0 bg-gradient-to-b from-[#0f3d0f] to-[#0f3d0f]"></div>
+                ${Array(20).fill(0).map((_, i) => `<div class="absolute text-white opacity-20 animate-float" style="left:${Math.random()*100}%; top:${Math.random()*100}%; font-size:${10+Math.random()*20}px; animation-duration:${3+Math.random()*5}s">❄</div>`).join('')}
+                
+                <div class="flex flex-col justify-center h-full px-8 z-10 relative text-center">
+                    <i class="fas fa-star text-yellow-400 text-4xl mb-4 animate-spin-slow"></i>
+                    <h1 class="display-text text-5xl font-black mb-6 opacity-0 animate-slide-up">December<br>Favorites</h1>
+                    
+                    <div class="bg-black/30 backdrop-blur-md rounded-xl p-6 border border-white/10 text-left opacity-0 animate-slide-up" style="animation-delay: 0.2s">
+                         ${decUnique.map((song, i) => `
+                            <div class="py-2 border-b border-white/10 last:border-0 text-sm font-bold flex gap-2">
+                                <span class="text-brand-yellow">★</span> ${song}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `
+        },
+        // 8. OUTRO
+        {
+            id: 'outro',
+            themeClass: 'theme-purple',
+            bgColor: '#8C52FF',
+            duration: 0,
+            render: () => `
+                <div class="flex flex-col items-center justify-center h-full px-4 z-10 relative">
+                    <div class="w-full bg-[#E91429] p-6 text-center transform rotate-2 border-4 border-black cover-art-shadow opacity-0 animate-pop-in relative">
+                        <div class="flex items-center justify-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-white text-white rounded-full flex items-center justify-center text-xl font-bold border-2 border-white">
+                                <img src="https://gospelcitychurch.my/wp-content/uploads/2023/03/gcc-logo_multi_yellow-300x300.png" />
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs font-bold text-black uppercase opacity-75">Wrapped 2025</div>
+                                <div class="text-2xl font-black text-white uppercase leading-none">Top Stats</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white text-black p-4 font-mono text-sm text-left border-2 border-black shadow-inner">
+                            <div class="border-b-2 border-black pb-2 mb-2">
+                                <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Top Song</div>
+                                <div class="font-black text-lg leading-tight uppercase break-words">
+                                    ${topSong.name}
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 border-b-2 border-black pb-2 mb-2">
+                                <div class="w-1/2">
+                                    <div class="text-[10px] text-gray-500 font-bold uppercase">Top Artist</div>
+                                    <div class="font-bold truncate">${topArtist}</div>
+                                </div>
+                                <div class="w-1/2 border-l-2 border-black pl-4">
+                                    <div class="text-[10px] text-gray-500 font-bold uppercase">Unique Songs</div>
+                                    <div class="font-bold">${uniqueSongsCount}</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-[10px] text-gray-500 font-bold uppercase">Total Minutes</div>
+                                <div class="font-black text-3xl text-sp-pink">${Math.floor(totalMinutes).toLocaleString()}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute -bottom-12 right-0 font-marker text-white text-xl transform -rotate-6 opacity-80">
+                            #GCCWorshipWrapped
+                        </div>
+                    </div>
+
+                    <div class="mt-16 flex flex-col gap-4 w-full px-8 relative z-[60]">
+                        <button onclick="showSlide(0)" class="bg-white text-black py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform uppercase tracking-widest shadow-lg border-2 border-black cursor-pointer pointer-events-auto">
+                            Replay ↻
+                        </button>
+                    </div>
+                </div>
+            `
+        }
+    ];
+
+    // --- ENGINE ---
+    let currentSlideIndex = 0;
+    let timer = null;
+    const container = document.getElementById('slides-container');
+    const progressContainer = document.getElementById('progress-container');
+    const app = document.getElementById('app');
+
+    function init() {
+        progressContainer.innerHTML = slides.map((_, idx) => `
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="bar-${idx}"></div>
+            </div>
+        `).join('');
+        showSlide(0);
+    }
+
+    function showSlide(index) {
+        if (index >= slides.length) return; 
+        if (index < 0) return;
+
+        currentSlideIndex = index;
+        const slideData = slides[index];
+        app.style.backgroundColor = slideData.bgColor;
+        app.className = `story-container ${slideData.themeClass}`;
+        container.innerHTML = `<div class="slide active">${slideData.render()}</div>`;
+
+        // Handle Navigation Overlay Interactivity
+        const navOverlay = document.getElementById('nav-overlay');
+        if (navOverlay) {
+            // On the last slide, disable the ENTIRE overlay so the full-width Replay button is clickable
+            // On other slides, enable it for navigation
+            navOverlay.style.pointerEvents = (index === slides.length - 1) ? 'none' : 'auto';
+        }
+
+        slides.forEach((_, idx) => {
+            const bar = document.getElementById(`bar-${idx}`);
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            
+            if (idx < index) {
+                bar.style.width = '100%';
+            } 
+            else if (idx === index) {
+                if (slideData.duration > 0) {
+                    void bar.offsetWidth;
+                    bar.style.transition = `width ${slideData.duration}ms linear`;
+                    bar.style.width = '100%';
+                } else if (index === slides.length - 1) {
+                    // Final slide: fill immediately
+                    bar.style.width = '100%';
+                }
+            }
+        });
+
+        if (timer) clearTimeout(timer);
+        if (slideData.duration > 0) {
+            timer = setTimeout(() => nextSlide(), slideData.duration);
+        }
+    }
+
+    function nextSlide() {
+        if (currentSlideIndex < slides.length - 1) showSlide(currentSlideIndex + 1);
+    }
+
+    function prevSlide() {
+        if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+        else showSlide(0);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    init();
+
+</script>
+</body>
+</html>
