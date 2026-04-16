@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>TZ Widget</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-family:
+					-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				background: #0f172a;
+				min-height: 100vh;
+				display: flex;
+				align-items: start;
+				justify-content: center;
+				padding: 1rem;
+			}
+			.fade-in {
+				animation: fadeIn 0.2s ease-out;
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(-2px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			/* Hide scrollbar but allow scroll if >4 targets */
+			.no-scrollbar::-webkit-scrollbar {
+				display: none;
+			}
+			.no-scrollbar {
+				-ms-overflow-style: none;
+				scrollbar-width: none;
+			}
+		</style>
+	</head>
+	<body class="text-slate-100">
+		<div
+			class="bg-slate-900/95 backdrop-blur rounded-2xl p-3 shadow-xl border border-slate-700/60 w-full max-w-sm mx-auto"
+		>
+			<!-- Compact header + input -->
+			<div class="flex items-center gap-2 mb-2">
+				<span
+					class="text-[10px] uppercase tracking-wider text-slate-400 font-bold whitespace-nowrap"
+					>TZ</span
+				>
+				<input
+					id="input"
+					type="text"
+					placeholder="9pm myt to ukt"
+					class="flex-1 bg-slate-800/70 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-500"
+					autocomplete="off"
+					spellcheck="false"
+				/>
+			</div>
+
+			<!-- Output -->
+			<div id="output"></div>
+
+			<!-- Empty state hint -->
+			<div id="hint" class="text-[10px] text-slate-500 text-center py-2">
+				try: <span class="text-slate-400">7:30pm ET to myt, gmt, jst</span>
+			</div>
+		</div>
+
+		<script>
+			const TIMEZONES = {
+				UTC: { o: 0, n: 'UTC' },
+				GMT: { o: 0, n: 'GMT' },
+				UKT: { o: 0, n: 'UK' },
+				BST: { o: 1, n: 'UK Summer' },
+				CET: { o: 1, n: 'Central EU' },
+				CEST: { o: 2, n: 'Central EU Summer' },
+				EET: { o: 2, n: 'Eastern EU' },
+				EST: { o: -5, n: 'US Eastern' },
+				EDT: { o: -4, n: 'US Eastern DT' },
+				ET: { o: -5, n: 'US Eastern' },
+				CST: { o: -6, n: 'US Central' },
+				CDT: { o: -5, n: 'US Central DT' },
+				CT: { o: -6, n: 'US Central' },
+				MST: { o: -7, n: 'US Mountain' },
+				MDT: { o: -6, n: 'US Mountain DT' },
+				MT: { o: -7, n: 'US Mountain' },
+				PST: { o: -8, n: 'US Pacific' },
+				PDT: { o: -7, n: 'US Pacific DT' },
+				PT: { o: -8, n: 'US Pacific' },
+				AKST: { o: -9, n: 'Alaska' },
+				HST: { o: -10, n: 'Hawaii' },
+				MYT: { o: 8, n: 'Malaysia' },
+				SGT: { o: 8, n: 'Singapore' },
+				HKT: { o: 8, n: 'Hong Kong' },
+				CSTC: { o: 8, n: 'China' },
+				JST: { o: 9, n: 'Japan' },
+				KST: { o: 9, n: 'Korea' },
+				IST: { o: 5.5, n: 'India' },
+				PKT: { o: 5, n: 'Pakistan' },
+				GST: { o: 4, n: 'Gulf' },
+				ICT: { o: 7, n: 'Indochina' },
+				WIB: { o: 7, n: 'W. Indonesia' },
+				AEST: { o: 10, n: 'AU East' },
+				AEDT: { o: 11, n: 'AU East DT' },
+				ACST: { o: 9.5, n: 'AU Central' },
+				AWST: { o: 8, n: 'AU West' },
+				NZST: { o: 12, n: 'New Zealand' },
+			}
+
+			const ALIASES = {
+				UK: 'UKT',
+				US: 'ET',
+				EASTERN: 'ET',
+				PACIFIC: 'PT',
+				CENTRAL: 'CT',
+				MOUNTAIN: 'MT',
+				MALAYSIA: 'MYT',
+				SINGAPORE: 'SGT',
+				JAPAN: 'JST',
+				KOREA: 'KST',
+				INDIA: 'IST',
+				CHINA: 'CSTC',
+				AUSSIE: 'AEST',
+				AUSTRALIA: 'AEST',
+			}
+
+			function resolveTz(c) {
+				const u = c.toUpperCase()
+				return TIMEZONES[u] ? u : ALIASES[u] || null
+			}
+
+			function parseInput(raw) {
+				if (!raw || !raw.trim()) return null
+				const text = raw.trim().replace(/\s+/g, ' ')
+
+				const m = text.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i)
+				if (!m) return { error: 'Need a time like 9pm or 15:00' }
+
+				let h = parseInt(m[1], 10)
+				const min = m[2] ? parseInt(m[2], 10) : 0
+				const mer = m[3] ? m[3].toLowerCase() : null
+				if (min > 59) return { error: 'Bad minutes' }
+				if (mer === 'pm' && h < 12) h += 12
+				else if (mer === 'am' && h === 12) h = 0
+				if (h > 23) return { error: 'Bad hour' }
+
+				const after = text.slice(m.index + m[0].length)
+				const before = text.slice(0, m.index)
+				const toIdx = after.toLowerCase().search(/\bto\b/)
+				if (toIdx === -1) return { error: 'Missing "to"' }
+
+				const fromPart = after.slice(0, toIdx).trim()
+				const toPart = after.slice(toIdx + 2).trim()
+
+				const src = findFirstTz(fromPart) || findFirstTz(before)
+				if (!src) return { error: 'Unknown source tz' }
+
+				const tgts = findAllTz(toPart)
+				if (!tgts.length) return { error: 'Unknown target tz' }
+
+				return { hours: h, minutes: min, sourceTz: src, targetTzs: tgts }
+			}
+
+			function findFirstTz(s) {
+				const toks = s.toUpperCase().match(/[A-Z]{2,5}/g)
+				if (!toks) return null
+				for (const t of toks) {
+					const r = resolveTz(t)
+					if (r) return r
+				}
+				return null
+			}
+			function findAllTz(s) {
+				const toks = s.toUpperCase().match(/[A-Z]{2,5}/g)
+				if (!toks) return []
+				const out = [],
+					seen = new Set()
+				for (const t of toks) {
+					const r = resolveTz(t)
+					if (r && !seen.has(r)) {
+						seen.add(r)
+						out.push(r)
+					}
+				}
+				return out
+			}
+
+			function convert(h, m, from, to) {
+				const src = h * 60 + m
+				const utc = src - TIMEZONES[from].o * 60
+				let tgt = utc + TIMEZONES[to].o * 60
+				let shift = 0
+				while (tgt < 0) {
+					tgt += 1440
+					shift -= 1
+				}
+				while (tgt >= 1440) {
+					tgt -= 1440
+					shift += 1
+				}
+				return { h: Math.floor(tgt / 60), m: tgt % 60, shift }
+			}
+
+			function fmt12(h, m) {
+				const p = h >= 12 ? 'PM' : 'AM'
+				let h12 = h % 12
+				if (h12 === 0) h12 = 12
+				return `${h12}:${m.toString().padStart(2, '0')} ${p}`
+			}
+
+			function fmtOffset(o) {
+				if (o === 0) return 'GMT'
+				const s = o > 0 ? '+' : '-'
+				const a = Math.abs(o),
+					w = Math.floor(a),
+					f = a - w
+				if (f === 0) return `GMT${s}${w}`
+				return `GMT${s}${w}:${Math.round(f * 60)
+					.toString()
+					.padStart(2, '0')}`
+			}
+
+			function shiftBadge(s) {
+				if (s === 0) return ''
+				if (s === 1)
+					return '<span class="text-[9px] px-1 rounded bg-green-500/20 text-green-300">+1d</span>'
+				if (s === -1)
+					return '<span class="text-[9px] px-1 rounded bg-amber-500/20 text-amber-300">-1d</span>'
+				const cls =
+					s > 0
+						? 'bg-green-500/20 text-green-300'
+						: 'bg-amber-500/20 text-amber-300'
+				return `<span class="text-[9px] px-1 rounded ${cls}">${s > 0 ? '+' : ''}${s}d</span>`
+			}
+
+			const outputEl = document.getElementById('output')
+			const inputEl = document.getElementById('input')
+			const hintEl = document.getElementById('hint')
+
+			function row(label, time, tzCode, offset, badge, isSource) {
+				const bg = isSource
+					? 'bg-blue-600/15 border-blue-500/40'
+					: 'bg-slate-800/60 border-slate-700/50'
+				const displayCode = tzCode === 'CSTC' ? 'CST' : tzCode
+				return `
+    <div class="flex items-center justify-between ${bg} border rounded-lg px-2.5 py-1.5">
+      <div class="flex items-baseline gap-1.5 min-w-0">
+        <span class="text-xs font-mono font-bold text-slate-300 w-9 flex-shrink-0">${displayCode}</span>
+        <span class="text-sm font-semibold truncate">${time}</span>
+        ${badge}
+      </div>
+      <span class="text-[10px] font-mono text-slate-400 flex-shrink-0 ml-1">${offset}</span>
+    </div>`
+			}
+
+			function render(p) {
+				hintEl.style.display = 'none'
+				const src = TIMEZONES[p.sourceTz]
+				let html = '<div class="fade-in space-y-1">'
+				html += row(
+					'',
+					fmt12(p.hours, p.minutes),
+					p.sourceTz,
+					fmtOffset(src.o),
+					'',
+					true,
+				)
+				for (const tz of p.targetTzs) {
+					const info = TIMEZONES[tz]
+					const r = convert(p.hours, p.minutes, p.sourceTz, tz)
+					html += row(
+						'',
+						fmt12(r.h, r.m),
+						tz,
+						fmtOffset(info.o),
+						shiftBadge(r.shift),
+						false,
+					)
+				}
+				html += '</div>'
+				outputEl.innerHTML = html
+			}
+
+			function renderError(msg) {
+				hintEl.style.display = 'none'
+				outputEl.innerHTML = `<div class="fade-in text-[11px] text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg px-2.5 py-1.5">${msg}</div>`
+			}
+
+			function handle() {
+				const v = inputEl.value
+				if (!v.trim()) {
+					outputEl.innerHTML = ''
+					hintEl.style.display = 'block'
+					return
+				}
+				const p = parseInput(v)
+				if (!p) {
+					outputEl.innerHTML = ''
+					return
+				}
+				if (p.error) return renderError(p.error)
+				render(p)
+			}
+
+			inputEl.addEventListener('input', handle)
+			inputEl.focus()
+		</script>
+	</body>
+</html>
