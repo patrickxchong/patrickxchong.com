@@ -1,0 +1,523 @@
+{
+	"title": "Labs",
+	"description": "A collection of small personal projects, experiments, and utilities to make life a little easier.",
+	"sections": [
+		{
+			"id": "web-tools",
+			"title": "Web Tools",
+			"icon": "🛠️",
+			"accentColor": "blue",
+			"items": [
+				{
+					"title": "WhatsApp Link Generator",
+					"description": "Generate cross-platform WhatsApp links or open a number/message directly in WhatsApp Web without saving the contact. (🔒 Privacy Guaranteed)",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "/labs/whatsapp-link-generator",
+							"icon": "🚀",
+							"type": "launch"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/patrickxchong.com/blob/main/src/labs/whatsapp-link-generator.njk",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "RapidPlan - MyRapid Trip Planner",
+					"description": "Check trip duration and cost of LRT, MRT, and BRT trips in the Klang Valley.",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "https://rapidplan.patrickxchong.com/",
+							"icon": "🚀",
+							"type": "launch"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "Hide Discord Sidebar",
+					"description": "A browser extension to toggle visibility of Discord servers and channels.",
+					"links": [
+						{
+							"label": "Chrome Extension",
+							"url": "https://chrome.google.com/webstore/detail/hide-discord-sidebar/kaaohmdnmbdagpnenakakpkinddjmenp",
+							"icon": "🌐",
+							"type": "extension"
+						},
+						{
+							"label": "Firefox Extension",
+							"url": "https://addons.mozilla.org/addon/hide-discord-sidebar/",
+							"icon": "🦊",
+							"type": "extension"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/hide-discord-sidebar",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "Convert Image to Text (OCR)",
+					"description": "Accepts direct image pasting, drag & drop, and file uploads. Images are only processed in the browser and never sent to an external server. (🔒 Privacy Guaranteed)",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "/labs/convert-image-to-text/",
+							"icon": "🚀",
+							"type": "launch"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/convert-image-to-text",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "QR Reader",
+					"description": "Scan QR codes via paste or upload. Images are only processed in the browser and never sent to an external server. (🔒 Privacy Guaranteed)",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "/labs/qr/",
+							"icon": "🚀",
+							"type": "launch"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/qr",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "Image Transform",
+					"description": "Quickly rotate and flip images directly in your browser. (🔒 Privacy Guaranteed)",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "/labs/image-transform/",
+							"icon": "🚀",
+							"type": "launch"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/image-transform",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "Tailwind Compiler",
+					"description": "A tool to compile HTML snippets with Tailwind CSS classes into minified CSS. Data is processed on Vercel.",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "https://labs.patrickxchong.com/tailwind-compiler",
+							"icon": "🚀",
+							"type": "launch"
+						}
+					]
+				},
+				{
+					"title": "Flood Risk Map (Archive)",
+					"description": "Elevation tiles to assess if an area is flood-prone.",
+					"links": [
+						{
+							"label": "Launch App",
+							"url": "/labs/map/",
+							"icon": "🚀",
+							"type": "launch"
+						},
+						{
+							"label": "View Code",
+							"url": "https://github.com/patrickxchong/patrickxchong.com/tree/main/public/labs/map",
+							"icon": "💻",
+							"type": "code"
+						}
+					]
+				},
+				{
+					"title": "COVID Dashboard (Archive)",
+					"description": "Historical view of new cases and vaccinations by state.",
+					"links": [
+						{
+							"label": "View Dashboard",
+							"url": "https://datastudio.google.com/s/s8gdYST88Js",
+							"icon": "📊",
+							"type": "launch"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ai-experiments",
+			"title": "AI Experiments",
+			"icon": "🤖",
+			"accentColor": "purple",
+			"subsections": [
+				{
+					"id": "ai-generated-instastories",
+					"title": "AI Generated InstaStories",
+					"subsections": [
+						{
+							"id": "health",
+							"title": "🏩 Health",
+							"prompt": "Using the uploaded file as a template, populate this with content on how to sleep well at night.\nMake it content heavy with at least 10 pages.",
+							"items": [
+								{
+									"title": "Vitamin D & Calcium",
+									"description": "Template used to generate stories",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-vit-d-calcium.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Essential Vitamins and Minerals",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-nutrients.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Inflammation",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-inflammation.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Omega 3",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-omega3.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Sleep Interactive (Long)",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-sleep-interactive-long.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Sleep Interactive (Short)",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-sleep-interactive-short.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Sleep Flashcards",
+									"description": "Earlier version of template",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/health-sleep-flashcards.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "travel-itineraries",
+							"title": "✈️ Travel Itineraries",
+							"prompt": "Using the uploaded file as a template, populate this with an itinerary for a 3 day trip in Seoul\nMake it content heavy with at least 10 pages.",
+							"items": [
+								{
+									"title": "Kuala Lumpur",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/travel-kl.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Kuala Lumpur (Foodie Edition)",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/travel-kl-foodie.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Seoul",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/travel-seoul.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Singapore",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/travel-singapore.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "general-knowledge",
+							"title": "✈️ General Knowledge",
+							"prompt": "Using the uploaded file as a template, populate this with knowledge on LLM, SLM, NLU, how they are similar, different, pros and cons, how they are used in real life.\nMake it content heavy with at least 15 pages.",
+							"items": [
+								{
+									"title": "NLU vs SLM vs LLM",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/knowledge-nlu-slm-llm.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "NLU vs SLM vs LLM V2",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/knowledge-nlu-slm-llm-v2.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Investment Summary",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/knowledge-investment-summary.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "bible-studies",
+							"title": "📖 Bible Studies",
+							"prompt": "Using the uploaded file as a template, populate this with a study on the book of 1 John (ESV)\nMake it content heavy with at least 10 pages.\nInclude many quotations from the text, while expositing the meaning and application.\nAdd reflection questions per page to make it more engaging",
+							"items": [
+								{
+									"title": "Joshua",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/biblestudy-joshua.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Isaiah",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/biblestudy-isaiah.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Luke",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/biblestudy-luke.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "Acts",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/biblestudy-acts.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "1 John",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/biblestudy-1john.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								},
+								{
+									"title": "1 John v2",
+									"links": [
+										{
+											"label": "Launch",
+											"url": "/labs/stories/biblestudy-1john-v2.html",
+											"icon": "🚀",
+											"type": "launch"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "bangkok-trip-itinerary",
+					"title": "Bangkok Trip Itinerary",
+					"items": [
+						{
+							"title": "ChatGPT",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/bangkok/chatgpt.html",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						},
+						{
+							"title": "Gemini",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/bangkok/gemini.html",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						},
+						{
+							"title": "Claude",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/bangkok/claude.html",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						},
+						{
+							"title": "Deepseek",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/bangkok/deepseek.html",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "other-creations",
+					"title": "Other Creations",
+					"items": [
+						{
+							"title": "Worship Team Icebreaker",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/icebreaker/",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						},
+						{
+							"title": "GCC Worship Wrapped 2025",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/stories/gcc-worship-wrapped-2025.html",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						},
+						{
+							"title": "Bible Devotional",
+							"links": [
+								{
+									"label": "Launch",
+									"url": "/labs/devotion/",
+									"icon": "🚀",
+									"type": "launch"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

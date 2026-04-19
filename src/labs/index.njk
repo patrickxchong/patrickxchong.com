@@ -1,0 +1,189 @@
+---
+title: Labs
+layout: layouts/page
+eleventyNavigation:
+  key: Labs
+  order: 5
+pageWidth: max-w-5xl m-auto
+status: published
+---
+
+{% macro renderLinks(links) %}
+  {% if links %}
+  <div class="flex flex-wrap gap-2 mt-auto">
+    {% for link in links %}
+      {% if link.type == "launch" %}
+        <a href="{{ link.url }}"{% if "://" in link.url %} target="_blank" rel="noopener noreferrer"{% endif %} class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200">
+          {% if link.icon %}{{ link.icon }} {% endif %}{{ link.label }}
+        </a>
+      {% elif link.type == "code" %}
+        <a href="{{ link.url }}"{% if "://" in link.url %} target="_blank" rel="noopener noreferrer"{% endif %} class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+          {% if link.icon %}{{ link.icon }} {% endif %}{{ link.label }}
+        </a>
+      {% elif link.type == "extension" %}
+        <a href="{{ link.url }}"{% if "://" in link.url %} target="_blank" rel="noopener noreferrer"{% endif %} class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
+          {% if link.icon %}{{ link.icon }} {% endif %}{{ link.label }}
+        </a>
+      {% elif link.type == "view" %}
+        <a href="{{ link.url }}"{% if "://" in link.url %} target="_blank" rel="noopener noreferrer"{% endif %} class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 hover:bg-green-200">
+          {% if link.icon %}{{ link.icon }} {% endif %}{{ link.label }}
+        </a>
+      {% elif link.type == "external" %}
+        <a href="{{ link.url }}"{% if "://" in link.url %} target="_blank" rel="noopener noreferrer"{% endif %} class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700 hover:bg-orange-200">
+          {% if link.icon %}{{ link.icon }} {% endif %}{{ link.label }}
+        </a>
+      {% else %}
+        <a href="{{ link.url }}"{% if "://" in link.url %} target="_blank" rel="noopener noreferrer"{% endif %} class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+          {% if link.icon %}{{ link.icon }} {% endif %}{{ link.label }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endmacro %}
+
+<h1 class="mt-8 mb-2">🧑🏻&zwj;🔬 Labs</h1>
+<p class="text-gray-600 mb-8">{{ labs.description }}</p>
+
+<!-- Tab Bar -->
+<div class="flex gap-2 border-b border-gray-200 mb-8 overflow-hidden">
+  {% for section in labs.sections %}
+  <button
+    class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg -mb-px whitespace-nowrap {{ 'border border-b-white text-blue-600 bg-white' if loop.first else 'text-gray-500 hover:text-gray-700' }}"
+    data-panel="panel-{{ section.id }}">
+    {{ section.icon }} {{ section.title }}
+  </button>
+  {% endfor %}
+</div>
+
+<!-- Tab Panels -->
+{% for section in labs.sections %}
+<div id="panel-{{ section.id }}" class="tab-panel {{ 'block' if loop.first else 'hidden' }}">
+
+  {% if section.items %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+      {% for item in section.items %}
+      <div class="bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm p-4 flex flex-col h-full">
+        <p class="font-semibold text-gray-800 mb-1">{{ item.title }}</p>
+        {% if item.description %}<p class="text-sm text-gray-500 mb-3">{{ item.description }}</p>{% endif %}
+        {{ renderLinks(item.links) }}
+      </div>
+      {% endfor %}
+    </div>
+
+  {% elif section.subsections %}
+    {% for subsection in section.subsections %}
+    <div class="mb-2">
+      <button class="accordion-btn w-full flex justify-between items-center cursor-pointer py-3 px-4 bg-gray-50 rounded-lg hover:bg-gray-100 mb-1"
+        data-accordion="acc-{{ subsection.id }}">
+        <span class="font-semibold text-gray-700">{{ subsection.title }}</span>
+        <span class="accordion-chevron transition-transform duration-200 text-gray-400">▼</span>
+      </button>
+      <div id="acc-{{ subsection.id }}" class="accordion-content overflow-hidden mb-4 hidden">
+        <div class="pt-3 pb-2">
+
+          {% if subsection.prompt %}
+          <details class="mt-1 mb-3">
+            <summary class="text-sm text-gray-500 cursor-pointer font-medium">📝 View Prompt Used</summary>
+            <pre class="mt-2 text-xs text-gray-500 bg-gray-50 rounded-lg p-3 whitespace-pre-wrap">{{ subsection.prompt }}</pre>
+          </details>
+          {% endif %}
+
+          {% if subsection.items %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+              {% for item in subsection.items %}
+              <div class="bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm p-4 flex flex-col h-full">
+                <p class="font-semibold text-gray-800 mb-1">{{ item.title }}</p>
+                {% if item.description %}<p class="text-sm text-gray-500 mb-3">{{ item.description }}</p>{% endif %}
+                {{ renderLinks(item.links) }}
+              </div>
+              {% endfor %}
+            </div>
+
+          {% elif subsection.subsections %}
+            {% for sub2 in subsection.subsections %}
+            <h4 class="text-sm font-semibold text-gray-600 mt-4 mb-2">{{ sub2.title }}</h4>
+
+            {% if sub2.prompt %}
+            <details class="mt-1 mb-3">
+              <summary class="text-sm text-gray-500 cursor-pointer font-medium">📝 View Prompt Used</summary>
+              <pre class="mt-2 text-xs text-gray-500 bg-gray-50 rounded-lg p-3 whitespace-pre-wrap">{{ sub2.prompt }}</pre>
+            </details>
+            {% endif %}
+
+            {% if sub2.items %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+              {% for item in sub2.items %}
+              <div class="bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm p-4 flex flex-col h-full">
+                <p class="font-semibold text-gray-800 mb-1">{{ item.title }}</p>
+                {% if item.description %}<p class="text-sm text-gray-500 mb-3">{{ item.description }}</p>{% endif %}
+                {{ renderLinks(item.links) }}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            {% endfor %}
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  {% endif %}
+
+</div>
+{% endfor %}
+
+<script>
+(function() {
+  // Tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => {
+        b.classList.remove('border', 'border-b-white', 'text-blue-600', 'bg-white');
+        b.classList.add('text-gray-500');
+      });
+      tabPanels.forEach(p => p.classList.add('hidden'));
+
+      btn.classList.add('border', 'border-b-white', 'text-blue-600', 'bg-white');
+      btn.classList.remove('text-gray-500');
+      document.getElementById(btn.dataset.panel).classList.remove('hidden');
+    });
+  });
+
+  // Accordions
+  const accBtns = document.querySelectorAll('.accordion-btn');
+
+  accBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = document.getElementById(btn.dataset.accordion);
+      const chevron = btn.querySelector('.accordion-chevron');
+      const isOpen = !content.classList.contains('hidden');
+
+      if (isOpen) {
+        content.classList.add('hidden');
+        chevron.style.transform = '';
+      } else {
+        content.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+      }
+    });
+  });
+
+  // Open first accordion in each panel by default
+  tabPanels.forEach(panel => {
+    const firstAcc = panel.querySelector('.accordion-btn');
+    if (firstAcc) {
+      const firstContent = document.getElementById(firstAcc.dataset.accordion);
+      const chevron = firstAcc.querySelector('.accordion-chevron');
+      if (firstContent) firstContent.classList.remove('hidden');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+  });
+})();
+</script>
