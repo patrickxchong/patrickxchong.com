@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Bible Gateway Link Generator</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-family:
+					-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				background: #0f172a;
+				min-height: 100vh;
+				display: flex;
+				align-items: start;
+				justify-content: center;
+				padding: 1rem;
+			}
+			.fade-in {
+				animation: fadeIn 0.2s ease-out;
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(-2px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+	</head>
+	<body class="text-slate-100">
+		<div
+			class="bg-slate-900/95 backdrop-blur rounded-2xl p-4 shadow-xl border border-slate-700/60 w-full max-w-sm mx-auto"
+		>
+			<!-- Header -->
+			<div class="flex items-center gap-2 mb-3 px-1">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="text-slate-400"
+				>
+					<path
+						d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+					/>
+				</svg>
+				<span
+					class="text-[11px] uppercase tracking-wider text-slate-400 font-bold whitespace-nowrap"
+					>Bible Gateway Link</span
+				>
+			</div>
+
+			<!-- Input Controls -->
+			<div class="space-y-2 mb-2">
+				<input
+					id="passageInput"
+					type="text"
+					placeholder="e.g. John 3:16"
+					class="w-full bg-slate-800/70 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-500"
+					autocomplete="off"
+					spellcheck="false"
+				/>
+				<select
+					id="versionSelect"
+					class="w-full bg-slate-800/70 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-slate-200"
+				>
+					<option value="ESV">ESV (English Standard Version)</option>
+					<option value="CSB">CSB (Christian Standard Bible)</option>
+					<option value="NIV">NIV (New International Version)</option>
+					<option value="ESV;CSB;NIV">ESV + CSB + NIV (Parallel)</option>
+				</select>
+			</div>
+
+			<!-- Output Area -->
+			<div id="output"></div>
+
+			<!-- Empty State Hint -->
+			<div id="hint" class="text-[11px] text-slate-500 text-center py-2 mt-1">
+				Type a reference like
+				<span class="text-slate-400 font-medium">Romans 8:28</span> or
+				<span class="text-slate-400 font-medium">Genesis 1</span> <br /><span
+					class="text-[10px] mt-1 block"
+					>Press <strong>Enter</strong> to open directly</span
+				>
+			</div>
+		</div>
+
+		<script>
+			const passageInput = document.getElementById('passageInput')
+			const versionSelect = document.getElementById('versionSelect')
+			const outputEl = document.getElementById('output')
+			const hintEl = document.getElementById('hint')
+
+			function getBibleGatewayUrl(passage, version) {
+				const encodedPassage = encodeURIComponent(passage)
+				return `https://www.biblegateway.com/passage/?search=${encodedPassage}&version=${version}`
+			}
+
+			function generateLink() {
+				const passage = passageInput.value.trim()
+
+				// Show hint if input is empty
+				if (!passage) {
+					outputEl.innerHTML = ''
+					hintEl.style.display = 'block'
+					return
+				}
+
+				hintEl.style.display = 'none'
+
+				// Construct the Bible Gateway URL
+				const url = getBibleGatewayUrl(passage, versionSelect.value)
+
+				// Render the resulting link and buttons
+				outputEl.innerHTML = `
+                    <div class="fade-in bg-slate-800/60 border border-slate-700/50 rounded-lg p-2.5 space-y-2 mt-3">
+                        <div class="flex gap-2">
+                            <input
+                                type="text"
+                                readonly
+                                value="${url}"
+                                class="flex-1 bg-slate-900/50 border border-slate-700/50 rounded-md px-2 py-1.5 text-xs text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+                                id="urlInput"
+                            />
+                            <button
+                                onclick="copyUrl()"
+                                id="copyBtn"
+                                class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs rounded-md transition-colors font-medium flex-shrink-0 min-w-[60px]"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <a
+                            href="${url}"
+                            target="_blank"
+                            class="flex items-center justify-center gap-1.5 w-full bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 hover:text-blue-300 font-medium text-xs py-2 rounded-md transition-colors"
+                        >
+                            Open in Bible Gateway
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                `
+			}
+
+			// Simple copy-to-clipboard function
+			window.copyUrl = function () {
+				const urlInput = document.getElementById('urlInput')
+				const btn = document.getElementById('copyBtn')
+
+				urlInput.select()
+				try {
+					document.execCommand('copy')
+
+					// Temporary visual feedback
+					const originalText = btn.innerText
+					btn.innerText = 'Copied!'
+					btn.classList.add('bg-green-600/80', 'text-white', 'border-green-500')
+					btn.classList.remove('bg-slate-700', 'text-slate-200')
+
+					setTimeout(() => {
+						btn.innerText = originalText
+						btn.classList.remove(
+							'bg-green-600/80',
+							'text-white',
+							'border-green-500',
+						)
+						btn.classList.add('bg-slate-700', 'text-slate-200')
+					}, 1500)
+				} catch (err) {
+					console.error('Failed to copy text', err)
+				}
+
+				// Clear text selection after copying
+				window.getSelection().removeAllRanges()
+			}
+
+			// Event Listeners
+			passageInput.addEventListener('input', generateLink)
+			versionSelect.addEventListener('change', generateLink)
+
+			// Listen for Enter key to open in new tab
+			passageInput.addEventListener('keydown', function (event) {
+				if (event.key === 'Enter') {
+					event.preventDefault()
+					const passage = passageInput.value.trim()
+					if (passage) {
+						const url = getBibleGatewayUrl(passage, versionSelect.value)
+						window.open(url, '_blank')
+					}
+				}
+			})
+
+			// Auto-focus input on load
+			passageInput.focus()
+		</script>
+	</body>
+</html>
