@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Countdown Widget</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			html, body { margin: 0; padding: 0; }
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				background: #0f172a;
+				min-height: 100vh;
+				display: flex;
+				align-items: start;
+				justify-content: center;
+				padding: 1rem;
+			}
+			.fade-in { animation: fadeIn 0.2s ease-out; }
+			@keyframes fadeIn {
+				from { opacity: 0; transform: translateY(-2px); }
+				to   { opacity: 1; transform: translateY(0); }
+			}
+			.no-scrollbar::-webkit-scrollbar { display: none; }
+			.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+			input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+				filter: invert(0.6); cursor: pointer;
+			}
+		</style>
+	</head>
+	<body class="text-slate-100">
+		<div class="bg-slate-900/95 backdrop-blur rounded-2xl p-2.5 shadow-xl border border-slate-700/60 w-full max-w-sm mx-auto">
+
+			<!-- Compact single-row form -->
+			<div class="flex items-center gap-1.5 mb-1.5">
+				<span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold whitespace-nowrap">CD</span>
+				<input
+					id="input-title"
+					type="text"
+					placeholder="Event title"
+					class="flex-1 min-w-0 bg-slate-800/70 border border-slate-700 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-500"
+					autocomplete="off" spellcheck="false"
+				/>
+				<input
+					id="input-dt"
+					type="datetime-local"
+					class="bg-slate-800/70 border border-slate-700 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-slate-300 w-36"
+				/>
+				<button
+					onclick="addEvent()"
+					class="bg-blue-600 hover:bg-blue-500 active:bg-blue-700 transition-colors rounded-lg px-2.5 py-1 text-xs font-medium text-white whitespace-nowrap"
+				>+ Add</button>
+			</div>
+
+			<!-- Error -->
+			<div id="err" class="hidden fade-in text-[10px] text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg px-2 py-1 mb-1.5"></div>
+
+			<!-- List -->
+			<div id="list" class="space-y-1 no-scrollbar" style="max-height: 70vh; overflow-y: auto;"></div>
+
+			<!-- Empty hint -->
+			<div id="hint" class="text-[10px] text-slate-500 text-center py-1.5">
+				try: <span class="text-slate-400">Team offsite → pick a date → + Add</span>
+			</div>
+		</div>
+
+		<script>
+			const STORAGE_KEY = 'countdowns_v1'
+
+			function load() {
+				try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [] }
+				catch { return [] }
+			}
+			function save(events) { localStorage.setItem(STORAGE_KEY, JSON.stringify(events)) }
+
+			function addEvent() {
+				const title = document.getElementById('input-title').value.trim()
+				const dt    = document.getElementById('input-dt').value
+				const errEl = document.getElementById('err')
+				if (!title || !dt) {
+					errEl.textContent = !title ? 'Please enter a title.' : 'Please pick a date and time.'
+					errEl.classList.remove('hidden')
+					setTimeout(() => errEl.classList.add('hidden'), 2500)
+					return
+				}
+				errEl.classList.add('hidden')
+				const events = load()
+				events.push({ id: Date.now(), title, dt })
+				save(events)
+				document.getElementById('input-title').value = ''
+				document.getElementById('input-dt').value = ''
+				render()
+			}
+
+			function deleteEvent(id) { save(load().filter(e => e.id !== id)); render() }
+
+			function diffBreakdown(dtStr) {
+				const now = new Date(), tgt = new Date(dtStr)
+				const isPast = tgt <= now
+				const base = isPast ? tgt : now, end = isPast ? now : tgt
+				let years = end.getFullYear() - base.getFullYear()
+				let months = end.getMonth() - base.getMonth()
+				let days = end.getDate() - base.getDate()
+				let hours = end.getHours() - base.getHours()
+				if (hours  < 0) { hours  += 24; days-- }
+				if (days   < 0) { months--; days += new Date(end.getFullYear(), end.getMonth(), 0).getDate() }
+				if (months < 0) { months += 12; years-- }
+				return { totalMonths: years * 12 + months, days, hours, isPast }
+			}
+
+			function fmtDate(dtStr) {
+				return new Date(dtStr).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+			}
+			function esc(s) {
+				return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+			}
+
+			function render() {
+				const listEl = document.getElementById('list')
+				const hintEl = document.getElementById('hint')
+				const events = load()
+				if (!events.length) { listEl.innerHTML = ''; hintEl.style.display = 'block'; return }
+				hintEl.style.display = 'none'
+				events.sort((a, b) => {
+					const now = Date.now()
+					const da = new Date(a.dt) - now, db = new Date(b.dt) - now
+					const fa = da > 0, fb = db > 0
+					if (fa && !fb) return -1
+					if (!fa && fb) return 1
+					return fa ? da - db : db - da
+				})
+				listEl.innerHTML = events.map(e => {
+					const { totalMonths, days, hours, isPast } = diffBreakdown(e.dt)
+					const pastBadge = isPast ? '<span class="text-[9px] px-1 rounded bg-amber-500/20 text-amber-300 flex-shrink-0">past</span>' : ''
+					return `
+					<div class="fade-in bg-slate-800/60 border border-slate-700/50 rounded-lg px-2 py-1 flex items-center gap-1.5">
+						<span class="text-xs font-semibold truncate flex-1 min-w-0">${esc(e.title)}</span>
+						<span class="text-[9px] text-slate-500 flex-shrink-0">${fmtDate(e.dt)}</span>
+						${pastBadge}
+						<div class="flex items-baseline gap-0.5 flex-shrink-0 bg-slate-800 border border-slate-700/50 rounded px-1.5 py-0.5 font-mono">
+							<span class="text-xs font-semibold">${totalMonths}</span><span class="text-[9px] text-slate-400">mo</span>
+							<span class="text-slate-600 mx-0.5">·</span>
+							<span class="text-xs font-semibold">${days}</span><span class="text-[9px] text-slate-400">d</span>
+							<span class="text-slate-600 mx-0.5">·</span>
+							<span class="text-xs font-semibold">${hours}</span><span class="text-[9px] text-slate-400">hr</span>
+						</div>
+						<button onclick="deleteEvent(${e.id})" class="text-[9px] px-1 py-0.5 rounded border border-slate-700 text-slate-500 hover:text-red-300 hover:border-red-400/50 transition-colors flex-shrink-0">✕</button>
+					</div>`
+				}).join('')
+			}
+
+			document.getElementById('input-title').addEventListener('keydown', e => {
+				if (e.key === 'Enter') document.getElementById('input-dt').focus()
+			})
+			document.getElementById('input-dt').addEventListener('keydown', e => {
+				if (e.key === 'Enter') addEvent()
+			})
+
+			render()
+			setInterval(render, 60000)
+		</script>
+	</body>
+</html>
